@@ -1,0 +1,752 @@
+[
+  {
+    "kind": "typeAlias",
+    "name": "Handler",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 12,
+      "col": 0
+    },
+    "jsDoc": null,
+    "typeAliasDef": {
+      "tsType": {
+        "repr": "",
+        "kind": "fnOrConstructor",
+        "fnOrConstructor": {
+          "constructor": false,
+          "tsType": {
+            "repr": "",
+            "kind": "union",
+            "union": [
+              {
+                "repr": "Promise",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": [
+                    {
+                      "repr": "void",
+                      "kind": "keyword",
+                      "keyword": "void"
+                    }
+                  ],
+                  "typeName": "Promise"
+                }
+              },
+              {
+                "repr": "void",
+                "kind": "keyword",
+                "keyword": "void"
+              }
+            ]
+          },
+          "params": [
+            {
+              "kind": "identifier",
+              "name": "req",
+              "optional": false,
+              "tsType": {
+                "repr": "ServerRequest",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "ServerRequest"
+                }
+              }
+            }
+          ],
+          "typeParams": []
+        }
+      },
+      "typeParams": []
+    }
+  },
+  {
+    "kind": "typeAlias",
+    "name": "ErrorHandler",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 14,
+      "col": 0
+    },
+    "jsDoc": null,
+    "typeAliasDef": {
+      "tsType": {
+        "repr": "",
+        "kind": "fnOrConstructor",
+        "fnOrConstructor": {
+          "constructor": false,
+          "tsType": {
+            "repr": "",
+            "kind": "union",
+            "union": [
+              {
+                "repr": "Promise",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": [
+                    {
+                      "repr": "void",
+                      "kind": "keyword",
+                      "keyword": "void"
+                    }
+                  ],
+                  "typeName": "Promise"
+                }
+              },
+              {
+                "repr": "void",
+                "kind": "keyword",
+                "keyword": "void"
+              }
+            ]
+          },
+          "params": [
+            {
+              "kind": "identifier",
+              "name": "request",
+              "optional": false,
+              "tsType": {
+                "repr": "ServerRequest",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "ServerRequest"
+                }
+              }
+            },
+            {
+              "kind": "identifier",
+              "name": "error",
+              "optional": false,
+              "tsType": {
+                "repr": "Error",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "Error"
+                }
+              }
+            }
+          ],
+          "typeParams": []
+        }
+      },
+      "typeParams": []
+    }
+  },
+  {
+    "kind": "enum",
+    "name": "Method",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 19,
+      "col": 0
+    },
+    "jsDoc": null,
+    "enumDef": {
+      "members": [
+        {
+          "name": "POST"
+        },
+        {
+          "name": "GET"
+        },
+        {
+          "name": "OPTIONS"
+        },
+        {
+          "name": "DELETE"
+        },
+        {
+          "name": "PUT"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "typeAlias",
+    "name": "Route",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 27,
+      "col": 0
+    },
+    "jsDoc": null,
+    "typeAliasDef": {
+      "tsType": {
+        "repr": "",
+        "kind": "typeLiteral",
+        "typeLiteral": {
+          "methods": [],
+          "properties": [
+            {
+              "name": "method",
+              "params": [],
+              "computed": false,
+              "optional": false,
+              "tsType": {
+                "repr": "Method",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "Method"
+                }
+              },
+              "typeParams": []
+            },
+            {
+              "name": "handler",
+              "params": [],
+              "computed": false,
+              "optional": false,
+              "tsType": {
+                "repr": "Handler",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "Handler"
+                }
+              },
+              "typeParams": []
+            },
+            {
+              "name": "path",
+              "params": [],
+              "computed": false,
+              "optional": false,
+              "tsType": {
+                "repr": "string",
+                "kind": "keyword",
+                "keyword": "string"
+              },
+              "typeParams": []
+            }
+          ],
+          "callSignatures": [],
+          "indexSignatures": []
+        }
+      },
+      "typeParams": []
+    }
+  },
+  {
+    "kind": "class",
+    "name": "Lapi",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 36,
+      "col": 0
+    },
+    "jsDoc": "Class used to create an API. This handles starting the server and sending requests to the correct location.",
+    "classDef": {
+      "isAbstract": false,
+      "constructors": [
+        {
+          "jsDoc": "Creates a Lapi.\n\n@param port - The port to run the server on.\n@param host - The host of the server.\n@param handleError - The error handler.",
+          "accessibility": null,
+          "name": "constructor",
+          "params": [
+            {
+              "kind": "assign",
+              "left": {
+                "kind": "identifier",
+                "name": "port",
+                "optional": false,
+                "tsType": {
+                  "repr": "number",
+                  "kind": "keyword",
+                  "keyword": "number"
+                }
+              },
+              "right": "<UNIMPLEMENTED>",
+              "tsType": null
+            },
+            {
+              "kind": "assign",
+              "left": {
+                "kind": "identifier",
+                "name": "host",
+                "optional": false,
+                "tsType": {
+                  "repr": "string",
+                  "kind": "keyword",
+                  "keyword": "string"
+                }
+              },
+              "right": "<UNIMPLEMENTED>",
+              "tsType": null
+            },
+            {
+              "kind": "identifier",
+              "name": "handleError",
+              "optional": true,
+              "tsType": {
+                "repr": "ErrorHandler",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "ErrorHandler"
+                }
+              }
+            }
+          ],
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 47,
+            "col": 2
+          }
+        }
+      ],
+      "properties": [
+        {
+          "jsDoc": null,
+          "tsType": {
+            "repr": "",
+            "kind": "array",
+            "array": {
+              "repr": "Route",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": null,
+                "typeName": "Route"
+              }
+            }
+          },
+          "readonly": false,
+          "accessibility": "private",
+          "optional": false,
+          "isAbstract": false,
+          "isStatic": false,
+          "name": "routes",
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 37,
+            "col": 2
+          }
+        },
+        {
+          "jsDoc": null,
+          "tsType": {
+            "repr": "Server",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "Server"
+            }
+          },
+          "readonly": false,
+          "accessibility": "private",
+          "optional": true,
+          "isAbstract": false,
+          "isStatic": false,
+          "name": "server",
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 38,
+            "col": 2
+          }
+        }
+      ],
+      "indexSignatures": [],
+      "methods": [
+        {
+          "jsDoc": "Adds a route to the API.\n\n@public\n@param path The path the handler should be called with\n@param handler The request handler",
+          "accessibility": null,
+          "optional": false,
+          "isAbstract": false,
+          "isStatic": false,
+          "name": "route",
+          "kind": "method",
+          "functionDef": {
+            "params": [
+              {
+                "kind": "identifier",
+                "name": "method",
+                "optional": false,
+                "tsType": {
+                  "repr": "Method",
+                  "kind": "typeRef",
+                  "typeRef": {
+                    "typeParams": null,
+                    "typeName": "Method"
+                  }
+                }
+              },
+              {
+                "kind": "identifier",
+                "name": "path",
+                "optional": false,
+                "tsType": {
+                  "repr": "string",
+                  "kind": "keyword",
+                  "keyword": "string"
+                }
+              },
+              {
+                "kind": "identifier",
+                "name": "handler",
+                "optional": false,
+                "tsType": {
+                  "repr": "Handler",
+                  "kind": "typeRef",
+                  "typeRef": {
+                    "typeParams": null,
+                    "typeName": "Handler"
+                  }
+                }
+              }
+            ],
+            "returnType": null,
+            "isAsync": false,
+            "isGenerator": false,
+            "typeParams": []
+          },
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 60,
+            "col": 2
+          }
+        },
+        {
+          "jsDoc": "Sets the error handler for the API.\n\n@public\n@param handleError - The error handler.",
+          "accessibility": null,
+          "optional": false,
+          "isAbstract": false,
+          "isStatic": false,
+          "name": "handleErrors",
+          "kind": "method",
+          "functionDef": {
+            "params": [
+              {
+                "kind": "identifier",
+                "name": "handleError",
+                "optional": false,
+                "tsType": {
+                  "repr": "ErrorHandler",
+                  "kind": "typeRef",
+                  "typeRef": {
+                    "typeParams": null,
+                    "typeName": "ErrorHandler"
+                  }
+                }
+              }
+            ],
+            "returnType": null,
+            "isAsync": false,
+            "isGenerator": false,
+            "typeParams": []
+          },
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 70,
+            "col": 2
+          }
+        },
+        {
+          "jsDoc": "Finds the route from this.routes that has the same method and URL as the passed in request.\n\n@private\n@param request - The request to find the route for .\n@returns The route that matches.\n@throws {LapiError} if the route is not found.",
+          "accessibility": "private",
+          "optional": false,
+          "isAbstract": false,
+          "isStatic": false,
+          "name": "findRoute",
+          "kind": "method",
+          "functionDef": {
+            "params": [
+              {
+                "kind": "object",
+                "props": [
+                  {
+                    "kind": "assign",
+                    "key": "method",
+                    "value": null
+                  },
+                  {
+                    "kind": "assign",
+                    "key": "url",
+                    "value": null
+                  }
+                ],
+                "optional": false,
+                "tsType": {
+                  "repr": "ServerRequest",
+                  "kind": "typeRef",
+                  "typeRef": {
+                    "typeParams": null,
+                    "typeName": "ServerRequest"
+                  }
+                }
+              }
+            ],
+            "returnType": {
+              "repr": "Route",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": null,
+                "typeName": "Route"
+              }
+            },
+            "isAsync": false,
+            "isGenerator": false,
+            "typeParams": []
+          },
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 82,
+            "col": 2
+          }
+        },
+        {
+          "jsDoc": "Handles the given request.\n\n@private\n@param request - The request that is being made to the server",
+          "accessibility": "private",
+          "optional": false,
+          "isAbstract": false,
+          "isStatic": false,
+          "name": "handleRequest",
+          "kind": "method",
+          "functionDef": {
+            "params": [
+              {
+                "kind": "identifier",
+                "name": "request",
+                "optional": false,
+                "tsType": {
+                  "repr": "ServerRequest",
+                  "kind": "typeRef",
+                  "typeRef": {
+                    "typeParams": null,
+                    "typeName": "ServerRequest"
+                  }
+                }
+              }
+            ],
+            "returnType": null,
+            "isAsync": true,
+            "isGenerator": false,
+            "typeParams": []
+          },
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 101,
+            "col": 2
+          }
+        },
+        {
+          "jsDoc": "Starts the HTTP server.\n\n@public\n@param onStart Function to run when the server starts",
+          "accessibility": null,
+          "optional": false,
+          "isAbstract": false,
+          "isStatic": false,
+          "name": "start",
+          "kind": "method",
+          "functionDef": {
+            "params": [
+              {
+                "kind": "identifier",
+                "name": "onStart",
+                "optional": true,
+                "tsType": {
+                  "repr": "",
+                  "kind": "fnOrConstructor",
+                  "fnOrConstructor": {
+                    "constructor": false,
+                    "tsType": {
+                      "repr": "",
+                      "kind": "union",
+                      "union": [
+                        {
+                          "repr": "Promise",
+                          "kind": "typeRef",
+                          "typeRef": {
+                            "typeParams": [
+                              {
+                                "repr": "void",
+                                "kind": "keyword",
+                                "keyword": "void"
+                              }
+                            ],
+                            "typeName": "Promise"
+                          }
+                        },
+                        {
+                          "repr": "void",
+                          "kind": "keyword",
+                          "keyword": "void"
+                        }
+                      ]
+                    },
+                    "params": [],
+                    "typeParams": []
+                  }
+                }
+              }
+            ],
+            "returnType": null,
+            "isAsync": true,
+            "isGenerator": false,
+            "typeParams": []
+          },
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+            "line": 137,
+            "col": 2
+          }
+        }
+      ],
+      "extends": null,
+      "implements": [],
+      "typeParams": [],
+      "superTypeParams": []
+    }
+  },
+  {
+    "kind": "import",
+    "name": "ServerRequest",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 4,
+      "col": 0
+    },
+    "jsDoc": null,
+    "importDef": {
+      "src": "https://deno.land/std@0.70.0/http/mod.ts",
+      "imported": "ServerRequest"
+    }
+  },
+  {
+    "kind": "import",
+    "name": "serve",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 4,
+      "col": 0
+    },
+    "jsDoc": null,
+    "importDef": {
+      "src": "https://deno.land/std@0.70.0/http/mod.ts",
+      "imported": "serve"
+    }
+  },
+  {
+    "kind": "import",
+    "name": "Server",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 4,
+      "col": 0
+    },
+    "jsDoc": null,
+    "importDef": {
+      "src": "https://deno.land/std@0.70.0/http/mod.ts",
+      "imported": "Server"
+    }
+  },
+  {
+    "kind": "import",
+    "name": "Status",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 4,
+      "col": 0
+    },
+    "jsDoc": null,
+    "importDef": {
+      "src": "https://deno.land/std@0.70.0/http/mod.ts",
+      "imported": "Status"
+    }
+  },
+  {
+    "kind": "import",
+    "name": "LapiError",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
+      "line": 10,
+      "col": 0
+    },
+    "jsDoc": null,
+    "importDef": {
+      "src": "file:///home/codespace/workspace/lapi/lib/lapi-error.ts",
+      "imported": "LapiError"
+    }
+  },
+  {
+    "kind": "class",
+    "name": "LapiError",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi-error.ts",
+      "line": 4,
+      "col": 0
+    },
+    "jsDoc": null,
+    "classDef": {
+      "isAbstract": false,
+      "constructors": [
+        {
+          "jsDoc": null,
+          "accessibility": null,
+          "name": "constructor",
+          "params": [
+            {
+              "kind": "identifier",
+              "name": "message",
+              "optional": false,
+              "tsType": {
+                "repr": "string",
+                "kind": "keyword",
+                "keyword": "string"
+              }
+            },
+            {
+              "kind": "identifier",
+              "name": "status",
+              "optional": false,
+              "tsType": {
+                "repr": "number",
+                "kind": "keyword",
+                "keyword": "number"
+              }
+            },
+            {
+              "kind": "identifier",
+              "name": "path",
+              "optional": false,
+              "tsType": {
+                "repr": "string",
+                "kind": "keyword",
+                "keyword": "string"
+              }
+            },
+            {
+              "kind": "identifier",
+              "name": "body",
+              "optional": true,
+              "tsType": {
+                "repr": "T",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "T"
+                }
+              }
+            }
+          ],
+          "location": {
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi-error.ts",
+            "line": 5,
+            "col": 2
+          }
+        }
+      ],
+      "properties": [],
+      "indexSignatures": [],
+      "methods": [],
+      "extends": "Error",
+      "implements": [],
+      "typeParams": [
+        {
+          "name": "T"
+        }
+      ],
+      "superTypeParams": []
+    }
+  }
+]

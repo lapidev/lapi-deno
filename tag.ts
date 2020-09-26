@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import { VERSION } from "./version.ts";
 
 async function version(): Promise<void> {

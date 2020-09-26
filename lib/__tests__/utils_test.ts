@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 export function testName(module: string, func: string, test: string): string {
   const moduleLen = 10;
   const funcLen = 15;

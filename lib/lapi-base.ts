@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/lapi-base */
+
 import type { ServerRequest } from "../deps.ts";
 
 export type RequestHandler = (req: ServerRequest) => Promise<void> | void;

@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import { assertEquals, assert } from "../../deps_test.ts";
 import type { ServerRequest } from "../../deps.ts";
 import { Lapi } from "../lapi.ts";

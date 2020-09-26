@@ -58,6 +58,10 @@ jobs:
           deno-version: 1.4
       - name: Cache Dependencies
         run: deno cache deps.ts deps_test.ts
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
       - name: Tag
         run: deno run --allow-run --allow-write tag.ts
 

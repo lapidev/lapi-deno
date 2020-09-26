@@ -28,7 +28,7 @@ doc:
 	@$(DENO) doc --json $(MODULE) > docs.json
 
 tag:
-	@$(DENO) run --allow-run --allow-write tag.ts
+	@$(DENO) run --allow-run --allow-write scripts/tag.ts
 
 ci: cache lint test doc
 

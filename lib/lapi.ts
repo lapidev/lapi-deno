@@ -59,6 +59,7 @@ export class Lapi extends LapiBase {
     }
   }
 
+  /** Loops through they routers to find the handler for the given request. */
   private findRouteFromRouters(request: ServerRequest): Route | null {
     for (const router of this.routers) {
       const route = router.findRoute(request);

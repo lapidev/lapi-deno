@@ -36,6 +36,7 @@ export class LapiBase {
     this.routes = options?.routes || [];
   }
 
+  /** Adds a request handler for the given method and path. */
   addRoute(
     requestMethod: RequestMethod,
     path: string,
@@ -50,38 +51,47 @@ export class LapiBase {
     );
   }
 
+  /** Adds a middleware that is to be ran before the request handler. */
   addMiddleware(middleware: Middleware): void {
     this.middlewares.push(middleware);
   }
 
+  /** Adds a `POST` route. */
   post(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.POST, path, handler);
   }
-
+  
+  /** Adds a `GET` route. */
   get(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.GET, path, handler);
   }
-
+  
+  /** Adds a `PUT` route. */
   put(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.PUT, path, handler);
   }
-
+  
+  /** Adds a `DELETE` route. */
   delete(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.DELETE, path, handler);
   }
-
+  
+  /** Adds an `OPTIONS` route. */
   options(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.OPTIONS, path, handler);
   }
-
+  
+  /** Adds a `HEAD` route. */
   head(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.HEAD, path, handler);
   }
-
+  
+  /** Adds a `PATCH` route. */
   patch(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.PATCH, path, handler);
   }
 
+  /** Loops through the routes to find the handler for the given request.  */
   findRoute({ method, url }: ServerRequest): Route | null {
     const matches = this.routes.filter((route) =>
       route.requestMethod === method &&

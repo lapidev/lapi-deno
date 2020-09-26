@@ -1,6 +1,0 @@
-{
-  "imports": {
-     "http/": "https://deno.land/std@0.70.0/http/",
-     "testing/": "https://deno.land/std@0.70.0/testing/" 
-  }
-}

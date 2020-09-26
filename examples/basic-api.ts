@@ -1,6 +1,6 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
-import { Lapi, RequestMethod } from "../lib/mod.ts";
+import { Lapi } from "../lib/mod.ts";
 
 const app = new Lapi();
 

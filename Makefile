@@ -1,16 +1,19 @@
-.PHONY: default test format lint run
+.PHONY: default test format lint run ci cache tag
 
 IMPORT_MAP = import_map.json
 DENO = deno
-TEST_FILTER = lib/.*_test.ts
 EXAMPLES = examples/
+MODULE = mod.ts
 
-FLAGS = --importmap=$(IMPORT_MAP) --allow-net --unstable
+FLAGS = --allow-net --unstable
 
 default: test
 
+cache:
+	@$(DENO) cache deps.ts deps_test.ts
+
 test:
-	@$(DENO) test --coverage $(FLAGS) --filter $(TEST_FILTER)
+	@$(DENO) test --coverage $(FLAGS)
 
 format:
 	@$(DENO) fmt lib
@@ -22,7 +25,12 @@ run:
 	@$(DENO) run $(FLAGS) $(EXAMPLES)$(filter-out $@,$(MAKECMDGOALS))
 
 doc:
-	@$(DENO) doc --json lib/mod.ts > docs.json
+	@$(DENO) doc --json $(MODULE) > docs.json
+
+tag:
+	@$(DENO) run --allow-run --allow-write tag.ts
+
+ci: cache lint test doc
 
 %:
 	@:

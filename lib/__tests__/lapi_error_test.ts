@@ -1,20 +1,40 @@
-import { assertStrictEquals, assert } from "testing/asserts.ts";
+import { assertEquals, assert } from "../../deps_test.ts";
 import { LapiError } from "../lapi_error.ts";
+import { testName } from "./utils_test.ts";
 
 Deno.test({
-  name: "LapiError Constructor Test - No Body",
+  name: testName("LapiError", "Constructor", "No Body"),
   fn: () => {
     const lapiError = new LapiError(
-      "This is a test for LapiError",
+      "This is a for LapiError",
       123,
       "/path",
     );
 
-    assertStrictEquals(lapiError.message, "This is a test for LapiError");
-    assertStrictEquals(lapiError.status, 123);
-    assertStrictEquals(lapiError.path, "/path");
-    assertStrictEquals(lapiError.name, "LapiError");
+    assertEquals(lapiError.message, "This is a for LapiError");
+    assertEquals(lapiError.status, 123);
+    assertEquals(lapiError.path, "/path");
+    assertEquals(lapiError.name, "LapiError");
     assert(!lapiError.body);
+    assert(lapiError.stack);
+  },
+});
+
+Deno.test({
+  name: testName("LapiError", "Constructor", "Body"),
+  fn: () => {
+    const lapiError = new LapiError(
+      "This is a for LapiError",
+      123,
+      "/path",
+      { key: "the body" },
+    );
+
+    assertEquals(lapiError.message, "This is a for LapiError");
+    assertEquals(lapiError.status, 123);
+    assertEquals(lapiError.path, "/path");
+    assertEquals(lapiError.name, "LapiError");
+    assertEquals(lapiError.body, { key: "the body" });
     assert(lapiError.stack);
   },
 });

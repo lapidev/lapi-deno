@@ -6,94 +6,94 @@ import {
   serve,
   Server,
   Status,
-} from "http/mod.ts";
+} from "../deps.ts";
+import { LapiBase, Middleware, Route } from "./lapi-base.ts";
+import type { LapiRouter } from "./lapi-router.ts";
 import { LapiError } from "./lapi_error.ts";
-
-export type RequestHandler = (req: ServerRequest) => Promise<void> | void;
 
 export type ErrorHandler = (
   request: ServerRequest,
   error: Error,
 ) => Promise<void> | void;
 
-export enum RequestMethod {
-  POST = "POST",
-  GET = "GET",
-  OPTIONS = "OPTIONS",
-  DELETE = "DELETE",
-  PUT = "PUT",
+interface LapiOptions {
+  serverPort?: number;
+  serverHost?: string;
+  errorHandler?: ErrorHandler;
+  routers?: LapiRouter[];
+  routes?: Route[];
+  middlewares?: Middleware[];
 }
 
-export type Route = {
-  requestHandler: RequestHandler;
-  requestMethod: RequestMethod;
-  requestPath: string;
-};
-
 /** Class used to create an API. This handles starting the server and sending requests to the correct location. */
-export class Lapi {
-  private _routes: Route[] = [];
-  private _serverPort: number;
-  private _serverHost: string;
+export class Lapi extends LapiBase {
+  routers: LapiRouter[];
+  serverPort: number;
+  serverHost: string;
+  errorHandler?: ErrorHandler;
 
   private server?: Server;
-  private _errorHandler?: ErrorHandler;
 
   /** Creates a Lapi. */
-  constructor(
-    serverPort: number = 3000,
-    serverHost: string = "0.0.0.0",
-    errorHandler?: ErrorHandler,
-  ) {
-    this._serverHost = serverHost;
-    this._serverPort = serverPort;
-    this._errorHandler = errorHandler;
+  constructor(options?: LapiOptions) {
+    if (options) {
+      const {
+        routes,
+        routers,
+        middlewares,
+        serverPort,
+        serverHost,
+        errorHandler,
+      } = options;
+      super({ routes, middlewares });
+
+      this.routers = routers || [];
+      this.serverPort = serverPort || 3000;
+      this.serverHost = serverHost || "0.0.0.0";
+      this.errorHandler = errorHandler;
+    } else {
+      super();
+      this.routers = [];
+      this.serverPort = 3000;
+      this.serverHost = "0.0.0.0";
+    }
   }
 
-  addRoute(requestMethod: RequestMethod, path: string, handler: RequestHandler) {
-    this._routes.push(
-      {
-        requestMethod: requestMethod,
-        requestPath: path,
-        requestHandler: handler,
-      },
-    );
+  private findRouteFromRouters(request: ServerRequest): Route | null {
+    for (const router of this.routers) {
+      const route = router.findRoute(request);
+
+      if (route) {
+        for (const middleware of router.middlewares) {
+          middleware(request);
+        }
+
+        return route;
+      }
+    }
+
+    return null;
   }
 
-  set errorHandler(errorHandler: ErrorHandler) {
-    this._errorHandler = errorHandler;
-  }
-
-  get serverHost() {
-    return this._serverHost;
-  }
-
-  get serverPort() {
-    return this._serverPort;
-  }
-
-  /**
-   * Finds the route from this.routes that has the same method and URL as the passed in request.
+  /** 
+   * Handles the given request. 
    * 
    * @throws {LapiError} if the route is not found.
    */
-  private findRoute({ method, url }: ServerRequest): Route {
-    const matches = this._routes.filter((route) =>
-      route.requestMethod === method &&
-      route.requestPath === url
-    );
-
-    if (matches.length === 0) {
-      throw new LapiError("Path not found", Status.NotFound, url);
-    }
-
-    return matches[0];
-  }
-
-  /** Handles the given request. */
-  private async handleRequest(request: ServerRequest) {
+  private async handleRequest(request: ServerRequest): Promise<void> {
     try {
-      const route = this.findRoute(request);
+      for (const middleware of this.middlewares) {
+        await middleware(request);
+      }
+
+      let route = this.findRoute(request);
+
+      if (!route) route = this.findRouteFromRouters(request);
+
+      if (!route) {
+        throw new LapiError("Path not found", Status.NotFound, request.url);
+      }
+
       await route.requestHandler(request);
     } catch (error) {
       if (this.errorHandler) {
@@ -122,7 +122,7 @@ export class Lapi {
   }
 
   /** Starts the HTTP server. */
-  async start(onStart?: () => Promise<void> | void) {
+  async start(onStart?: () => Promise<void> | void): Promise<void> {
     this.server = serve({ hostname: this.serverHost, port: this.serverPort });
 
     if (onStart) onStart();

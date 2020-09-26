@@ -19,7 +19,7 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
       - name: Cache Dependencies
-        run: deno cache deps.ts
+        run: make cache
       - name: Run Tests
         run: make test
       - name: Upload lib
@@ -43,6 +43,26 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
       - name: Cache Dependencies
-        run: deno cache deps.ts
+        run: make cache
       - name: Run Linter
         run: make lint
+  tag:
+    runs-on: ubuntu-latest
+    needs: [build, lint]
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 5
+          submodules: true
+      - name: Setup Deno
+        uses: denolib/setup-deno@c7d7968ad4a59c159a777f79adddad6872ee8d96
+        with:
+          deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
+      - name: Cache Dependencies
+        run: make cache
+      - name: Tag
+        run: make tag
+
+

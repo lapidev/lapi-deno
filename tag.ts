@@ -7,7 +7,7 @@ async function version(): Promise<void> {
 
   let status = await tag.status();
 
-  if (!status.success) return;
+  if (!status.success)  Deno.exit(1);
 
   const docs = Deno.run(
     { cmd: ["deno", "doc", "--json", "mod.ts"], stdout: "piped" },
@@ -15,7 +15,7 @@ async function version(): Promise<void> {
 
   status = await docs.status();
 
-  if (!status.success) return;
+  if (!status.success)  Deno.exit(1);
 
   const output = await docs.output();
 
@@ -26,7 +26,7 @@ async function version(): Promise<void> {
 
   status = await add.status();
 
-  if (!status.success) return;
+  if (!status.success) Deno.exit(1);
 
   const commit = Deno.run(
     { cmd: ["git", "commit", "-m", `docs: docs for version ${VERSION}`] },
@@ -34,13 +34,13 @@ async function version(): Promise<void> {
 
   status = await commit.status();
 
-  if (!status.success) return;
+  if (!status.success)  Deno.exit(1);
 
   const push = Deno.run({ cmd: ["git", "push", "--tags"] });
 
   status = await push.status();
 
-  if (!status.success) return;
+  if (!status.success)  Deno.exit(1);
 }
 
 await version();

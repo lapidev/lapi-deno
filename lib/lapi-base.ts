@@ -60,32 +60,32 @@ export class LapiBase {
   post(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.POST, path, handler);
   }
-  
+
   /** Adds a `GET` route. */
   get(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.GET, path, handler);
   }
-  
+
   /** Adds a `PUT` route. */
   put(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.PUT, path, handler);
   }
-  
+
   /** Adds a `DELETE` route. */
   delete(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.DELETE, path, handler);
   }
-  
+
   /** Adds an `OPTIONS` route. */
   options(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.OPTIONS, path, handler);
   }
-  
+
   /** Adds a `HEAD` route. */
   head(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.HEAD, path, handler);
   }
-  
+
   /** Adds a `PATCH` route. */
   patch(path: string, handler: RequestHandler): void {
     this.addRoute(RequestMethod.PATCH, path, handler);

@@ -1,13 +1,13 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
-import { Lapi } from "../lib/mod.ts";
+import { Lapi, RequestMethod } from "../mod.ts";
 
-const app = new Lapi();
+const lapi = new Lapi();
 
-app.addRoute(RequestMethod.GET, "/hello", (req) => {
+lapi.addRoute(RequestMethod.GET, "/hello", (req) => {
   req.respond({ body: "Hello!" });
 });
 
-await app.start(() => {
-  console.log(`Server started on http://${app.serverHost}:${app.serverPort}`);
+await lapi.start(() => {
+  console.log(`Server started on http://${lapi.serverHost}:${lapi.serverPort}`);
 });

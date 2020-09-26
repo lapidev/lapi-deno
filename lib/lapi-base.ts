@@ -12,6 +12,8 @@ export enum RequestMethod {
   OPTIONS = "OPTIONS",
   DELETE = "DELETE",
   PUT = "PUT",
+  HEAD = "HEAD",
+  PATCH = "PATCH",
 }
 
 export type Route = {
@@ -50,6 +52,34 @@ export class LapiBase {
 
   addMiddleware(middleware: Middleware): void {
     this.middlewares.push(middleware);
+  }
+
+  post(path: string, handler: RequestHandler): void {
+    this.addRoute(RequestMethod.POST, path, handler);
+  }
+
+  get(path: string, handler: RequestHandler): void {
+    this.addRoute(RequestMethod.GET, path, handler);
+  }
+
+  put(path: string, handler: RequestHandler): void {
+    this.addRoute(RequestMethod.PUT, path, handler);
+  }
+
+  delete(path: string, handler: RequestHandler): void {
+    this.addRoute(RequestMethod.DELETE, path, handler);
+  }
+
+  options(path: string, handler: RequestHandler): void {
+    this.addRoute(RequestMethod.OPTIONS, path, handler);
+  }
+
+  head(path: string, handler: RequestHandler): void {
+    this.addRoute(RequestMethod.HEAD, path, handler);
+  }
+
+  patch(path: string, handler: RequestHandler): void {
+    this.addRoute(RequestMethod.PATCH, path, handler);
   }
 
   findRoute({ method, url }: ServerRequest): Route | null {

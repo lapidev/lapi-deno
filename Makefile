@@ -30,6 +30,9 @@ doc:
 tag:
 	@$(DENO) run --allow-run --allow-write scripts/tag.ts
 
+coverage:
+	@$(DENO) run --allow-run --allow-read scripts/coverage.ts
+
 ci: cache lint test doc
 
 %:

@@ -1,6 +1,7 @@
 name: CI
 
 on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
@@ -21,7 +22,7 @@ jobs:
       - name: Cache Dependencies
         run: make cache
       - name: Run Tests
-        run: make test
+        run: make coverage
       - name: Upload lib
         uses: actions/upload-artifact@v2.1.4
         with:

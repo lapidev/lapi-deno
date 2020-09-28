@@ -5,6 +5,6 @@ export const VERSION = "0.0.3";
 
 export * from "./lib/lapi.ts";
 export * from "./lib/lapi_error.ts";
-export * from "./lib/lapi-router.ts";
-export * from "./lib/lapi-base.ts";
+export * from "./lib/lapi_router.ts";
+export * from "./lib/lapi_base.ts";
 

@@ -7,8 +7,8 @@ import {
   Server,
   Status,
 } from "../deps.ts";
-import { LapiBase, Middleware, Route } from "./lapi-base.ts";
-import type { LapiRouter } from "./lapi-router.ts";
+import { LapiBase, Middleware, Route } from "./lapi_base.ts";
+import type { LapiRouter } from "./lapi_router.ts";
 import { LapiError } from "./lapi_error.ts";
 
 export type ErrorHandler = (

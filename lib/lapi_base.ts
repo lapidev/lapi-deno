@@ -91,6 +91,12 @@ export class LapiBase {
     this.addRoute(RequestMethod.PATCH, path, handler);
   }
 
+  async runMiddleware(request: ServerRequest): Promise<void> {
+    for (const middleware of this.middlewares) {
+      await middleware(request);
+    }
+  }
+
   /** Loops through the routes to find the handler for the given request.  */
   findRoute({ method, url }: ServerRequest): Route | null {
     const matches = this.routes.filter((route) =>

@@ -6,3 +6,4 @@ export * from "./lib/lapi_error.ts";
 export * from "./lib/lapi_router.ts";
 export * from "./lib/lapi_base.ts";
 
+export { ServerRequest } from "./deps.ts";

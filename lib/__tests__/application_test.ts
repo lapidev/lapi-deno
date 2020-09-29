@@ -2,26 +2,26 @@
 
 import { assertEquals, assert } from "../../deps_test.ts";
 import type { ServerRequest } from "../../deps.ts";
-import { Lapi } from "../lapi.ts";
+import { Application } from "../application.ts";
 import { testName } from "./utils_test.ts";
-import { LapiRouter } from "../lapi_router.ts";
+import { Router } from "../router.ts";
 import { RequestMethod } from "../lapi_base.ts";
 
 Deno.test({
-  name: testName("Lapi", "constructor", "default values"),
+  name: testName("Application", "constructor", "default values"),
   fn: () => {
-    const lapi = new Lapi();
+    const application = new Application();
 
-    assertEquals(lapi.serverPort, 3000);
-    assertEquals(lapi.serverHost, "0.0.0.0");
-    assert(!lapi.errorHandler);
+    assertEquals(application.serverPort, 3000);
+    assertEquals(application.serverHost, "0.0.0.0");
+    assert(!application.errorHandler);
   },
 });
 
 Deno.test({
-  name: testName("Lapi", "constructor", "passed in values"),
+  name: testName("Application", "constructor", "passed in values"),
   fn: () => {
-    const lapi = new Lapi(
+    const application = new Application(
       {
         serverPort: 4000,
         serverHost: "1.2.3.4",
@@ -29,33 +29,33 @@ Deno.test({
       },
     );
 
-    assertEquals(lapi.serverPort, 4000);
-    assertEquals(lapi.serverHost, "1.2.3.4");
-    assert(lapi.errorHandler);
+    assertEquals(application.serverPort, 4000);
+    assertEquals(application.serverHost, "1.2.3.4");
+    assert(application.errorHandler);
   },
 });
 
 Deno.test({
-  name: testName("Lapi", "findRouteFromRouters", "finds router"),
+  name: testName("Application", "findRouteFromRouters", "finds router"),
   fn: async () => {
-    const lapi = new Lapi({ serverPort: 4000, serverHost: "1.2.3.4" });
+    const application = new Application({ serverPort: 4000, serverHost: "1.2.3.4" });
 
-    const routerOne = new LapiRouter();
+    const routerOne = new Router();
 
     routerOne.post("/", () => {});
     routerOne.post("/path1", () => {});
     routerOne.get("/path1", () => {});
 
-    const routerTwo = new LapiRouter();
+    const routerTwo = new Router();
 
     routerTwo.post("/2", () => {});
     routerTwo.post("/path2", () => {});
     routerTwo.get("/path2", () => {});
 
-    lapi.addRouter(routerOne);
-    lapi.addRouter(routerTwo);
+    application.addRouter(routerOne);
+    application.addRouter(routerTwo);
 
-    const route = await lapi.findRouteFromRouters(
+    const route = await application.findRouteFromRouters(
       { url: "/path1", method: RequestMethod.POST } as unknown as ServerRequest,
     );
 

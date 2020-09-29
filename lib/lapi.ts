@@ -59,7 +59,12 @@ export class Lapi extends LapiBase {
     }
   }
 
-  /** Loops through they routers to find the handler for the given request. */
+  /** Adds the given router. */
+  addRouter(router: LapiRouter): void {
+    this.routers.push(router);
+  }
+
+  /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
   async findRouteFromRouters(request: ServerRequest): Promise<Route | null> {
     for (const router of this.routers) {
       const route = router.findRoute(request);
@@ -73,7 +78,7 @@ export class Lapi extends LapiBase {
     return null;
   }
 
-  /** 
+  /**
    * Handles the given request. 
    * 
    * @throws {LapiError} if the route is not found.

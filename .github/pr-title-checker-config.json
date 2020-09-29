@@ -1,0 +1,9 @@
+{
+  "LABEL": {
+    "name": "title needs formatting",
+    "color": "EEEEEE"
+  },
+  "CHECKS": {
+    "regexp": "(fix|feat|chore|perf|revert|docs|ci|build|test)\\(core|example|release\\)?!?: [\\w ]+"
+  }
+}

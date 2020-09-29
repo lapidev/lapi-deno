@@ -13,9 +13,6 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 5
-          submodules: true
       - name: Setup Deno
         uses: denolib/setup-deno@c7d7968ad4a59c159a777f79adddad6872ee8d96
         with:
@@ -34,9 +31,6 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 5
-          submodules: true
       - name: Setup Deno
         uses: denolib/setup-deno@c7d7968ad4a59c159a777f79adddad6872ee8d96
         with:
@@ -79,6 +73,8 @@ jobs:
     needs: [test, lint]
     if: github.ref == 'refs/heads/master'
     steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
       - name: Setup Deno
         uses: denolib/setup-deno@c7d7968ad4a59c159a777f79adddad6872ee8d96
         with:

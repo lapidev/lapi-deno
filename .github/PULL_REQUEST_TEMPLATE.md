@@ -1,12 +1,10 @@
+<!-- Your PR title should follow the conventional commit message format -->
+
 **Description**
 
 <!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
 
 Fixes # (issue)
-
-**Type of change**
-
-<!-- Corresponds to the type used in conventional commits. Please include the type in brackets in the beginning of the title. -->
 
 **How to test?**
 

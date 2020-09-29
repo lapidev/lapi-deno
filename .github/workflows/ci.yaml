@@ -55,6 +55,14 @@ jobs:
         languages: typescript
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+  title:
+    name: Valid Title
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: thehanimo/pr-title-checker@v1.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # tag:
   #   runs-on: ubuntu-latest
   #   needs: [test, lint]

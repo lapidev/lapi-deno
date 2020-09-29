@@ -1,18 +1,18 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
-import { Lapi, RequestMethod, ServerRequest } from "../mod.ts";
+import { Application, RequestMethod, ServerRequest } from "../mod.ts";
 import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
 
-const lapi = new Lapi();
+const application = new Application();
 
-lapi.get("/hello", (req): void => {
+application.get("/hello", (req): void => {
   req.respond({ body: "Hello!" });
 });
 
 if (Deno.env.get("DENO_ENV") !== "TEST") {
-  await lapi.start((): void => {
+  await application.start((): void => {
     console.log(
-      `Server started on http://${lapi.serverHost}:${lapi.serverPort}`,
+      `Server started on http://${application.serverHost}:${application.serverPort}`,
     );
   });
 }
@@ -28,7 +28,7 @@ Deno.test('/hello should return { body: "Hello!" }', async () => {
     },
   } as unknown as ServerRequest;
 
-  await lapi.handleRequest(request);
+  await application.handleRequest(request);
 
   assertEquals(responses[0], { body: "Hello!" });
 });

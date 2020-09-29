@@ -1,9 +1,9 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi */
 
-export * from "./lib/lapi.ts";
+export * from "./lib/application.ts";
 export * from "./lib/lapi_error.ts";
-export * from "./lib/lapi_router.ts";
+export * from "./lib/router.ts";
 export * from "./lib/lapi_base.ts";
 
 export { ServerRequest } from "./deps.ts";

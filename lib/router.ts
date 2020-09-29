@@ -3,5 +3,5 @@
 
 import { LapiBase } from "./lapi_base.ts";
 
-export class LapiRouter extends LapiBase {
+export class Router extends LapiBase {
 }

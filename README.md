@@ -10,28 +10,28 @@ I started this project because I wanted a very easy to use framework to build AP
 
 ## Getting Started
 
-To create a basic API, you first need to import `Lapi` into your program. This can be done with the following import statment:
+To create a basic API, you first need to import `Application` into your program. This can be done with the following import statment:
 
 ```typescript
-import { Lapi } from "https://deno.land/x/lapi/mod.ts";
+import { Application } from "https://deno.land/x/application/mod.ts";
 ```
 
-Once you have `Lapi` imported, you can create an API by calling the constructor:
+Once you have `Application` imported, you can create an API by calling the constructor:
 
 ```typescript
-import { Lapi } from "https://deno.land/x/lapi/mod.ts";
+import { Application } from "https://deno.land/x/application/mod.ts";
 
-const lapi = new Lapi();
+const application = new Application();
 ```
 
-You can then add routes by calling `lapi.addRoute`:
+You can then add routes by calling `application.addRoute`:
 
 ```typescript
-import { Lapi } from "https://deno.land/x/lapi/mod.ts";
+import { Application } from "https://deno.land/x/application/mod.ts";
 
-const lapi = new Lapi();
+const application = new Application();
 
-lapi.get("/hello", (req): void => {
+application.get("/hello", (req): void => {
   req.respond({ body: "Hello!" });
 });
 ```
@@ -39,39 +39,39 @@ lapi.get("/hello", (req): void => {
 Now that you have a route created, you can start the API:
 
 ```typescript
-import { Lapi } from "https://deno.land/x/lapi/mod.ts";
+import { Application } from "https://deno.land/x/application/mod.ts";
 
-const lapi = new Lapi();
+const application = new Application();
 
-lapi.get("/hello", (req): void => {
+application.get("/hello", (req): void => {
   req.respond({ body: "Hello!" });
 });
 
-await lapi.start((): void => {
-  console.log(`Server started on http://${lapi.serverHost}:${lapi.serverPort}`);
+await application.start((): void => {
+  console.log(`Server started on http://${application.serverHost}:${application.serverPort}`);
 });
 ```
 
-The full example [can be found here](./examples/basic-api.ts)
+The full example [can be found here](./examples/basic_api.ts)
 
 ## Testing
 
-There is an exposed method called `handleRequest` on the `Lapi` class that can be used to test your API. This method should never be called in production but is public to make testing very easy. `handleRequest` is an async function that returns `Promise<void>` and it takes in one parameter which is of type `ServerRequest`. The following is an example of how we could test the API created above:
+There is an exposed method called `handleRequest` on the `Application` class that can be used to test your API. This method should never be called in production but is public to make testing very easy. `handleRequest` is an async function that returns `Promise<void>` and it takes in one parameter which is of type `ServerRequest`. The following is an example of how we could test the API created above:
 
 ```typescript
-import { Lapi, RequestMethod, ServerRequest } from "https://deno.land/x/lapi/mod.ts";
+import { Application, RequestMethod, ServerRequest } from "https://deno.land/x/application/mod.ts";
 import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
 
-const lapi = new Lapi();
+const application = new Application();
 
-lapi.get("/hello", (req): void => {
+application.get("/hello", (req): void => {
   req.respond({ body: "Hello!" });
 });
 
 if (Deno.env.get("DENO_ENV") !== "TEST") {
-  await lapi.start((): void => {
+  await application.start((): void => {
     console.log(
-      `Server started on http://${lapi.serverHost}:${lapi.serverPort}`,
+      `Server started on http://${application.serverHost}:${application.serverPort}`,
     );
   });
 }
@@ -87,7 +87,7 @@ Deno.test('/hello should return { body: "Hello!" }', async () => {
     },
   } as unknown as ServerRequest;
 
-  await lapi.handleRequest(request);
+  await application.handleRequest(request);
 
   assertEquals(responses[0], { body: "Hello!" });
 });

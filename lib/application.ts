@@ -8,7 +8,7 @@ import {
   Status,
 } from "../deps.ts";
 import { LapiBase, Middleware, Route } from "./lapi_base.ts";
-import type { LapiRouter } from "./lapi_router.ts";
+import type { Router } from "./router.ts";
 import { LapiError } from "./lapi_error.ts";
 
 export type ErrorHandler = (
@@ -16,18 +16,18 @@ export type ErrorHandler = (
   error: Error,
 ) => Promise<void> | void;
 
-interface LapiOptions {
+interface ApplicationOptions {
   serverPort?: number;
   serverHost?: string;
   errorHandler?: ErrorHandler;
-  routers?: LapiRouter[];
+  routers?: Router[];
   routes?: Route[];
   middlewares?: Middleware[];
 }
 
 /** Class used to create an API. This handles starting the server and sending requests to the correct location. */
-export class Lapi extends LapiBase {
-  routers: LapiRouter[];
+export class Application extends LapiBase {
+  routers: Router[];
   serverPort: number;
   serverHost: string;
   errorHandler?: ErrorHandler;
@@ -35,7 +35,7 @@ export class Lapi extends LapiBase {
   private server?: Server;
 
   /** Creates a Lapi. */
-  constructor(options?: LapiOptions) {
+  constructor(options?: ApplicationOptions) {
     if (options) {
       const {
         routes,
@@ -60,7 +60,7 @@ export class Lapi extends LapiBase {
   }
 
   /** Adds the given router. */
-  addRouter(router: LapiRouter): void {
+  addRouter(router: Router): void {
     this.routers.push(router);
   }
 

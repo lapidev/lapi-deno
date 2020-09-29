@@ -4,6 +4,6 @@
     "color": "EEEEEE"
   },
   "CHECKS": {
-    "regexp": "(fix|feat|chore|perf|revert|docs|ci|build|test)\\(core|example|release\\)?!?: [\\w ]+"
+    "regexp": "(fix|feat|chore|perf|revert|docs|ci|build|test)(\\(core|example|release\\))?!?: [\\w ]+"
   }
 }

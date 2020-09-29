@@ -1,5 +1,5 @@
 import type { ServerRequest } from "../../deps.ts";
-import { assertEquals, assert } from "../../deps_test.ts";
+import { assertEquals, assert, spy, Spy } from "../../deps_test.ts";
 import { LapiBase, RequestMethod } from "../lapi_base.ts";
 import { testName } from "./utils_test.ts";
 
@@ -205,5 +205,29 @@ Deno.test({
     );
 
     assert(!route);
+  },
+});
+
+Deno.test({
+  name: testName(
+    "LapiBase",
+    "runMiddleware",
+    "runs middleware",
+  ),
+  fn: async () => {
+    const lapiBase = new LapiBase();
+    const middlewares: Spy<void>[] = [spy(), spy(), spy()];
+
+    lapiBase.addMiddleware(middlewares[0]);
+    lapiBase.addMiddleware(middlewares[1]);
+    lapiBase.addMiddleware(middlewares[2]);
+
+    const mockRequest = { request: "mock" } as unknown as ServerRequest;
+
+    await lapiBase.runMiddleware(mockRequest);
+
+    assertEquals(middlewares[0].calls, [{ args: [mockRequest] }]);
+    assertEquals(middlewares[1].calls, [{ args: [mockRequest] }]);
+    assertEquals(middlewares[2].calls, [{ args: [mockRequest] }]);
   },
 });

@@ -59,16 +59,18 @@ export class Lapi extends LapiBase {
     }
   }
 
-  /** Loops through they routers to find the handler for the given request. */
-  private findRouteFromRouters(request: ServerRequest): Route | null {
+  /** Adds the given router. */
+  addRouter(router: LapiRouter): void {
+    this.routers.push(router);
+  }
+
+  /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
+  async findRouteFromRouters(request: ServerRequest): Promise<Route | null> {
     for (const router of this.routers) {
       const route = router.findRoute(request);
 
       if (route) {
-        for (const middleware of router.middlewares) {
-          middleware(request);
-        }
-
+        await router.runMiddleware(request);
         return route;
       }
     }
@@ -76,20 +78,18 @@ export class Lapi extends LapiBase {
     return null;
   }
 
-  /** 
+  /**
    * Handles the given request. 
    * 
    * @throws {LapiError} if the route is not found.
    */
-  private async handleRequest(request: ServerRequest): Promise<void> {
+  async handleRequest(request: ServerRequest): Promise<void> {
     try {
-      for (const middleware of this.middlewares) {
-        await middleware(request);
-      }
+      await this.runMiddleware(request);
 
       let route = this.findRoute(request);
 
-      if (!route) route = this.findRouteFromRouters(request);
+      if (!route) route = await this.findRouteFromRouters(request);
 
       if (!route) {
         throw new LapiError("Path not found", Status.NotFound, request.url);

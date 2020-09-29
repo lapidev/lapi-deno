@@ -81,6 +81,10 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      - name: Setup Deno
+        uses: denolib/setup-deno@c7d7968ad4a59c159a777f79adddad6872ee8d96
+        with:
+          deno-version: 1.4
       - name: Generate API Docs
         run: make docs
       - name: Conventional Changelog Action

@@ -38,7 +38,9 @@ Deno.test({
 Deno.test({
   name: testName("Application", "findRouteFromRouters", "finds router"),
   fn: async () => {
-    const application = new Application({ serverPort: 4000, serverHost: "1.2.3.4" });
+    const application = new Application(
+      { serverPort: 4000, serverHost: "1.2.3.4" },
+    );
 
     const routerOne = new Router();
 

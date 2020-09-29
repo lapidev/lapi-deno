@@ -98,4 +98,5 @@ jobs:
           tag-prefix: ''
           version-file: ./project.yaml
           version-path: version
+          git-pull-method: "--ff-only"
 

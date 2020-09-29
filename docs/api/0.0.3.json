@@ -1,44 +1,9 @@
 [
   {
-    "kind": "class",
-    "name": "LapiRouter",
-    "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-router.ts",
-      "line": 6,
-      "col": 0
-    },
-    "jsDoc": null,
-    "classDef": {
-      "isAbstract": false,
-      "constructors": [],
-      "properties": [],
-      "indexSignatures": [],
-      "methods": [],
-      "extends": "LapiBase",
-      "implements": [],
-      "typeParams": [],
-      "superTypeParams": []
-    }
-  },
-  {
-    "kind": "import",
-    "name": "LapiBase",
-    "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-router.ts",
-      "line": 4,
-      "col": 0
-    },
-    "jsDoc": null,
-    "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
-      "imported": "LapiBase"
-    }
-  },
-  {
     "kind": "typeAlias",
     "name": "ErrorHandler",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 14,
       "col": 0
     },
@@ -112,7 +77,7 @@
     "kind": "class",
     "name": "Lapi",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 29,
       "col": 0
     },
@@ -140,7 +105,7 @@
             }
           ],
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 38,
             "col": 2
           }
@@ -168,7 +133,7 @@
           "isStatic": false,
           "name": "routers",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 30,
             "col": 2
           }
@@ -187,7 +152,7 @@
           "isStatic": false,
           "name": "serverPort",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 31,
             "col": 2
           }
@@ -206,7 +171,7 @@
           "isStatic": false,
           "name": "serverHost",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 32,
             "col": 2
           }
@@ -228,7 +193,7 @@
           "isStatic": false,
           "name": "errorHandler",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 33,
             "col": 2
           }
@@ -250,7 +215,7 @@
           "isStatic": false,
           "name": "server",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 35,
             "col": 2
           }
@@ -306,7 +271,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 63,
             "col": 2
           }
@@ -354,7 +319,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 84,
             "col": 2
           }
@@ -428,7 +393,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
             "line": 126,
             "col": 2
           }
@@ -444,13 +409,13 @@
     "kind": "import",
     "name": "ServerRequest",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 4,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/deps.ts",
+      "src": "file:///home/codespace/workspace/lapi/deps.ts",
       "imported": "ServerRequest"
     }
   },
@@ -458,13 +423,13 @@
     "kind": "import",
     "name": "serve",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 4,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/deps.ts",
+      "src": "file:///home/codespace/workspace/lapi/deps.ts",
       "imported": "serve"
     }
   },
@@ -472,13 +437,13 @@
     "kind": "import",
     "name": "Server",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 4,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/deps.ts",
+      "src": "file:///home/codespace/workspace/lapi/deps.ts",
       "imported": "Server"
     }
   },
@@ -486,13 +451,13 @@
     "kind": "import",
     "name": "Status",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 4,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/deps.ts",
+      "src": "file:///home/codespace/workspace/lapi/deps.ts",
       "imported": "Status"
     }
   },
@@ -500,13 +465,13 @@
     "kind": "import",
     "name": "LapiBase",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 10,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "src": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "imported": "LapiBase"
     }
   },
@@ -514,13 +479,13 @@
     "kind": "import",
     "name": "Middleware",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 10,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "src": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "imported": "Middleware"
     }
   },
@@ -528,13 +493,13 @@
     "kind": "import",
     "name": "Route",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 10,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "src": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "imported": "Route"
     }
   },
@@ -542,13 +507,13 @@
     "kind": "import",
     "name": "LapiRouter",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 11,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/lib/lapi-router.ts",
+      "src": "file:///home/codespace/workspace/lapi/lib/lapi_router.ts",
       "imported": "LapiRouter"
     }
   },
@@ -556,13 +521,13 @@
     "kind": "import",
     "name": "LapiError",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi.ts",
       "line": 12,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/lib/lapi_error.ts",
+      "src": "file:///home/codespace/workspace/lapi/lib/lapi_error.ts",
       "imported": "LapiError"
     }
   },
@@ -570,7 +535,7 @@
     "kind": "typeAlias",
     "name": "RequestHandler",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "line": 6,
       "col": 0
     },
@@ -631,7 +596,7 @@
     "kind": "typeAlias",
     "name": "Middleware",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "line": 7,
       "col": 0
     },
@@ -692,7 +657,7 @@
     "kind": "enum",
     "name": "RequestMethod",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "line": 9,
       "col": 0
     },
@@ -727,7 +692,7 @@
     "kind": "typeAlias",
     "name": "Route",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "line": 19,
       "col": 0
     },
@@ -793,7 +758,7 @@
     "kind": "interface",
     "name": "LapiBaseOptions",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "line": 25,
       "col": 0
     },
@@ -805,7 +770,7 @@
         {
           "name": "middlewares",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 26,
             "col": 2
           },
@@ -830,7 +795,7 @@
         {
           "name": "routes",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 27,
             "col": 2
           },
@@ -862,7 +827,7 @@
     "kind": "class",
     "name": "LapiBase",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "line": 30,
       "col": 0
     },
@@ -890,7 +855,7 @@
             }
           ],
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 34,
             "col": 2
           }
@@ -918,7 +883,7 @@
           "isStatic": false,
           "name": "middlewares",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 31,
             "col": 2
           }
@@ -944,7 +909,7 @@
           "isStatic": false,
           "name": "routes",
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 32,
             "col": 2
           }
@@ -1009,7 +974,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 40,
             "col": 2
           }
@@ -1048,7 +1013,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 55,
             "col": 2
           }
@@ -1097,7 +1062,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 60,
             "col": 2
           }
@@ -1146,7 +1111,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 65,
             "col": 2
           }
@@ -1195,7 +1160,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 70,
             "col": 2
           }
@@ -1244,7 +1209,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 75,
             "col": 2
           }
@@ -1293,7 +1258,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 80,
             "col": 2
           }
@@ -1342,7 +1307,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 85,
             "col": 2
           }
@@ -1391,7 +1356,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 90,
             "col": 2
           }
@@ -1455,7 +1420,7 @@
             "typeParams": []
           },
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
             "line": 95,
             "col": 2
           }
@@ -1471,13 +1436,13 @@
     "kind": "import",
     "name": "ServerRequest",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi-base.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
       "line": 4,
       "col": 0
     },
     "jsDoc": null,
     "importDef": {
-      "src": "file:///home/runner/work/lapi/lapi/deps.ts",
+      "src": "file:///home/codespace/workspace/lapi/deps.ts",
       "imported": "ServerRequest"
     }
   },
@@ -1485,7 +1450,7 @@
     "kind": "class",
     "name": "LapiError",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/lib/lapi_error.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_error.ts",
       "line": 4,
       "col": 0
     },
@@ -1543,7 +1508,7 @@
             }
           ],
           "location": {
-            "filename": "file:///home/runner/work/lapi/lapi/lib/lapi_error.ts",
+            "filename": "file:///home/codespace/workspace/lapi/lib/lapi_error.ts",
             "line": 5,
             "col": 2
           }
@@ -1563,17 +1528,38 @@
     }
   },
   {
-    "kind": "variable",
-    "name": "VERSION",
+    "kind": "class",
+    "name": "LapiRouter",
     "location": {
-      "filename": "file:///home/runner/work/lapi/lapi/mod.ts",
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_router.ts",
+      "line": 6,
+      "col": 0
+    },
+    "jsDoc": null,
+    "classDef": {
+      "isAbstract": false,
+      "constructors": [],
+      "properties": [],
+      "indexSignatures": [],
+      "methods": [],
+      "extends": "LapiBase",
+      "implements": [],
+      "typeParams": [],
+      "superTypeParams": []
+    }
+  },
+  {
+    "kind": "import",
+    "name": "LapiBase",
+    "location": {
+      "filename": "file:///home/codespace/workspace/lapi/lib/lapi_router.ts",
       "line": 4,
       "col": 0
     },
     "jsDoc": null,
-    "variableDef": {
-      "tsType": null,
-      "kind": "const"
+    "importDef": {
+      "src": "file:///home/codespace/workspace/lapi/lib/lapi_base.ts",
+      "imported": "LapiBase"
     }
   }
 ]

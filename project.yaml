@@ -3,3 +3,4 @@ scopes:
   - core
   - example
   - release
+  - scripts

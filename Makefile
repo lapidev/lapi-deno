@@ -1,4 +1,4 @@
-.PHONY: default test format lint run ci cache tag
+.PHONY: default test format lint run ci cache docs coverage
 
 IMPORT_MAP = import_map.json
 DENO = deno
@@ -27,8 +27,8 @@ run:
 doc:
 	@$(DENO) doc --json $(MODULE) > docs.json
 
-tag:
-	@$(DENO) run --allow-run --allow-write scripts/tag.ts
+docs:
+	@$(DENO) run --allow-run --allow-write --allow-read scripts/docs.ts
 
 coverage:
 	@$(DENO) run --allow-run --allow-read scripts/coverage.ts

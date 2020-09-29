@@ -58,6 +58,7 @@ jobs:
   title:
     name: Valid Title
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: thehanimo/pr-title-checker@v1.1
         with:

@@ -5,7 +5,7 @@ import { LapiRouter } from "../lapi_router.ts";
 import { testName } from "./utils_test.ts";
 
 Deno.test({
-  name: testName("LapiRouter", "Constructor", ""),
+  name: testName("LapiRouter", "constructor", ""),
   fn: () => {
     const lapiRouter = new LapiRouter();
 

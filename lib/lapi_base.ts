@@ -16,11 +16,11 @@ export enum RequestMethod {
   PATCH = "PATCH",
 }
 
-export type Route = {
+export interface Route {
   requestHandler: RequestHandler;
   requestMethod: RequestMethod;
   requestPath: string;
-};
+}
 
 export interface LapiBaseOptions {
   middlewares?: Middleware[];

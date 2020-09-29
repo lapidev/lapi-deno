@@ -5,7 +5,7 @@ import { LapiError } from "../lapi_error.ts";
 import { testName } from "./utils_test.ts";
 
 Deno.test({
-  name: testName("LapiError", "Constructor", "No Body"),
+  name: testName("LapiError", "constructor", "no body"),
   fn: () => {
     const lapiError = new LapiError(
       "This is a for LapiError",
@@ -23,7 +23,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: testName("LapiError", "Constructor", "Body"),
+  name: testName("LapiError", "constructor", "body"),
   fn: () => {
     const lapiError = new LapiError(
       "This is a for LapiError",

@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
     strategy:
       matrix:
-        deno: ["v1.x", "nightly"]
+        deno: ["v1.x"] # , "nightly"]
         os: [macOS-latest, windows-latest, ubuntu-latest]
     steps:
       - name: Setup repo
@@ -22,7 +22,7 @@ jobs:
       - name: Cache Dependencies
         run: make cache
       - name: Run Tests
-        run: make coverage
+        run: make test
       - name: Upload lib
         uses: actions/upload-artifact@v2.1.4
         with:

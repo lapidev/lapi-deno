@@ -6,7 +6,7 @@ import { Lapi } from "../lapi.ts";
 import { testName } from "./utils_test.ts";
 
 Deno.test({
-  name: testName("Lapi", "Constructor", "Default Values"),
+  name: testName("Lapi", "constructor", "default values"),
   fn: () => {
     const lapi = new Lapi();
 
@@ -17,7 +17,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: testName("Lapi", "Constructor", "Passed in Values"),
+  name: testName("Lapi", "constructor", "passed in values"),
   fn: () => {
     const lapi = new Lapi(
       {

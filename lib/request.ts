@@ -3,24 +3,29 @@
 
 import type { ServerRequest, Response } from "../deps.ts";
 
-export type QueryStrings = any;
-
 /** Class that stores request information and sends responses. */
 export class Request {
-  url: URL;
+  url: Readonly<string>;
   status = 200;
   headers = new Headers();
   body?: string;
 
   /** Creates a Request. */
   constructor(private serverRequest: ServerRequest) {
-    this.url = new URL(`http://fakeurl${serverRequest.url}`);
+    this.url = serverRequest.url;
   }
 
   /** Sets the body to the passed in object and the content type to application/json. */
-  json(body: any): Request {
+  json(body: Record<string, unknown>): Request {
     this.body = JSON.stringify(body);
-    this.headers.set("Content-type", "application/json");
+    this.setHeader("Content-type", "application/json");
+    return this;
+  }
+
+  /** Sets the body to the passed in string and the content type to application/xml. */
+  xml(body: string): Request {
+    this.body = body;
+    this.setHeader("Content-type", "application/xml");
     return this;
   }
 
@@ -43,7 +48,17 @@ export class Request {
     return this.headers.get(name);
   }
 
+  /** Sets the status of the response. */
+  setStatus(status: number): Request {
+    this.status = status;
+    return this;
+  }
+
   get method(): string {
     return this.serverRequest.method;
+  }
+
+  get queries(): URLSearchParams {
+    return new URL(`http://fakeurl${this.url}`).searchParams;
   }
 }

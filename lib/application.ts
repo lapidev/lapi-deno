@@ -34,25 +34,23 @@ export class Application extends LapiBase {
 
   private server?: Server;
 
-  /** Creates an Application. */
+  /** Constructs an Application. */
   constructor(options?: ApplicationOptions) {
+    super(options);
+
     if (options) {
       const {
-        routes,
         routers,
-        middlewares,
         serverPort,
         serverHost,
         errorHandler,
       } = options;
-      super({ routes, middlewares });
 
       this.routers = routers || [];
       this.serverPort = serverPort || 3000;
       this.serverHost = serverHost || "0.0.0.0";
       this.errorHandler = errorHandler;
     } else {
-      super();
       this.routers = [];
       this.serverPort = 3000;
       this.serverHost = "0.0.0.0";
@@ -95,7 +93,7 @@ export class Application extends LapiBase {
         throw new LapiError(
           "Path not found",
           Status.NotFound,
-          request.url.pathname,
+          request.url,
         );
       }
 

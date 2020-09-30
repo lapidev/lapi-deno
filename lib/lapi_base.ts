@@ -1,10 +1,10 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
-/* @module lapi/lapi-base */
+/* @module lapi/lapi_base */
 
-import type { ServerRequest } from "../deps.ts";
+import type { Request } from "./request.ts";
 
-export type RequestHandler = (req: ServerRequest) => Promise<void> | void;
-export type Middleware = (req: ServerRequest) => Promise<void> | void;
+export type RequestHandler = (req: Request) => Promise<void> | void;
+export type Middleware = (req: Request) => Promise<void> | void;
 
 export enum RequestMethod {
   POST = "POST",
@@ -91,17 +91,17 @@ export class LapiBase {
     this.addRoute(RequestMethod.PATCH, path, handler);
   }
 
-  async runMiddleware(request: ServerRequest): Promise<void> {
+  async runMiddleware(request: Request): Promise<void> {
     for (const middleware of this.middlewares) {
       await middleware(request);
     }
   }
 
   /** Loops through the routes to find the handler for the given request.  */
-  findRoute({ method, url }: ServerRequest): Route | null {
+  findRoute({ method, url }: Request): Route | null {
     const matches = this.routes.filter((route) =>
       route.requestMethod === method &&
-      route.requestPath === url
+      route.requestPath === url.pathname
     );
 
     if (matches.length === 0) {

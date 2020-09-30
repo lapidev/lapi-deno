@@ -6,3 +6,5 @@ export {
   Server,
   Status,
 } from "https://deno.land/std@0.70.0/http/mod.ts";
+
+export type { Response } from "https://deno.land/std@0.70.0/http/mod.ts";

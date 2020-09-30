@@ -6,6 +6,7 @@ import { Application } from "../application.ts";
 import { testName } from "./utils_test.ts";
 import { Router } from "../router.ts";
 import { RequestMethod } from "../lapi_base.ts";
+import { Request } from "../request.ts";
 
 Deno.test({
   name: testName("Application", "constructor", "default values"),
@@ -25,7 +26,7 @@ Deno.test({
       {
         serverPort: 4000,
         serverHost: "1.2.3.4",
-        errorHandler: (request: ServerRequest, error: Error) => {},
+        errorHandler: (request: Request, error: Error) => {},
       },
     );
 
@@ -57,8 +58,13 @@ Deno.test({
     application.addRouter(routerOne);
     application.addRouter(routerTwo);
 
+    const serverRequest = {
+      url: "/path1",
+      method: RequestMethod.POST,
+    } as unknown as ServerRequest;
+
     const route = await application.findRouteFromRouters(
-      { url: "/path1", method: RequestMethod.POST } as unknown as ServerRequest,
+      new Request(serverRequest),
     );
 
     assert(route);

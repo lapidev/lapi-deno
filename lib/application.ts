@@ -1,8 +1,7 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
-/* @module lapi/lapi */
+/* @module lapi/application */
 
 import {
-  ServerRequest,
   serve,
   Server,
   Status,
@@ -10,9 +9,10 @@ import {
 import { LapiBase, Middleware, Route } from "./lapi_base.ts";
 import type { Router } from "./router.ts";
 import { LapiError } from "./lapi_error.ts";
+import { Request } from "./request.ts";
 
 export type ErrorHandler = (
-  request: ServerRequest,
+  request: Request,
   error: Error,
 ) => Promise<void> | void;
 
@@ -34,7 +34,7 @@ export class Application extends LapiBase {
 
   private server?: Server;
 
-  /** Creates a Lapi. */
+  /** Creates an Application. */
   constructor(options?: ApplicationOptions) {
     if (options) {
       const {
@@ -65,7 +65,7 @@ export class Application extends LapiBase {
   }
 
   /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
-  async findRouteFromRouters(request: ServerRequest): Promise<Route | null> {
+  async findRouteFromRouters(request: Request): Promise<Route | null> {
     for (const router of this.routers) {
       const route = router.findRoute(request);
 
@@ -83,7 +83,7 @@ export class Application extends LapiBase {
    * 
    * @throws {LapiError} if the route is not found.
    */
-  async handleRequest(request: ServerRequest): Promise<void> {
+  async handleRequest(request: Request): Promise<void> {
     try {
       await this.runMiddleware(request);
 
@@ -92,7 +92,11 @@ export class Application extends LapiBase {
       if (!route) route = await this.findRouteFromRouters(request);
 
       if (!route) {
-        throw new LapiError("Path not found", Status.NotFound, request.url);
+        throw new LapiError(
+          "Path not found",
+          Status.NotFound,
+          request.url.pathname,
+        );
       }
 
       await route.requestHandler(request);
@@ -109,10 +113,10 @@ export class Application extends LapiBase {
           request.headers.set("Content-type", "application/json");
         }
 
-        request.respond({ status: error.status, body });
+        request.send({ status: error.status, body });
       } else {
         request.headers.set("Content-type", "application/json");
-        request.respond(
+        request.send(
           {
             status: Status.InternalServerError,
             body: JSON.stringify({ message: "An unexpected error occurred" }),
@@ -128,7 +132,8 @@ export class Application extends LapiBase {
 
     if (onStart) onStart();
 
-    for await (const request of this.server) {
+    for await (const serverRequest of this.server) {
+      const request = new Request(serverRequest);
       this.handleRequest(request);
     }
   }

@@ -3,6 +3,7 @@ import { assertEquals, assert, spy, Spy } from "../../deps_test.ts";
 import { LapiBase, RequestMethod } from "../lapi_base.ts";
 import { testName } from "./utils_test.ts";
 import type { ServerRequest } from "../../deps.ts";
+import { id } from "../utils.ts";
 
 Deno.test({
   name: testName(
@@ -179,7 +180,7 @@ Deno.test({
       url: "/path",
     } as unknown as ServerRequest;
 
-    const route = lapiBase.findRoute(new Request(serverRequest, ""));
+    const route = lapiBase.findRoute(new Request(id(), serverRequest, ""));
 
     assert(route);
     assertEquals(route.requestMethod, RequestMethod.POST);
@@ -206,7 +207,7 @@ Deno.test({
       url: "/path",
     } as unknown as ServerRequest;
 
-    const route = lapiBase.findRoute(new Request(serverRequest, ""));
+    const route = lapiBase.findRoute(new Request(id(), serverRequest, ""));
 
     assert(!route);
   },

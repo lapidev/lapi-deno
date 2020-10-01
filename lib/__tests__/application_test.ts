@@ -7,6 +7,7 @@ import { testName } from "./utils_test.ts";
 import { Controller } from "../controller.ts";
 import { RequestMethod } from "../lapi_base.ts";
 import { Request } from "../request.ts";
+import { id } from "../utils.ts";
 
 Deno.test({
   name: testName("Application", "constructor", "default values"),
@@ -64,7 +65,7 @@ Deno.test({
     } as unknown as ServerRequest;
 
     const route = await application.findRouteFromRouters(
-      new Request(serverRequest, ""),
+      new Request(id(), serverRequest, ""),
     );
 
     assert(route);

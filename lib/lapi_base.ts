@@ -25,17 +25,20 @@ export interface Route {
 export interface LapiBaseOptions {
   middlewares?: Middleware[];
   routes?: Route[];
+  timer?: boolean
 }
 
 /** Base class to be used if you need a class that supports middlewares and routes. */
 export class LapiBase {
   middlewares: Middleware[];
   routes: Route[];
+  timer = false;
 
   /** Constructs a LapiBase class */
   constructor(options?: LapiBaseOptions) {
     this.middlewares = options?.middlewares || [];
     this.routes = options?.routes || [];
+    this.timer = options?.timer || false;
   }
 
   /** Adds a request handler for the given method and path. */
@@ -95,9 +98,11 @@ export class LapiBase {
 
   /** Runs all middleware on the passed in request. */
   async runMiddleware(request: Request): Promise<void> {
+    if (this.timer) request.logger.time("middleware");
     for (const middleware of this.middlewares) {
       await middleware(request);
     }
+    if (this.timer) request.logger.timeEnd("middleware");
   }
 
   /** Loops through the routes to find the handler for the given request.  */

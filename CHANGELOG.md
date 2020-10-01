@@ -1,3 +1,18 @@
+# [0.1.0](https://github.com/LukeShay/lapi/compare/0.0.4...0.1.0) (2020-10-01)
+
+
+### Bug Fixes
+
+* **core:** added method to Lapi to add routers ([f59e882](https://github.com/LukeShay/lapi/commit/f59e88250c52c7562c7dbba964709533f858d500))
+* **core:** improved testability by making methods public ([7968553](https://github.com/LukeShay/lapi/commit/79685539403b0f83a43fdc744627831adb92eee3))
+
+
+### Features
+
+* **core:** middleware and routes now take in a Request ([#10](https://github.com/LukeShay/lapi/issues/10)) ([866c100](https://github.com/LukeShay/lapi/commit/866c10031570be5442b6a322b45141bca1caee64))
+
+
+
 ## [0.0.4](https://github.com/LukeShay/lapi/compare/0.0.2...0.0.4) (2020-09-29)
 
 

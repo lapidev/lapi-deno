@@ -4,27 +4,27 @@
 import type { ServerRequest, Response } from "../deps.ts";
 
 /** Class that stores request information and sends responses. */
-export class Request {
+export class Request<T = Body> {
   url: Readonly<string>;
   status = 200;
   headers = new Headers();
-  body?: string;
+  responseBody?: string;
 
   /** Creates a Request. */
-  constructor(private serverRequest: ServerRequest) {
+  constructor(private serverRequest: ServerRequest, public body: string) {
     this.url = serverRequest.url;
   }
 
   /** Sets the body to the passed in object and the content type to application/json. */
   json(body: Record<string, unknown>): Request {
-    this.body = JSON.stringify(body);
+    this.responseBody = JSON.stringify(body);
     this.setHeader("Content-type", "application/json");
     return this;
   }
 
   /** Sets the body to the passed in string and the content type to application/xml. */
   xml(body: string): Request {
-    this.body = body;
+    this.responseBody = body;
     this.setHeader("Content-type", "application/xml");
     return this;
   }
@@ -33,7 +33,7 @@ export class Request {
   send(response?: Response): void {
     this.serverRequest.respond(
       response ||
-        { body: this.body, status: this.status, headers: this.headers },
+        { body: this.responseBody, status: this.status, headers: this.headers },
     );
   }
 

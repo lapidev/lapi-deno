@@ -1,7 +1,7 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
-/* @module lapi/lapi-router */
+/* @module lapi/controller */
 
 import { LapiBase } from "./lapi_base.ts";
 
-export class Router extends LapiBase {
+export class Controller extends LapiBase {
 }

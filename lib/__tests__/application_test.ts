@@ -4,7 +4,7 @@ import { assertEquals, assert } from "../../deps_test.ts";
 import type { ServerRequest } from "../../deps.ts";
 import { Application } from "../application.ts";
 import { testName } from "./utils_test.ts";
-import { Router } from "../router.ts";
+import { Controller } from "../controller.ts";
 import { RequestMethod } from "../lapi_base.ts";
 import { Request } from "../request.ts";
 
@@ -37,26 +37,26 @@ Deno.test({
 });
 
 Deno.test({
-  name: testName("Application", "findRouteFromRouters", "finds router"),
+  name: testName("Application", "findRouteFromRouters", "finds controller"),
   fn: async () => {
     const application = new Application(
       { serverPort: 4000, serverHost: "1.2.3.4" },
     );
 
-    const routerOne = new Router();
+    const controllerOne = new Controller();
 
-    routerOne.post("/", () => {});
-    routerOne.post("/path1", () => {});
-    routerOne.get("/path1", () => {});
+    controllerOne.post("/", () => {});
+    controllerOne.post("/path1", () => {});
+    controllerOne.get("/path1", () => {});
 
-    const routerTwo = new Router();
+    const controllerTwo = new Controller();
 
-    routerTwo.post("/2", () => {});
-    routerTwo.post("/path2", () => {});
-    routerTwo.get("/path2", () => {});
+    controllerTwo.post("/2", () => {});
+    controllerTwo.post("/path2", () => {});
+    controllerTwo.get("/path2", () => {});
 
-    application.addRouter(routerOne);
-    application.addRouter(routerTwo);
+    application.addController(controllerOne);
+    application.addController(controllerTwo);
 
     const serverRequest = {
       url: "/path1",
@@ -64,7 +64,7 @@ Deno.test({
     } as unknown as ServerRequest;
 
     const route = await application.findRouteFromRouters(
-      new Request(serverRequest),
+      new Request(serverRequest, ""),
     );
 
     assert(route);

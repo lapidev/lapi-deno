@@ -179,7 +179,7 @@ Deno.test({
       url: "/path",
     } as unknown as ServerRequest;
 
-    const route = lapiBase.findRoute(new Request(serverRequest));
+    const route = lapiBase.findRoute(new Request(serverRequest, ""));
 
     assert(route);
     assertEquals(route.requestMethod, RequestMethod.POST);
@@ -206,7 +206,7 @@ Deno.test({
       url: "/path",
     } as unknown as ServerRequest;
 
-    const route = lapiBase.findRoute(new Request(serverRequest));
+    const route = lapiBase.findRoute(new Request(serverRequest, ""));
 
     assert(!route);
   },

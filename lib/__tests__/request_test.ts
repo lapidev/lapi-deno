@@ -10,11 +10,12 @@ Deno.test(
     fn: () => {
       const request = new Request(
         { url: "/path", method: RequestMethod.GET } as ServerRequest,
+        "",
       );
 
       request.json({ key: "value" });
 
-      assertEquals(request.body, JSON.stringify({ key: "value" }));
+      assertEquals(request.responseBody, JSON.stringify({ key: "value" }));
       assertEquals(request.getHeader("Content-type"), "application/json");
     },
   },
@@ -26,11 +27,12 @@ Deno.test(
     fn: () => {
       const request = new Request(
         { url: "/path", method: RequestMethod.GET } as ServerRequest,
+        "",
       );
 
       request.xml("<tag>Hi</tag>");
 
-      assertEquals(request.body, "<tag>Hi</tag>");
+      assertEquals(request.responseBody, "<tag>Hi</tag>");
       assertEquals(request.getHeader("Content-type"), "application/xml");
     },
   },
@@ -42,6 +44,7 @@ Deno.test(
     fn: () => {
       const request = new Request(
         { url: "/path", method: RequestMethod.GET } as ServerRequest,
+        "",
       );
 
       assertEquals(request.method, RequestMethod.GET);
@@ -58,6 +61,7 @@ Deno.test(
           url: "/path?one=valueOne&two=valueTwo",
           method: RequestMethod.GET,
         } as ServerRequest,
+        "",
       );
 
       assertEquals(request.queries.get("one"), "valueOne");
@@ -77,6 +81,7 @@ Deno.test(
           method: RequestMethod.GET,
           respond,
         } as unknown as ServerRequest,
+        "",
       );
 
       request.json({ key: "value" }).send();
@@ -85,7 +90,7 @@ Deno.test(
         respond.calls[0].args,
         [
           {
-            body: request.body,
+            body: request.responseBody,
             status: request.status,
             headers: request.headers,
           },

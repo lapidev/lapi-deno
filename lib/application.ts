@@ -7,7 +7,7 @@ import {
   Status,
 } from "../deps.ts";
 import { LapiBase, Middleware, Route } from "./lapi_base.ts";
-import type { Router } from "./router.ts";
+import type { Controller } from "./controller.ts";
 import { LapiError } from "./lapi_error.ts";
 import { Request } from "./request.ts";
 
@@ -20,16 +20,17 @@ interface ApplicationOptions {
   serverPort?: number;
   serverHost?: string;
   errorHandler?: ErrorHandler;
-  routers?: Router[];
+  routers?: Controller[];
   routes?: Route[];
   middlewares?: Middleware[];
 }
 
 /** Class used to create an API. This handles starting the server and sending requests to the correct location. */
 export class Application extends LapiBase {
-  routers: Router[];
+  controllers: Controller[];
   serverPort: number;
   serverHost: string;
+  utf8TextDecoder = new TextDecoder("utf8");
   errorHandler?: ErrorHandler;
 
   private server?: Server;
@@ -46,25 +47,25 @@ export class Application extends LapiBase {
         errorHandler,
       } = options;
 
-      this.routers = routers || [];
+      this.controllers = routers || [];
       this.serverPort = serverPort || 3000;
       this.serverHost = serverHost || "0.0.0.0";
       this.errorHandler = errorHandler;
     } else {
-      this.routers = [];
+      this.controllers = [];
       this.serverPort = 3000;
       this.serverHost = "0.0.0.0";
     }
   }
 
   /** Adds the given router. */
-  addRouter(router: Router): void {
-    this.routers.push(router);
+  addController(router: Controller): void {
+    this.controllers.push(router);
   }
 
   /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
   async findRouteFromRouters(request: Request): Promise<Route | null> {
-    for (const router of this.routers) {
+    for (const router of this.controllers) {
       const route = router.findRoute(request);
 
       if (route) {
@@ -131,7 +132,11 @@ export class Application extends LapiBase {
     if (onStart) onStart();
 
     for await (const serverRequest of this.server) {
-      const request = new Request(serverRequest);
+      const body = this.utf8TextDecoder.decode(
+        await Deno.readAll(serverRequest.body),
+      );
+
+      const request = new Request(serverRequest, body);
       this.handleRequest(request);
     }
   }

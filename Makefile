@@ -22,7 +22,7 @@ lint:
 	@$(DENO) lint --unstable
 
 run:
-	@$(DENO) run $(CONFIG) --allow-net --allow-env $(EXAMPLES)$(filter-out $@,$(MAKECMDGOALS))
+	@$(DENO) run $(CONFIG) --allow-net=0.0.0.0 --allow-env $(EXAMPLES)$(filter-out $@,$(MAKECMDGOALS))
 
 doc:
 	@$(DENO) doc --json $(MODULE) > docs.json

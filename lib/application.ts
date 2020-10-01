@@ -1,18 +1,18 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
-/* @module lapi/lapi */
+/* @module lapi/application */
 
 import {
-  ServerRequest,
   serve,
   Server,
   Status,
 } from "../deps.ts";
 import { LapiBase, Middleware, Route } from "./lapi_base.ts";
-import type { Router } from "./router.ts";
+import type { Controller } from "./controller.ts";
 import { LapiError } from "./lapi_error.ts";
+import { Request } from "./request.ts";
 
 export type ErrorHandler = (
-  request: ServerRequest,
+  request: Request,
   error: Error,
 ) => Promise<void> | void;
 
@@ -20,53 +20,52 @@ interface ApplicationOptions {
   serverPort?: number;
   serverHost?: string;
   errorHandler?: ErrorHandler;
-  routers?: Router[];
+  routers?: Controller[];
   routes?: Route[];
   middlewares?: Middleware[];
 }
 
 /** Class used to create an API. This handles starting the server and sending requests to the correct location. */
 export class Application extends LapiBase {
-  routers: Router[];
+  controllers: Controller[];
   serverPort: number;
   serverHost: string;
+  utf8TextDecoder = new TextDecoder("utf8");
   errorHandler?: ErrorHandler;
 
   private server?: Server;
 
-  /** Creates a Lapi. */
+  /** Constructs an Application. */
   constructor(options?: ApplicationOptions) {
+    super(options);
+
     if (options) {
       const {
-        routes,
         routers,
-        middlewares,
         serverPort,
         serverHost,
         errorHandler,
       } = options;
-      super({ routes, middlewares });
 
-      this.routers = routers || [];
+      this.controllers = routers || [];
       this.serverPort = serverPort || 3000;
       this.serverHost = serverHost || "0.0.0.0";
       this.errorHandler = errorHandler;
     } else {
-      super();
-      this.routers = [];
+      this.controllers = [];
       this.serverPort = 3000;
       this.serverHost = "0.0.0.0";
     }
   }
 
   /** Adds the given router. */
-  addRouter(router: Router): void {
-    this.routers.push(router);
+  addController(router: Controller): void {
+    this.controllers.push(router);
   }
 
   /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
-  async findRouteFromRouters(request: ServerRequest): Promise<Route | null> {
-    for (const router of this.routers) {
+  async findRouteFromRouters(request: Request): Promise<Route | null> {
+    for (const router of this.controllers) {
       const route = router.findRoute(request);
 
       if (route) {
@@ -83,7 +82,7 @@ export class Application extends LapiBase {
    * 
    * @throws {LapiError} if the route is not found.
    */
-  async handleRequest(request: ServerRequest): Promise<void> {
+  async handleRequest(request: Request): Promise<void> {
     try {
       await this.runMiddleware(request);
 
@@ -92,7 +91,11 @@ export class Application extends LapiBase {
       if (!route) route = await this.findRouteFromRouters(request);
 
       if (!route) {
-        throw new LapiError("Path not found", Status.NotFound, request.url);
+        throw new LapiError(
+          "Path not found",
+          Status.NotFound,
+          request.url,
+        );
       }
 
       await route.requestHandler(request);
@@ -109,10 +112,10 @@ export class Application extends LapiBase {
           request.headers.set("Content-type", "application/json");
         }
 
-        request.respond({ status: error.status, body });
+        request.send({ status: error.status, body });
       } else {
         request.headers.set("Content-type", "application/json");
-        request.respond(
+        request.send(
           {
             status: Status.InternalServerError,
             body: JSON.stringify({ message: "An unexpected error occurred" }),
@@ -128,7 +131,12 @@ export class Application extends LapiBase {
 
     if (onStart) onStart();
 
-    for await (const request of this.server) {
+    for await (const serverRequest of this.server) {
+      const body = this.utf8TextDecoder.decode(
+        await Deno.readAll(serverRequest.body),
+      );
+
+      const request = new Request(serverRequest, body);
       this.handleRequest(request);
     }
   }

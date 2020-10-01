@@ -1,10 +1,10 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
-/* @module lapi/lapi-base */
+/* @module lapi/lapi_base */
 
-import type { ServerRequest } from "../deps.ts";
+import type { Request } from "./request.ts";
 
-export type RequestHandler = (req: ServerRequest) => Promise<void> | void;
-export type Middleware = (req: ServerRequest) => Promise<void> | void;
+export type RequestHandler = (req: Request) => Promise<void> | void;
+export type Middleware = (req: Request) => Promise<void> | void;
 
 export enum RequestMethod {
   POST = "POST",
@@ -27,10 +27,12 @@ export interface LapiBaseOptions {
   routes?: Route[];
 }
 
+/** Base class to be used if you need a class that supports middlewares and routes. */
 export class LapiBase {
   middlewares: Middleware[];
   routes: Route[];
 
+  /** Constructs a LapiBase class */
   constructor(options?: LapiBaseOptions) {
     this.middlewares = options?.middlewares || [];
     this.routes = options?.routes || [];
@@ -91,14 +93,15 @@ export class LapiBase {
     this.addRoute(RequestMethod.PATCH, path, handler);
   }
 
-  async runMiddleware(request: ServerRequest): Promise<void> {
+  /** Runs all middleware on the passed in request. */
+  async runMiddleware(request: Request): Promise<void> {
     for (const middleware of this.middlewares) {
       await middleware(request);
     }
   }
 
   /** Loops through the routes to find the handler for the given request.  */
-  findRoute({ method, url }: ServerRequest): Route | null {
+  findRoute({ method, url }: Request): Route | null {
     const matches = this.routes.filter((route) =>
       route.requestMethod === method &&
       route.requestPath === url

@@ -5,7 +5,7 @@ DENO = deno
 EXAMPLES = examples/
 MODULE = mod.ts
 
-FLAGS = --allow-net --unstable
+CONFIG = --config tsconfig.json
 
 default: test
 
@@ -13,16 +13,16 @@ cache:
 	@$(DENO) cache deps.ts deps_test.ts
 
 test:
-	@$(DENO) test --coverage $(FLAGS)
+	@$(DENO) test $(CONFIG) --coverage --allow-net --unstable
 
 format:
-	@$(DENO) fmt lib
+	@$(DENO) fmt $(filter-out $@,$(MAKECMDGOALS))
 
 lint:
-	@$(DENO) fmt --check lib
+	@$(DENO) lint --unstable
 
 run:
-	@$(DENO) run $(FLAGS) $(EXAMPLES)$(filter-out $@,$(MAKECMDGOALS))
+	@$(DENO) run $(CONFIG) --allow-net=0.0.0.0 --allow-env $(EXAMPLES)$(filter-out $@,$(MAKECMDGOALS))
 
 doc:
 	@$(DENO) doc --json $(MODULE) > docs.json
@@ -31,7 +31,7 @@ docs:
 	@$(DENO) run --allow-run --allow-write --allow-read scripts/docs.ts
 
 coverage:
-	@$(DENO) run --allow-run --allow-read scripts/coverage.ts
+	@$(DENO) run $(CONFIG) --allow-run --allow-read scripts/coverage.ts
 
 ci: cache lint test doc
 

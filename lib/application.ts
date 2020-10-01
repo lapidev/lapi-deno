@@ -6,30 +6,30 @@ import {
   Server,
   Status,
 } from "../deps.ts";
-import { LapiBase, Middleware, Route } from "./lapi_base.ts";
+import { LapiBase, LapiBaseOptions, Middleware, Route } from "./lapi_base.ts";
 import type { Controller } from "./controller.ts";
 import { LapiError } from "./lapi_error.ts";
 import { Request } from "./request.ts";
+import { id } from "./utils.ts";
 
 export type ErrorHandler = (
   request: Request,
   error: Error,
 ) => Promise<void> | void;
 
-interface ApplicationOptions {
+interface ApplicationOptions extends LapiBaseOptions {
   serverPort?: number;
   serverHost?: string;
   errorHandler?: ErrorHandler;
-  routers?: Controller[];
-  routes?: Route[];
-  middlewares?: Middleware[];
+  controllers?: Controller[];
+  timer?: boolean;
 }
 
 /** Class used to create an API. This handles starting the server and sending requests to the correct location. */
 export class Application extends LapiBase {
-  controllers: Controller[];
-  serverPort: number;
-  serverHost: string;
+  controllers: Controller[] = [];
+  serverPort = 3000;
+  serverHost = "0.0.0.0";
   utf8TextDecoder = new TextDecoder("utf8");
   errorHandler?: ErrorHandler;
 
@@ -41,20 +41,16 @@ export class Application extends LapiBase {
 
     if (options) {
       const {
-        routers,
+        controllers,
+        errorHandler,
         serverPort,
         serverHost,
-        errorHandler,
       } = options;
 
-      this.controllers = routers || [];
+      this.controllers = controllers || [];
+      this.errorHandler = errorHandler;
       this.serverPort = serverPort || 3000;
       this.serverHost = serverHost || "0.0.0.0";
-      this.errorHandler = errorHandler;
-    } else {
-      this.controllers = [];
-      this.serverPort = 3000;
-      this.serverHost = "0.0.0.0";
     }
   }
 
@@ -98,7 +94,9 @@ export class Application extends LapiBase {
         );
       }
 
+      if (this.timer) request.logger.time("handler");
       await route.requestHandler(request);
+      if (this.timer) request.logger.timeEnd("handler");
     } catch (error) {
       if (this.errorHandler) {
         this.errorHandler(request, error);
@@ -136,7 +134,12 @@ export class Application extends LapiBase {
         await Deno.readAll(serverRequest.body),
       );
 
-      const request = new Request(serverRequest, body);
+      const request = new Request(id(), serverRequest, body);
+
+      request.logger.info(
+        `${serverRequest.proto} - ${request.method} - ${request.url}`,
+      );
+
       this.handleRequest(request);
     }
   }

@@ -9,7 +9,7 @@ import {
 } from "../mod.ts";
 import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
 
-const application = new Application();
+const application = new Application({ timer: true });
 
 application.get("/hello", (request: Request): void => {
   request.send({ body: "Hello!" });
@@ -42,7 +42,7 @@ Deno.test('/hello should return { body: "Hello!" }', async () => {
     },
   } as unknown as ServerRequest;
 
-  const request = new Request(serverRequest);
+  const request = new Request("asdf", serverRequest, "");
 
   await application.handleRequest(request);
 

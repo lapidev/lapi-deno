@@ -2,17 +2,24 @@
 /* @module lapi/request */
 
 import type { ServerRequest, Response } from "../deps.ts";
+import { Logger } from "./logger.ts";
 
 /** Class that stores request information and sends responses. */
-export class Request<T = Body> {
+export class Request {
   url: Readonly<string>;
   status = 200;
+  logger: Logger;
   headers = new Headers();
   responseBody?: string;
 
   /** Creates a Request. */
-  constructor(private serverRequest: ServerRequest, public body: string) {
-    this.url = serverRequest.url;
+  constructor(
+    private id: string,
+    private serverRequest: ServerRequest,
+    public body: string,
+  ) {
+    this.url = this.serverRequest.url;
+    this.logger = new Logger(this.id);
   }
 
   /** Sets the body to the passed in object and the content type to application/json. */

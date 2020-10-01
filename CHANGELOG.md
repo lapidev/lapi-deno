@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file. See [standa
 * added methods for each HTTP request method ([ca9c1f1](https://github.com/LukeShay/lapi/commits/ca9c1f16a100e7e8af0b559e713f0410a91fff64))
 
 
-### Bug Fixes
+### Fixes
 
 * **core:** added method to Lapi to add routers ([f59e882](https://github.com/LukeShay/lapi/commits/f59e88250c52c7562c7dbba964709533f858d500))
 * **core:** improved testability by making methods public ([7968553](https://github.com/LukeShay/lapi/commits/79685539403b0f83a43fdc744627831adb92eee3))

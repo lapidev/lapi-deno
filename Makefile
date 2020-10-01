@@ -1,4 +1,4 @@
-.PHONY: default test format lint run ci cache docs coverage
+.PHONY: default test format lint run ci cache docs coverage release
 
 IMPORT_MAP = import_map.json
 DENO = deno
@@ -32,6 +32,9 @@ docs:
 
 coverage:
 	@$(DENO) run $(CONFIG) --allow-run --allow-read scripts/coverage.ts
+
+release:
+	npx standard-version --commit-all --tag-prefix ""
 
 ci: cache lint test doc
 

@@ -5,8 +5,8 @@ on: [push, pull_request]
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest # runs a test on Ubuntu, Windows and macOS
-    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     strategy:
       matrix:
         deno: ["v1.x", "nightly"]
@@ -16,7 +16,7 @@ jobs:
       - name: Setup Deno
         uses: denolib/setup-deno@c7d7968ad4a59c159a777f79adddad6872ee8d96
         with:
-          deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
+          deno-version: ${{ matrix.deno }}
       - name: Cache Dependencies
         run: make cache
       - name: Run Tests
@@ -28,7 +28,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
@@ -43,6 +43,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2

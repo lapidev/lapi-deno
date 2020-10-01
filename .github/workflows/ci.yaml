@@ -5,12 +5,11 @@ on: [push, pull_request]
 jobs:
   test:
     name: Test
-    runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
+    runs-on: ubuntu-latest # runs a test on Ubuntu, Windows and macOS
     if: github.event_name == 'pull_request'
     strategy:
       matrix:
-        deno: ["v1.x"] # , "nightly"]
-        os: [macOS-latest, windows-latest, ubuntu-latest]
+        deno: ["v1.x", "nightly"]
     steps:
       - name: Setup repo
         uses: actions/checkout@v2

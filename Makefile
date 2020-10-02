@@ -15,7 +15,7 @@ test:
 	@$(DENO) test $(CONFIG) --coverage $(FLAGS)
 
 format:
-	@$(DENO) fmt $(filter-out $@,$(MAKECMDGOALS))
+	@$(DENO) fmt
 
 lint:
 	@$(DENO) lint --unstable
@@ -26,15 +26,7 @@ docs:
 build-wasm:
 	deno run --allow-run --allow-read scripts/build.ts
 
-bundle:
-	@rm -rf dist/
-	@mkdir dist/
-	@$(DENO) bundle $(CONFIG) mod.ts dist/mod.bundle.js
-
-release: build-wasm test bundle docs
+release: build-wasm test docs
 	git add . && git commit -m "built files" && npx standard-version --commit-all --tag-prefix ""
 
 ci: cache lint test doc
-
-%:
-	@:

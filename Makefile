@@ -1,4 +1,4 @@
-.PHONY: default test format lint run ci cache docs coverage release
+.PHONY: test format lint ci cache docs release build-wasm
 
 IMPORT_MAP = import_map.json
 DENO = deno
@@ -6,14 +6,13 @@ EXAMPLES = examples/
 MODULE = mod.ts
 
 CONFIG = --config tsconfig.json
-
-default: test
+FLAGS = --allow-net=0.0.0.0 --allow-read --allow-env --unstable
 
 cache:
 	@$(DENO) cache deps.ts deps_test.ts
 
 test:
-	@$(DENO) test $(CONFIG) --coverage --allow-net --unstable
+	@$(DENO) test $(CONFIG) --coverage $(FLAGS)
 
 format:
 	@$(DENO) fmt $(filter-out $@,$(MAKECMDGOALS))
@@ -21,20 +20,19 @@ format:
 lint:
 	@$(DENO) lint --unstable
 
-run:
-	@$(DENO) run $(CONFIG) --watch --allow-net=0.0.0.0 --allow-env --unstable $(EXAMPLES)$(filter-out $@,$(MAKECMDGOALS))
-
-doc:
-	@$(DENO) doc --json $(MODULE) > docs.json
-
 docs:
 	@$(DENO) run --allow-run --allow-write --allow-read scripts/docs.ts
 
-coverage:
-	@$(DENO) run $(CONFIG) --allow-run --allow-read scripts/coverage.ts
+build-wasm:
+	deno run --allow-run --allow-read scripts/build.ts
 
-release:
-	npx standard-version --commit-all --tag-prefix ""
+bundle:
+	@rm -rf dist/
+	@mkdir dist/
+	@$(DENO) bundle $(CONFIG) mod.ts dist/mod.bundle.js
+
+release: build-wasm test bundle docs
+	git add . && git commit -m "built files" && npx standard-version --commit-all --tag-prefix ""
 
 ci: cache lint test doc
 

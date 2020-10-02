@@ -1,0 +1,1 @@
+{"rustc":7210524046684111384,"features":"[]","target":3906782529857142793,"profile":4339006351771724982,"path":10872709659218687626,"deps":[[16466562421965842458,"wasm_bindgen",false,2283080073141570632]],"local":[{"CheckDepInfo":{"dep_info":"wasm32-wasi/release/.fingerprint/lapi_wasm-ff12fac6411d3212/dep-lib-lapi_wasm"}}],"rustflags":[],"metadata":9256850856396839660,"config":0}

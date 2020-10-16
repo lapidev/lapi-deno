@@ -80,8 +80,6 @@ export class Application extends LapiBase {
    */
   async handleRequest(request: Request): Promise<void> {
     try {
-      await this.runMiddleware(request);
-
       let route = this.findRoute(request);
 
       if (!route) route = await this.findRouteFromRouters(request);
@@ -93,6 +91,8 @@ export class Application extends LapiBase {
           request.url,
         );
       }
+
+      await this.runMiddleware(request);
 
       if (this.timer) request.logger.time("handler");
       await route.requestHandler(request);

@@ -8,11 +8,10 @@ if (!success) {
 
 try {
   await Deno.remove("wasm", { recursive: true });
+  // deno-lint-ignore no-empty
 } catch (error) {}
 
-await Deno.remove("pkg/README.md");
-await Deno.remove("pkg/LICENSE");
-await Deno.remove("pkg/package.json");
-await Deno.remove("pkg/.gitignore");
+await Deno.mkdir("wasm");
 
-await Deno.rename("pkg", "wasm");
+await Deno.copyFile("pkg/lapi_wasm.js", "wasm/lapi_wasm.js");
+await Deno.copyFile("pkg/lapi_wasm_bg.wasm", "wasm/lapi_wasm_bg.wasm");

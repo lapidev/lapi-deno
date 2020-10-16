@@ -11,6 +11,7 @@ export class Request {
   logger: Logger;
   headers = new Headers();
   responseBody?: string;
+  params: { [param: string]: string } = {};
 
   /** Creates a Request. */
   constructor(
@@ -60,6 +61,16 @@ export class Request {
     this.status = status;
     return this;
   }
+
+  // /** Parses the params for the given route. */
+  // parseParams(route: Route) {
+  //   const splitUrl = this.url.split("/");
+
+  //   Object.keys(route.params).forEach((key) => {
+  //     // TODO(Core): Improve input validation
+  //     this.params[route.params[key]] = splitUrl[parseInt(key)];
+  //   });
+  // }
 
   get method(): string {
     return this.serverRequest.method;

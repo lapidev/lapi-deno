@@ -1,3 +1,4 @@
+// deno-lint-ignore-file
 module.exports = {
   types: [
     { type: "feat", section: "Features" },

@@ -1,25 +1,112 @@
-// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+import { assert } from "../../deps_test.ts";
+import {
+  isString,
+  isAsyncFunc,
+  isObject,
+  isSyncFunc,
+  isFunc,
+} from "../utils.ts";
+import { testName } from "./test_utils.ts";
 
-export function testName(module: string, func: string, test: string): string {
-  const moduleLen = 10;
-  const funcLen = 15;
-  const testLen = 30;
+Deno.test(
+  {
+    name: testName("utils", "isString", "should return true"),
+    fn: () => {
+      const str = "asdf";
+      assert(isString(str));
+    },
+  },
+);
 
-  let moduleFormatted = module;
-  let funcFormatted = func;
-  let testFormatted = test;
+Deno.test(
+  {
+    name: testName("utils", "isString", "should return false"),
+    fn: () => {
+      const str = 1;
+      assert(!isString(str));
+    },
+  },
+);
 
-  for (let i = module.length; i < moduleLen; i++) {
-    moduleFormatted += " ";
-  }
+Deno.test(
+  {
+    name: testName("utils", "isAsyncFunc", "should return true"),
+    fn: () => {
+      const func = async () => {};
+      assert(isAsyncFunc(func));
+    },
+  },
+);
 
-  for (let i = func.length; i < funcLen; i++) {
-    funcFormatted += " ";
-  }
+Deno.test(
+  {
+    name: testName("utils", "isAsyncFunc", "should return false"),
+    fn: () => {
+      const func = () => {};
+      assert(!isAsyncFunc(func));
+    },
+  },
+);
 
-  for (let i = test.length; i < testLen; i++) {
-    testFormatted += " ";
-  }
+Deno.test(
+  {
+    name: testName("utils", "isSyncFunc", "should return true"),
+    fn: () => {
+      const func = () => {};
+      assert(isSyncFunc(func));
+    },
+  },
+);
 
-  return `${moduleFormatted} | ${funcFormatted} | ${testFormatted}`;
-}
+Deno.test(
+  {
+    name: testName("utils", "isSyncFunc", "should return false"),
+    fn: () => {
+      const func = async () => {};
+      assert(!isSyncFunc(func));
+    },
+  },
+);
+
+Deno.test(
+  {
+    name: testName("utils", "isFunc", "should return true"),
+    fn: () => {
+      const syncFunc = () => {};
+      assert(isFunc(syncFunc));
+
+      const asyncFunc = async () => {};
+      assert(isFunc(asyncFunc));
+    },
+  },
+);
+
+Deno.test(
+  {
+    name: testName("utils", "isFunc", "should return false"),
+    fn: () => {
+      const syncFunc = "[object Function]";
+      assert(!isFunc(syncFunc));
+    },
+  },
+);
+
+Deno.test(
+  {
+    name: testName("utils", "isObject", "should return true"),
+    fn: () => {
+      const syncFunc = {};
+      assert(isObject(syncFunc));
+    },
+  },
+);
+
+Deno.test(
+  {
+    name: testName("utils", "isObject", "should return false"),
+    fn: () => {
+      const syncFunc = "[object Object]";
+      assert(!isObject(syncFunc));
+    },
+  },
+);

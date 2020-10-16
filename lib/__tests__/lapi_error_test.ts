@@ -2,7 +2,7 @@
 
 import { assertEquals, assert } from "../../deps_test.ts";
 import { LapiError } from "../lapi_error.ts";
-import { testName } from "./utils_test.ts";
+import { testName } from "./test_utils.ts";
 
 Deno.test({
   name: testName("LapiError", "constructor", "no body"),

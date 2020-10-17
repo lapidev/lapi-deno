@@ -11,4 +11,4 @@ app.post("/post-endpoint/<id>", (req) => {
   req.send({ body: req.params.id });
 });
 
-app.start();
+await app.start();

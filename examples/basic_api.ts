@@ -2,17 +2,17 @@
 
 import {
   Application,
-  RequestMethod,
-  ServerRequest,
   Request,
+  RequestMethod,
   Response,
+  ServerRequest,
 } from "../mod.ts";
-import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.74.0/testing/asserts.ts";
 
 const application = new Application({ timer: true });
 
-application.get("/hello", (request: Request): void => {
-  request.send({ body: "Hello!" });
+application.get("/hello/<name>", (request: Request): void => {
+  request.send({ body: `Hello, ${request.params.name}!` });
 });
 
 application.get("/json", (request: Request): void => {

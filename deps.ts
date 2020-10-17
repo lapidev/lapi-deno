@@ -7,6 +7,6 @@ export {
   Status,
 } from "https://deno.land/std@0.74.0/http/mod.ts";
 
-export * from "./wasm/lapi_wasm.js";
+// export * from "./wasm/lapi_wasm.js";
 
 export type { Response } from "https://deno.land/std@0.74.0/http/mod.ts";

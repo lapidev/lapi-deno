@@ -89,6 +89,8 @@ export class Application extends LapiBase {
         );
       }
 
+      request.parseParams(route.requestPathRegex);
+
       await this.runMiddleware(request);
 
       if (this.timer) request.logger.time("handler");

@@ -16,7 +16,7 @@ cache:
 	@$(DENO) cache --unstable deps.ts deps_test.ts
 
 test:
-	@$(DENO) test $(CONFIG) --coverage $(FLAGS) lib
+	@$(DENO) test $(CONFIG) --coverage $(FLAGS) --unstable lib
 
 int:
 	@$(DENO) test $(CONFIG) --allow-run $(FLAGS) --unstable test

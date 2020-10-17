@@ -21,6 +21,8 @@ jobs:
         run: make cache
       - name: Run Tests
         run: make test
+      - name: Run Integration
+        run: make int
       - name: Upload lib
         uses: actions/upload-artifact@v2.1.4
         with:

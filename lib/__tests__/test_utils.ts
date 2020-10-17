@@ -1,9 +1,9 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
 export function testName(module: string, func: string, test: string): string {
-  const moduleLen = 10;
-  const funcLen = 15;
-  const testLen = 30;
+  const moduleLen = 11;
+  const funcLen = 20;
+  const testLen = 40;
 
   let moduleFormatted = module;
   let funcFormatted = func;

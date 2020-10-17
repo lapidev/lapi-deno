@@ -1,58 +1,36 @@
-.PHONY: test format lint ci cache docs release build-deno build-rust test-deno test-rust ci-deno ci-rust
+.PHONY: setup cache test format lint docs release ci
 
 IMPORT_MAP = import_map.json
 DENO = deno
-CARGO = cargo
-EXAMPLES = examples/
 MODULE = mod.ts
 FILES =  mod.ts deps.ts dep_test.ts lib
 
 CONFIG = --config tsconfig.json
-FLAGS = --allow-net=0.0.0.0 --allow-read --allow-env --unstable
+FLAGS = --allow-net --allow-env
 
 setup:
-  @curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
-	@echo export PATH="${PATH}:/usr/local/cargo/bin" >> ~/.bashrc
-	@source /usr/local/cargo/env
 	@sudo ln -s ${DENO_INSTALL}/bin/deno /usr/bin/deno
 	@curl https://raw.githubusercontent.com/second-state/ssvmup/master/installer/init.sh -sSf | sh
-
-clean:
-	@$(CARGO) clean
-	@rm -rf wasm
 
 cache:
 	@$(DENO) cache --unstable deps.ts deps_test.ts
 
-test-rust:
-	@$(CARGO) check
-	@$(CARGO) test
-
-test-deno:
+test:
 	@$(DENO) test $(CONFIG) --coverage $(FLAGS) lib
 
-test: test-rust test-deno
+int:
+	@$(DENO) test $(CONFIG) --allow-run $(FLAGS) --unstable test
 
 format:
-	@$(DENO) fmt lib
-	@$(CARGO) fmt
+	@$(DENO) fmt lib test
 
 lint:
-	@$(DENO) lint --unstable lib
+	@$(DENO) lint --unstable lib test
 
 docs:
 	@$(DENO) run --allow-run --allow-write --allow-read scripts/docs.ts
 
-build-rust:
-	deno run --allow-run --allow-read --allow-write scripts/build.ts
-
-build: build-rust
-
 release: clean build test docs
 	git add . && git commit -m "built files" && npx standard-version --commit-all --tag-prefix ""
 
-ci-rust: clean test-rust build-rust
-
-ci-deno: lint cache test-deno doc
-
-ci: ci-rust ci-deno
+ci: lint cache test-deno docs

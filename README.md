@@ -48,7 +48,9 @@ application.get("/hello", (req): void => {
 });
 
 await application.start((): void => {
-  console.log(`Server started on http://${application.serverHost}:${application.serverPort}`);
+  console.log(
+    `Server started on http://${application.serverHost}:${application.serverPort}`
+  );
 });
 ```
 
@@ -59,7 +61,11 @@ The full example [can be found here](./examples/basic_api.ts)
 There is an exposed method called `handleRequest` on the `Application` class that can be used to test your API. This method should never be called in production but is public to make testing very easy. `handleRequest` is an async function that returns `Promise<void>` and it takes in one parameter which is of type `ServerRequest`. The following is an example of how we could test the API created above:
 
 ```typescript
-import { Application, RequestMethod, ServerRequest } from "https://deno.land/x/application/mod.ts";
+import {
+  Application,
+  RequestMethod,
+  ServerRequest,
+} from "https://deno.land/x/application/mod.ts";
 import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
 
 const application = new Application();
@@ -71,7 +77,7 @@ application.get("/hello", (req): void => {
 if (Deno.env.get("DENO_ENV") !== "TEST") {
   await application.start((): void => {
     console.log(
-      `Server started on http://${application.serverHost}:${application.serverPort}`,
+      `Server started on http://${application.serverHost}:${application.serverPort}`
     );
   });
 }
@@ -79,13 +85,13 @@ if (Deno.env.get("DENO_ENV") !== "TEST") {
 Deno.test('/hello should return { body: "Hello!" }', async () => {
   const responses: unknown[] = [];
 
-  const request = {
+  const request = ({
     method: RequestMethod.GET,
     url: "/hello",
     respond: (res: any) => {
       responses.push(res);
     },
-  } as unknown as ServerRequest;
+  } as unknown) as ServerRequest;
 
   await application.handleRequest(request);
 
@@ -94,3 +100,48 @@ Deno.test('/hello should return { body: "Hello!" }', async () => {
 ```
 
 We have plans of improving the testability in a way that will work similar to `supertest` but have our priorities elsewhere at the moment.
+
+## Query Parameters
+
+Lapi supports query params but they do not need to be defined in your code. They can be accessed through the property `queries` on the request parameter in your handler function. Please see the example below.
+
+```typescript
+const application = new Application();
+
+application.get("/endpoint", (req) => {
+  const name = req.queries.get("name");
+  req.json({ name }).send();
+});
+
+await application.start();
+```
+
+## Path Parameters
+
+Path parameters can be defined by adding `<paramName>` to the path or by using a RegExp for the request path. An example of using a string is below.
+
+```typescript
+const application = new Application();
+
+application.get("/endpoint/<name>", (req) => {
+  const name = req.params.name;
+  req.json({ name }).send();
+});
+
+await application.start();
+```
+
+The following is the same as the example above but using a RegExp instead of a string.
+
+```typescript
+const application = new Application();
+
+application.get(/\/endpoint\/(?<name>.+)/, (req) => {
+  const name = req.params.name;
+  req.json({ name }).send();
+});
+
+await application.start();
+```
+
+We only recommend using RegExp when absolutely necessary because there is a higher chance of an error occurring.

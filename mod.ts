@@ -2,9 +2,10 @@
 /* @module lapi */
 
 export * from "./lib/application.ts";
-export * from "./lib/lapi_error.ts";
+export * from "./lib/content-type.ts";
 export * from "./lib/controller.ts";
 export * from "./lib/lapi_base.ts";
+export * from "./lib/lapi_error.ts";
 export * from "./lib/lapi_route.ts";
 export * from "./lib/request.ts";
 

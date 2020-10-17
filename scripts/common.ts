@@ -1,6 +1,4 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
-import { parse } from "https://deno.land/std@0.70.0/encoding/yaml.ts";
-
 const decoder = new TextDecoder("utf8");
 
 export async function runAndExitOnFail(
@@ -27,8 +25,6 @@ export interface Project {
   scopes: string[];
 }
 
-export async function getProject(): Promise<Project> {
-  return parse(
-    decoder.decode(await Deno.readFile("./project.yaml")),
-  ) as Project;
+export async function getVersion(): Promise<string> {
+  return decoder.decode(await Deno.readFile("./version.txt")).split(/\r?\n/)[0];
 }

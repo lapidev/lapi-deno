@@ -1,9 +1,9 @@
 import type { ServerRequest } from "../../deps.ts";
 import { assertEquals, spy } from "../../deps_test.ts";
-import { RequestMethod } from "../lapi_base.ts";
+import { RequestMethod } from "../lapi_route.ts";
 import { Request } from "../request.ts";
 import { id } from "../utils.ts";
-import { testName } from "./utils_test.ts";
+import { testName } from "./test_utils.ts";
 
 Deno.test(
   {

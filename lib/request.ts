@@ -1,8 +1,10 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/request */
 
-import type { ServerRequest, Response } from "../deps.ts";
+import type { Response, ServerRequest } from "../deps.ts";
 import { Logger } from "./logger.ts";
+
+export type Params = { [index: string]: string | undefined };
 
 /** Class that stores request information and sends responses. */
 export class Request {
@@ -11,6 +13,7 @@ export class Request {
   logger: Logger;
   headers = new Headers();
   responseBody?: string;
+  params: Params = {};
 
   /** Creates a Request. */
   constructor(
@@ -59,6 +62,11 @@ export class Request {
   setStatus(status: number): Request {
     this.status = status;
     return this;
+  }
+
+  /** Parses the params for the given route. */
+  parseParams(regExp: RegExp) {
+    this.params = regExp.exec(this.url)?.groups || {};
   }
 
   get method(): string {

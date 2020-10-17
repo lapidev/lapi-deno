@@ -5,6 +5,8 @@ export {
   serve,
   Server,
   Status,
-} from "https://deno.land/std@0.71.0/http/mod.ts";
+} from "https://deno.land/std@0.74.0/http/mod.ts";
 
-export type { Response } from "https://deno.land/std@0.71.0/http/mod.ts";
+// export * from "./wasm/lapi_wasm.js";
+
+export type { Response } from "https://deno.land/std@0.74.0/http/mod.ts";

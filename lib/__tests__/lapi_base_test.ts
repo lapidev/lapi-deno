@@ -1,7 +1,8 @@
 import { Request } from "../request.ts";
-import { assertEquals, assert, spy, Spy } from "../../deps_test.ts";
-import { LapiBase, RequestMethod } from "../lapi_base.ts";
-import { testName } from "./utils_test.ts";
+import { assert, assertEquals, Spy, spy } from "../../deps_test.ts";
+import { LapiBase } from "../lapi_base.ts";
+import { RequestMethod } from "../lapi_route.ts";
+import { testName } from "./test_utils.ts";
 import type { ServerRequest } from "../../deps.ts";
 import { id } from "../utils.ts";
 

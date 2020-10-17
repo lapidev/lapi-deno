@@ -1,8 +1,8 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
-import { getProject, runAndExitOnFail } from "./common.ts";
+import { getVersion, runAndExitOnFail } from "./common.ts";
 
-const { version } = await getProject();
+const version = await getVersion();
 
 const docs = await runAndExitOnFail(
   { cmd: ["deno", "doc", "--json", "mod.ts"], stdout: "piped" },

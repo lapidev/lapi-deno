@@ -32,7 +32,7 @@ export class Logger {
   timeEnd(label: string): void {
     console.timeEnd(`${Logger.time()} [TIMER] ${this.id} | ${label}`);
   }
-  
+
   timeLog(label: string): void {
     console.timeLog(`${Logger.time()} [TIMER] ${this.id} | ${label}`);
   }

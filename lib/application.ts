@@ -1,12 +1,9 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/application */
 
-import {
-  serve,
-  Server,
-  Status,
-} from "../deps.ts";
-import { LapiBase, LapiBaseOptions, Middleware, Route } from "./lapi_base.ts";
+import { serve, Server, Status } from "../deps.ts";
+import { LapiBase, LapiBaseOptions } from "./lapi_base.ts";
+import { LapiRoute } from "./lapi_route.ts";
 import type { Controller } from "./controller.ts";
 import { LapiError } from "./lapi_error.ts";
 import { Request } from "./request.ts";
@@ -60,7 +57,7 @@ export class Application extends LapiBase {
   }
 
   /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
-  async findRouteFromRouters(request: Request): Promise<Route | null> {
+  async findRouteFromRouters(request: Request): Promise<LapiRoute | null> {
     for (const router of this.controllers) {
       const route = router.findRoute(request);
 
@@ -80,8 +77,6 @@ export class Application extends LapiBase {
    */
   async handleRequest(request: Request): Promise<void> {
     try {
-      await this.runMiddleware(request);
-
       let route = this.findRoute(request);
 
       if (!route) route = await this.findRouteFromRouters(request);
@@ -93,6 +88,10 @@ export class Application extends LapiBase {
           request.url,
         );
       }
+
+      request.parseParams(route.requestPathRegex);
+
+      await this.runMiddleware(request);
 
       if (this.timer) request.logger.time("handler");
       await route.requestHandler(request);

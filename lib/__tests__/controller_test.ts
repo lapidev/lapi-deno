@@ -2,7 +2,7 @@
 
 import { assert } from "../../deps_test.ts";
 import { Controller } from "../controller.ts";
-import { testName } from "./utils_test.ts";
+import { testName } from "./test_utils.ts";
 
 Deno.test({
   name: testName("Router", "constructor", ""),

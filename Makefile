@@ -7,7 +7,7 @@ EXAMPLES = examples/
 MODULE = mod.ts
 
 CONFIG = --config tsconfig.json
-FLAGS = --allow-net=0.0.0.0 --allow-read --allow-env --unstable --quiet
+FLAGS = --allow-net=0.0.0.0 --allow-read --allow-env --unstable
 
 setup:
   @curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh

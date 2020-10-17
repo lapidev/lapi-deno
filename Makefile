@@ -5,6 +5,7 @@ DENO = deno
 CARGO = cargo
 EXAMPLES = examples/
 MODULE = mod.ts
+FILES =  mod.ts deps.ts dep_test.ts lib
 
 CONFIG = --config tsconfig.json
 FLAGS = --allow-net=0.0.0.0 --allow-read --allow-env --unstable
@@ -28,16 +29,16 @@ test-rust:
 	@$(CARGO) test
 
 test-deno:
-	@$(DENO) test $(CONFIG) --coverage $(FLAGS) mod.ts lib
+	@$(DENO) test $(CONFIG) --coverage $(FLAGS) lib
 
 test: test-rust test-deno
 
 format:
-	@$(DENO) fmt
+	@$(DENO) fmt lib
 	@$(CARGO) fmt
 
 lint:
-	@$(DENO) lint --unstable
+	@$(DENO) lint --unstable lib
 
 docs:
 	@$(DENO) run --allow-run --allow-write --allow-read scripts/docs.ts

@@ -37,3 +37,8 @@ export function isFunc(value: any): boolean {
 export function isObject(value: any): boolean {
   return _toString.call(value) === "[object Object]";
 }
+
+/** Checks if the given value is a regular expression. */
+export function isRegExp(value: any): boolean {
+  return _toString.call(value) === "[object RegExp]";
+}

@@ -1,6 +1,6 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
-import { assertEquals, assert } from "../../deps_test.ts";
+import { assert, assertEquals } from "../../deps_test.ts";
 import { LapiError } from "../lapi_error.ts";
 import { testName } from "./test_utils.ts";
 

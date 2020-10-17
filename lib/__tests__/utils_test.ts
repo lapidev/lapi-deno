@@ -1,10 +1,10 @@
 import { assert } from "../../deps_test.ts";
 import {
-  isString,
   isAsyncFunc,
-  isObject,
-  isSyncFunc,
   isFunc,
+  isObject,
+  isString,
+  isSyncFunc,
 } from "../utils.ts";
 import { testName } from "./test_utils.ts";
 

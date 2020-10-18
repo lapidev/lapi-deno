@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import { assertEquals, delay } from "../deps_test.ts";
 import { RequestMethod } from "../lib/lapi_route.ts";
 

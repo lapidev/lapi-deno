@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/lapi_route */
+
 import { Request } from "./request.ts";
 
 export enum RequestMethod {

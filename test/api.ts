@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import { Application, ContentType } from "../mod.ts";
 
 const app = new Application();

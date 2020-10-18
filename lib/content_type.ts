@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/content_type */
+
 export enum ContentType {
   APPLICATION_JAVASCRIPT = "application/javascript",
   APPLICATION_JSON = "application/json",

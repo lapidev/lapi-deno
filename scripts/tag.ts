@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import { getVersion, runAndExitOnFail } from "./common.ts";
 
 const version = await getVersion();

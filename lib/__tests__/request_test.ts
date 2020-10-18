@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import type { ServerRequest } from "../../deps.ts";
 import { assertEquals, spy } from "../../deps_test.ts";
 import { RequestMethod } from "../lapi_route.ts";

@@ -1,5 +1,6 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @private */
+/* @module lapi/types */
 // deno-lint-ignore-file
 
 /** Returns a id as a string. */

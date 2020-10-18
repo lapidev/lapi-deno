@@ -10,7 +10,7 @@ const docs = await runAndExitOnFail(
 
 const output = await docs.output();
 
-await Deno.writeFile(`docs/api/${version}.json`, output);
-await Deno.writeFile(`docs/api/latest.json`, output);
+await Deno.writeFile(`docs/${version}.json`, output);
+await Deno.writeFile(`docs/latest.json`, output);
 
 Deno.exit(0);

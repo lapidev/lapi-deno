@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import { assert, assertEquals } from "../../deps_test.ts";
 import { LapiRoute, RequestMethod } from "../lapi_route.ts";
 import { Request } from "../request.ts";

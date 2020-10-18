@@ -1,3 +1,5 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+
 import { Request } from "../request.ts";
 import { assert, assertEquals, Spy, spy } from "../../deps_test.ts";
 import { LapiBase } from "../lapi_base.ts";

@@ -63,6 +63,7 @@ jobs:
     name: Tag
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    needs: [test, lint]
     steps:
       - name: Setup Repo
         uses: actions/checkout@v2

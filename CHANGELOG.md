@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/LukeShay/lapi/compare/0.2.1...0.2.2) (2020-10-18)
+
+
+### Features
+
+* **core:** added path parameters support ([#14](https://github.com/LukeShay/lapi/issues/14)) ([5ba0682](https://github.com/LukeShay/lapi/commits/5ba0682ca3e122cd46015e160bd0d04ba85f6d4c))
+
 ### 0.2.1 (2020-10-01)
 
 

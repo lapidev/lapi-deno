@@ -30,7 +30,11 @@ lint:
 docs:
 	@$(DENO) run --allow-run --allow-write --allow-read scripts/docs.ts
 
-release: clean build test docs
-	git add . && git commit -m "built files" && npx standard-version --commit-all --tag-prefix ""
+release: test int
+	npx standard-version --commit-all --tag-prefix ""
+release: docs
 
-ci: lint cache test-deno docs
+ci: lint cache test-deno
+
+tag:
+	@$(DENO) run --allow-read --allow-run scripts/tag.ts

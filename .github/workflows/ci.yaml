@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     steps:
-    - name: Checkout repository
+    - name: Setup Repo
       uses: actions/checkout@v2
       with:
         fetch-depth: 2
@@ -59,4 +59,13 @@ jobs:
         languages: typescript
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+  tag:
+    name: Tag
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Setup Repo
+        uses: actions/checkout@v2
+      - name: Tag Repo
+        run: make tag
 

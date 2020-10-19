@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: "[FEATURE] Your title here"
-labels: enhancement, awaiting-triage
+labels: enhancement, awaiting triage
 assignees: LukeShay
 
 ---

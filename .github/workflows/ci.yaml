@@ -3,10 +3,10 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  test:
-    name: Test
+  unit-test:
+    name: Unit test
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
     strategy:
       matrix:
         deno: ["v1.x", "nightly"]
@@ -17,20 +17,32 @@ jobs:
         uses: denolib/setup-deno@v2
         with:
           deno-version: ${{ matrix.deno }}
-      - name: Cache Dependencies
+      - name: Cache dependencies
         run: make cache
-      - name: Run Tests
+      - name: Run unit tests
         run: make test
-      # - name: Run Integration
-      #   run: make int
-      - name: Upload lib
-        uses: actions/upload-artifact@v2.1.4
+  int-test:
+    name: Integration test
+    runs-on: ubuntu-latest
+    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
+    strategy:
+      matrix:
+        deno: ["v1.x", "nightly"]
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+      - name: Setup Deno
+        uses: denolib/setup-deno@v2
         with:
-          path: lib
+          deno-version: ${{ matrix.deno }}
+      - name: Cache dependencies
+        run: make cache
+      - name: Run integration tests
+        run: make int
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
@@ -38,21 +50,21 @@ jobs:
         uses: denolib/setup-deno@v2
         with:
           deno-version: 1.4
-      - name: Cache Dependencies
+      - name: Cache dependencies
         run: make cache
-      - name: Run Linter
+      - name: Run linter
         run: make lint
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
     steps:
-    - name: Setup Repo
+    - name: Setup repo
       uses: actions/checkout@v2
       with:
         fetch-depth: 2
     - run: git checkout HEAD^2
-      if: github.event_name == 'pull_request'
+      if: github.event_name == "pull_request"
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
@@ -62,13 +74,14 @@ jobs:
   tag:
     name: Tag
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    needs: [test, lint]
+    if: github.ref == "refs/heads/master"
+    needs: [unit-test, int-test, lint, analyze]
     steps:
-      - name: Setup Repo
+      - name: Setup repo
         uses: actions/checkout@v2
-      - name: Setup Deno
-        uses: denolib/setup-deno@v2
-      - name: Tag Repo
-        run: make tag
+      - name: Tag repo
+        uses: salsify/action-detect-and-tag-new-version@v2
+        with:
+          version-command: cat version.txt
+          tag-template: "{VERSION}"
 

@@ -146,4 +146,11 @@ await application.start();
 
 We only recommend using RegExp when absolutely necessary because there is a higher chance of an error occurring.
 
+# Roadmap
 
+This is just a list of what we have planned in order:
+
+- [ ] Standardize `Request` methods
+- [ ] Add `next` parameter to handlers
+- [ ] Add builtin `xml` support
+- [ ] Add `authenticator` function for routes

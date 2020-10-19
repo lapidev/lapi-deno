@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to help us improve
 title: "[BUG] Your title here"
-labels: bug, awaiting-triage
+labels: bug, awaiting triage
 assignees: LukeShay
 
 ---

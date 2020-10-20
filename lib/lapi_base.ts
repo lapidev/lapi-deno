@@ -7,11 +7,13 @@ import {
   RequestMethod,
   Route,
 } from "./lapi_route.ts";
-import type { Request } from "./request.ts";
+import type { LapiRequest } from "./lapi_request.ts";
 import { isRegExp } from "./utils.ts";
 import type { StrOrRegExp } from "./types.ts";
+import type { LapiResponse } from "./lapi_response.ts";
+import { ServerRequest } from "https://deno.land/std@0.74.0/http/server.ts";
 
-export type Middleware = (req: Request) => Promise<void> | void;
+export type Middleware = (req: LapiRequest, res: LapiResponse) => Promise<void> | void;
 
 export interface LapiBaseOptions {
   middlewares?: Middleware[];
@@ -98,16 +100,16 @@ export class LapiBase {
   }
 
   /** Runs all middleware on the passed in request. */
-  async runMiddleware(request: Request): Promise<void> {
+  async runMiddleware(request: LapiRequest, response: LapiResponse): Promise<void> {
     if (this.timer) request.logger.time("middleware");
     for (const middleware of this.middlewares) {
-      await middleware(request);
+      await middleware(request, response);
     }
     if (this.timer) request.logger.timeEnd("middleware");
   }
 
   /** Loops through the routes to find the handler for the given request.  */
-  findRoute(request: Request): LapiRoute | null {
+  findRoute(request: ServerRequest): LapiRoute | null {
     const matches = this.routes.filter((route) => route.matches(request));
 
     if (matches.length === 0) {

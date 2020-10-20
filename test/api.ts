@@ -9,7 +9,7 @@ app.get(/\/hello\/(?<name>.+)/, (req) => {
 });
 
 app.post("/post-endpoint/<id>", (req) => {
-  req.setHeader("Content-type", ContentType.TEXT_PLAIN);
+  req.setHeader("Content-type", ContentType.TextPlain);
   req.send({ body: req.params.id });
 });
 

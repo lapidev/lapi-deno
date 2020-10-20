@@ -2,8 +2,8 @@
 
 import { assert, assertEquals } from "../../deps_test.ts";
 import { LapiRoute, RequestMethod } from "../lapi_route.ts";
-import { Request } from "../request.ts";
 import { testName } from "./test_utils.ts";
+import { ServerRequest } from "../../deps.ts";
 
 Deno.test({
   name: testName("LapiRoute", "constructor", "parses regex"),
@@ -53,7 +53,7 @@ Deno.test({
     );
     assert(
       lapiRoute.matches(
-        { method: "POST", url: "/p1/yes/p2" } as unknown as Request,
+        { method: "POST", url: "/p1/yes/p2" } as unknown as ServerRequest,
       ),
     );
   },
@@ -74,7 +74,7 @@ Deno.test({
     );
     assert(
       !lapiRoute.matches(
-        { method: "GET", url: "/p1/yes/p2" } as unknown as Request,
+        { method: "GET", url: "/p1/yes/p2" } as unknown as ServerRequest,
       ),
     );
   },

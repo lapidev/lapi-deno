@@ -3,8 +3,8 @@
 export {
   assert,
   assertEquals,
-} from "https://deno.land/std@0.74.0/testing/asserts.ts";
+} from "https://deno.land/std@0.75.0/testing/asserts.ts";
 
 export { spy } from "https://deno.land/x/mock@v0.8.0/mod.ts";
 export type { Spy } from "https://deno.land/x/mock@v0.8.0/mod.ts";
-export { delay } from "https://deno.land/std@0.74.0/async/delay.ts";
+export { delay } from "https://deno.land/std@0.75.0/async/delay.ts";

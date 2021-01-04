@@ -11,7 +11,7 @@ import type { LapiRequest } from "./lapi_request.ts";
 import { isRegExp } from "./utils.ts";
 import type { StrOrRegExp } from "./types.ts";
 import type { LapiResponse } from "./lapi_response.ts";
-import { ServerRequest } from "https://deno.land/std@0.74.0/http/server.ts";
+import type { ServerRequest } from "../deps.ts";
 
 export type Middleware = (req: LapiRequest, res: LapiResponse) => Promise<void> | void;
 

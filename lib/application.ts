@@ -61,9 +61,9 @@ export class Application extends LapiBase {
   }
 
   /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
-  async findRouteFromRouters(
+  findRouteFromRouters(
     request: ServerRequest,
-  ): Promise<LapiRoute | null> {
+  ): LapiRoute | null {
     for (const router of this.controllers) {
       const route = router.findRoute(request);
 
@@ -83,7 +83,7 @@ export class Application extends LapiBase {
   async handleRequest(serverRequest: ServerRequest): Promise<void> {
     let route = this.findRoute(serverRequest);
 
-    if (!route) route = await this.findRouteFromRouters(serverRequest);
+    if (!route) route = this.findRouteFromRouters(serverRequest);
 
     const rid = id();
 

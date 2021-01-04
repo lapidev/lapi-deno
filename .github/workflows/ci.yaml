@@ -21,6 +21,8 @@ jobs:
         run: make cache
       - name: Run unit tests
         run: make test
+      - name: Codecov upload
+        run: bash <(curl -s https://codecov.io/bash)
   int-test:
     name: Integration test
     runs-on: ubuntu-latest

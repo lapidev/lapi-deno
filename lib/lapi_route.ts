@@ -1,7 +1,7 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/lapi_route */
 
-import { ServerRequest } from "https://deno.land/std@0.74.0/http/server.ts";
+import type { ServerRequest } from "../deps.ts";
 import type { LapiRequest } from "./lapi_request.ts";
 import type { LapiResponse } from "./lapi_response.ts";
 

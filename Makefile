@@ -13,10 +13,10 @@ setup:
 	@curl https://raw.githubusercontent.com/second-state/ssvmup/master/installer/init.sh -sSf | sh
 
 cache:
-	@$(DENO) cache --unstable deps.ts deps_test.ts
+	@$(DENO) cache --reload --unstable deps.ts deps_test.ts
 
 test:
-	@$(DENO) test $(CONFIG) --coverage $(FLAGS) --unstable lib
+	@$(DENO) test $(CONFIG) --coverage=coverage $(FLAGS) --unstable lib
 
 int:
 	@$(DENO) test $(CONFIG) --allow-run $(FLAGS) --unstable test
@@ -34,7 +34,7 @@ release: test int
 	npx standard-version --commit-all --tag-prefix ""
 release: docs
 
-ci: lint cache test-deno
+ci: lint cache test
 
 tag:
 	@$(DENO) run --allow-read --allow-run scripts/tag.ts

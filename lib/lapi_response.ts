@@ -1,7 +1,7 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/lapi_request */
 
-import type { Response, ServerRequest } from "../deps.ts";
+import { Cookie, Response, ServerRequest, setCookie } from "../deps.ts";
 import { Logger } from "./logger.ts";
 import { ContentType } from "./content_type.ts";
 import { Header } from "./header.ts";
@@ -23,9 +23,12 @@ export class LapiResponse {
   /** Body that will be sent in the response. */
   private _body?: string;
 
+  /** Cookies that will be sent in the response. */
+  private _cookies: Cookie[] = [];
+
   /** Creates a Request. */
   constructor(
-    private id: string,
+    public id: string,
     private serverRequest: ServerRequest,
   ) {
     this.url = this.serverRequest.url;
@@ -60,19 +63,29 @@ export class LapiResponse {
     return this;
   }
 
-  /** Sends a response. */
-  send(response?: Response): void {
+  /** Generates and returns the response. */
+  getResponse(response?: Response): Response {
     if (response?.headers && this._headers) {
       response.headers.forEach((value, key) => this._headers.set(key, value));
     }
-    this.serverRequest.respond(
-      {
-        body: this._body,
-        status: this.status,
-        ...response,
-        headers: this._headers,
-      },
+
+    const serverResponse = {
+      body: this._body,
+      status: this.status,
+      ...response,
+      headers: this._headers,
+    };
+
+    this._cookies.forEach((cookie: Cookie): void =>
+      setCookie(serverResponse, cookie)
     );
+
+    return serverResponse;
+  }
+
+  /** Sends a response. */
+  send(response?: Response): void {
+    this.serverRequest.respond(this.getResponse(response));
   }
 
   /** Sets a header. */
@@ -81,7 +94,7 @@ export class LapiResponse {
     return this;
   }
 
-  // /** Gets a header. */
+  /** Gets a header. */
   getHeader(name: string): string | null {
     return this._headers.get(name);
   }
@@ -92,7 +105,9 @@ export class LapiResponse {
     return this;
   }
 
-  get method(): string {
-    return this.serverRequest.method;
+  /** Sets a cookie for the response. */
+  setCookie(cookie: Cookie): LapiResponse {
+    this._cookies.push(cookie);
+    return this;
   }
 }

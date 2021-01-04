@@ -6,10 +6,10 @@ jobs:
   unit-test:
     name: Unit test
     runs-on: ubuntu-latest
-    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     strategy:
       matrix:
-        deno: ["v1.x", "nightly"]
+        deno: ['v1.x', 'nightly']
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
@@ -24,10 +24,10 @@ jobs:
   int-test:
     name: Integration test
     runs-on: ubuntu-latest
-    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     strategy:
       matrix:
-        deno: ["v1.x", "nightly"]
+        deno: ['v1.x', 'nightly']
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
@@ -57,14 +57,14 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    if: github.event_name == "pull_request" || github.ref == "refs/heads/master"
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     steps:
     - name: Setup repo
       uses: actions/checkout@v2
       with:
         fetch-depth: 2
     - run: git checkout HEAD^2
-      if: github.event_name == "pull_request"
+      if: github.event_name == 'pull_request'
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
@@ -74,7 +74,7 @@ jobs:
   tag:
     name: Tag
     runs-on: ubuntu-latest
-    if: github.ref == "refs/heads/master"
+    if: github.ref == 'refs/heads/master'
     needs: [unit-test, int-test, lint, analyze]
     steps:
       - name: Setup repo

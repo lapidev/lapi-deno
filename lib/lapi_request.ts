@@ -1,7 +1,7 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/lapi_request */
 
-import { ServerRequest, getCookies } from "../deps.ts";
+import { getCookies, ServerRequest } from "../deps.ts";
 import { Logger } from "./logger.ts";
 
 export type PathParameters = { [index: string]: string | undefined };

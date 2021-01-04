@@ -13,7 +13,10 @@ import type { StrOrRegExp } from "./types.ts";
 import type { LapiResponse } from "./lapi_response.ts";
 import type { ServerRequest } from "../deps.ts";
 
-export type Middleware = (req: LapiRequest, res: LapiResponse) => Promise<void> | void;
+export type Middleware = (
+  req: LapiRequest,
+  res: LapiResponse,
+) => Promise<void> | void;
 
 export interface LapiBaseOptions {
   middlewares?: Middleware[];
@@ -100,7 +103,10 @@ export class LapiBase {
   }
 
   /** Runs all middleware on the passed in request. */
-  async runMiddleware(request: LapiRequest, response: LapiResponse): Promise<void> {
+  async runMiddleware(
+    request: LapiRequest,
+    response: LapiResponse,
+  ): Promise<void> {
     if (this.timer) request.logger.time("middleware");
     for (const middleware of this.middlewares) {
       await middleware(request, response);

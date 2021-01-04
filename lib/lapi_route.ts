@@ -15,7 +15,10 @@ export enum RequestMethod {
   PATCH = "PATCH",
 }
 
-export type RequestHandler = (req: LapiRequest, res: LapiResponse) => Promise<void> | void;
+export type RequestHandler = (
+  req: LapiRequest,
+  res: LapiResponse,
+) => Promise<void> | void;
 
 export interface Route {
   requestHandler: RequestHandler;

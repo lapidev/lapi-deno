@@ -1,10 +1,11 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
-import { getVersion, runAndExitOnFail } from "./common.ts";
+import { getConfig, runAndExitOnFail } from "./common.ts";
 
 const test = await runAndExitOnFail(
   { cmd: ["make", "test"], stdout: "piped" },
 );
+const config = await getConfig();
 
 const output = await test.output();
 
@@ -14,7 +15,15 @@ let covered = 0;
 let lines = 0;
 
 outputString.split(/(\r|\n)/g).forEach((line) => {
-  if (line.startsWith("cover file:///")) {
+  let ignored = false;
+
+  config.coverage?.ignore?.forEach((file) => {
+    if (line.includes(file)) {
+      ignored = true;
+    }
+  });
+
+  if (line.startsWith("cover file:///") && !ignored) {
     const match = line.match(/\((?<covered>\d+)\/(?<lines>\d+)/);
 
     if (!match?.groups?.lines || !match?.groups?.covered) {
@@ -27,8 +36,12 @@ outputString.split(/(\r|\n)/g).forEach((line) => {
   }
 });
 
-const percent = ((covered / lines) * 100)
+const percent = ((covered / lines) * 100);
 
 console.log(`${percent.toFixed(2)}% (${covered}/${lines})`);
 
-Deno.exit(percent < 75 ? 1 : 0)
+Deno.exit(
+  config.coverage?.lineCoverage && percent < config.coverage.lineCoverage
+    ? 1
+    : 0,
+);

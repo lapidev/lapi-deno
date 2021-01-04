@@ -41,7 +41,7 @@ release: docs
 .PHONY: release
 
 cov:
-	@$(DENO) run --allow-run scripts/coverage.ts
+	@$(DENO) run --allow-run --allow-read scripts/coverage.ts
 .PHONY: cov
 
 ci: lint cache cov

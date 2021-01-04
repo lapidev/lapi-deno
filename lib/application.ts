@@ -1,16 +1,20 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/application */
 
-import { serve, Server, Status } from "../deps.ts";
+import { serve, Server, ServerRequest, Status } from "../deps.ts";
 import { LapiBase, LapiBaseOptions } from "./lapi_base.ts";
 import { LapiRoute } from "./lapi_route.ts";
 import type { Controller } from "./controller.ts";
 import { LapiError } from "./lapi_error.ts";
-import { Request } from "./request.ts";
+import { LapiRequest } from "./lapi_request.ts";
+import { LapiResponse } from "./lapi_response.ts";
 import { id } from "./utils.ts";
+import { Header } from "./header.ts";
+import { ContentType } from "./content_type.ts";
 
 export type ErrorHandler = (
-  request: Request,
+  request: LapiRequest,
+  response: LapiResponse,
   error: Error,
 ) => Promise<void> | void;
 
@@ -57,12 +61,13 @@ export class Application extends LapiBase {
   }
 
   /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
-  async findRouteFromRouters(request: Request): Promise<LapiRoute | null> {
+  findRouteFromRouters(
+    request: ServerRequest,
+  ): LapiRoute | null {
     for (const router of this.controllers) {
       const route = router.findRoute(request);
 
       if (route) {
-        await router.runMiddleware(request);
         return route;
       }
     }
@@ -75,30 +80,44 @@ export class Application extends LapiBase {
    * 
    * @throws {LapiError} if the route is not found.
    */
-  async handleRequest(request: Request): Promise<void> {
+  async handleRequest(serverRequest: ServerRequest): Promise<void> {
+    let route = this.findRoute(serverRequest);
+
+    if (!route) route = this.findRouteFromRouters(serverRequest);
+
+    const rid = id();
+
+    const request = new LapiRequest(
+      rid,
+      serverRequest,
+      route?.requestPathRegex || new RegExp(/.*/),
+      this.utf8TextDecoder.decode(
+        await Deno.readAll(serverRequest.body),
+      ),
+    );
+    const response = new LapiResponse(rid, serverRequest);
+
     try {
-      let route = this.findRoute(request);
-
-      if (!route) route = await this.findRouteFromRouters(request);
-
       if (!route) {
         throw new LapiError(
           "Path not found",
           Status.NotFound,
-          request.url,
+          serverRequest.url,
         );
       }
 
-      request.parseParams(route.requestPathRegex);
+      request.logger.info(
+        `${serverRequest.proto} - ${request.method} - ${request.url}`,
+      );
 
-      await this.runMiddleware(request);
+      await this.runMiddleware(request, response);
 
       if (this.timer) request.logger.time("handler");
-      await route.requestHandler(request);
+      await route.requestHandler(request, response);
       if (this.timer) request.logger.timeEnd("handler");
     } catch (error) {
       if (this.errorHandler) {
-        this.errorHandler(request, error);
+        this.errorHandler(request, response, error);
         return;
       }
 
@@ -106,13 +125,13 @@ export class Application extends LapiBase {
         const body = JSON.stringify(error.body || { message: error.message });
 
         if (!error.body) {
-          request.headers.set("Content-type", "application/json");
+          response.setHeader(Header.ContentType, ContentType.ApplicationJson);
         }
 
-        request.send({ status: error.status, body });
+        response.send({ status: error.status, body });
       } else {
-        request.headers.set("Content-type", "application/json");
-        request.send(
+        response.setHeader(Header.ContentType, ContentType.ApplicationJson);
+        response.send(
           {
             status: Status.InternalServerError,
             body: JSON.stringify({ message: "An unexpected error occurred" }),
@@ -129,17 +148,7 @@ export class Application extends LapiBase {
     if (onStart) onStart();
 
     for await (const serverRequest of this.server) {
-      const body = this.utf8TextDecoder.decode(
-        await Deno.readAll(serverRequest.body),
-      );
-
-      const request = new Request(id(), serverRequest, body);
-
-      request.logger.info(
-        `${serverRequest.proto} - ${request.method} - ${request.url}`,
-      );
-
-      this.handleRequest(request);
+      this.handleRequest(serverRequest);
     }
   }
 }

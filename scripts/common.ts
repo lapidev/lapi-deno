@@ -28,3 +28,14 @@ export interface Project {
 export async function getVersion(): Promise<string> {
   return decoder.decode(await Deno.readFile("./version.txt")).split(/\r?\n/)[0];
 }
+
+export interface Config {
+  coverage?: {
+    lineCoverage?: number;
+    ignore: string[];
+  };
+}
+
+export async function getConfig(): Promise<Config> {
+  return JSON.parse(decoder.decode(await Deno.readFile("./config.json")));
+}

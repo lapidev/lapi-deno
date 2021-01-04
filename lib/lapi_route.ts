@@ -1,7 +1,9 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/lapi_route */
 
-import { Request } from "./request.ts";
+import type { ServerRequest } from "../deps.ts";
+import type { LapiRequest } from "./lapi_request.ts";
+import type { LapiResponse } from "./lapi_response.ts";
 
 export enum RequestMethod {
   POST = "POST",
@@ -13,7 +15,10 @@ export enum RequestMethod {
   PATCH = "PATCH",
 }
 
-export type RequestHandler = (req: Request) => Promise<void> | void;
+export type RequestHandler = (
+  req: LapiRequest,
+  res: LapiResponse,
+) => Promise<void> | void;
 
 export interface Route {
   requestHandler: RequestHandler;
@@ -50,7 +55,7 @@ export class LapiRoute implements Route {
   }
 
   /** Determine wether this route matches the received request. */
-  public matches(request: Request) {
+  public matches(request: ServerRequest) {
     const { method, url } = request;
 
     return this.requestMethod === method && this.requestPathRegex.test(url);

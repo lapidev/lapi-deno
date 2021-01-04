@@ -2,29 +2,36 @@
 
 import {
   Application,
-  Request,
+  LapiRequest,
   RequestMethod,
   Response,
   ServerRequest,
 } from "../mod.ts";
-import { assertEquals } from "https://deno.land/std@0.74.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.83.0/testing/asserts.ts";
+import { LapiResponse } from "../lib/lapi_response.ts";
 
 const application = new Application({ timer: true });
 
-application.get("/hello/<name>", (request: Request): void => {
-  request.send({ body: `Hello, ${request.params.name}!` });
+application.get(
+  "/hello/<name>",
+  (request: LapiRequest, response: LapiResponse): void => {
+    response.send({ body: `Hello, ${request.params.name}!` });
+  },
+);
+
+application.get("/json", (request: LapiRequest, response: LapiResponse): void => {
+  response.json({ hello: "This is JSON" }).send();
 });
 
-application.get("/json", (request: Request): void => {
-  request.json({ hello: "This is JSON" }).send();
-});
-
-application.get("/xml", (request: Request): void => {
-  request.xml("<tag>This is some XML</tag>").send();
-});
+application.get(
+  "/xml",
+  (request: LapiRequest, response: LapiResponse): void => {
+    response.xml("<tag>This is some XML</tag>").send();
+  },
+);
 
 if (Deno.env.get("DENO_ENV") !== "TEST") {
-  await application.start((): void => {
+  await application.start(() => {
     console.log(
       `Server started on http://${application.serverHost}:${application.serverPort}`,
     );
@@ -42,9 +49,7 @@ Deno.test('/hello should return { body: "Hello!" }', async () => {
     },
   } as unknown as ServerRequest;
 
-  const request = new Request("asdf", serverRequest, "");
-
-  await application.handleRequest(request);
+  await application.handleRequest(serverRequest);
 
   assertEquals(responses[0], { body: "Hello!" });
 });

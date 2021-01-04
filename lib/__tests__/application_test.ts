@@ -6,8 +6,9 @@ import { Application } from "../application.ts";
 import { testName } from "./test_utils.ts";
 import { Controller } from "../controller.ts";
 import { RequestMethod } from "../lapi_route.ts";
-import { Request } from "../request.ts";
+import { LapiRequest } from "../lapi_request.ts";
 import { id } from "../utils.ts";
+import { LapiResponse } from "../lapi_response.ts";
 
 Deno.test({
   name: testName("Application", "constructor", "default values"),
@@ -27,7 +28,11 @@ Deno.test({
       {
         serverPort: 4000,
         serverHost: "1.2.3.4",
-        errorHandler: (request: Request, error: Error) => {},
+        errorHandler: (
+          request: LapiRequest,
+          response: LapiResponse,
+          error: Error,
+        ) => {},
       },
     );
 
@@ -64,9 +69,7 @@ Deno.test({
       method: RequestMethod.POST,
     } as unknown as ServerRequest;
 
-    const route = await application.findRouteFromRouters(
-      new Request(id(), serverRequest, ""),
-    );
+    const route = await application.findRouteFromRouters(serverRequest);
 
     assert(route);
     assertEquals(route.requestMethod, RequestMethod.POST);

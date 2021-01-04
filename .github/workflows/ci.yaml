@@ -29,8 +29,8 @@ jobs:
         run: make lint
       - name: Run unit tests
         run: make cov
-      - name: Run int tests
-        run: make int
+      # - name: Run int tests
+      #   run: make int
   analyze:
     name: analyze
     runs-on: ubuntu-latest

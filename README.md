@@ -31,8 +31,8 @@ import { Application } from "https://deno.land/x/application/mod.ts";
 
 const application = new Application();
 
-application.get("/hello", (req): void => {
-  req.respond({ body: "Hello!" });
+application.get("/hello", (req, res): void => {
+  res.respond({ body: "Hello!" });
 });
 ```
 
@@ -43,8 +43,8 @@ import { Application } from "https://deno.land/x/application/mod.ts";
 
 const application = new Application();
 
-application.get("/hello", (req): void => {
-  req.respond({ body: "Hello!" });
+application.get("/hello", (req, res): void => {
+  res.respond({ body: "Hello!" });
 });
 
 await application.start((): void => {
@@ -70,8 +70,8 @@ import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
 
 const application = new Application();
 
-application.get("/hello", (req): void => {
-  req.respond({ body: "Hello!" });
+application.get("/hello", (req, res): void => {
+  res.send({ body: "Hello!" });
 });
 
 if (Deno.env.get("DENO_ENV") !== "TEST") {
@@ -108,9 +108,9 @@ Lapi supports query params but they do not need to be defined in your code. They
 ```typescript
 const application = new Application();
 
-application.get("/endpoint", (req) => {
+application.get("/endpoint", (req, res) => {
   const name = req.queries.get("name");
-  req.json({ name }).send();
+  res.json({ name }).send();
 });
 
 await application.start();
@@ -123,9 +123,9 @@ Path parameters can be defined by adding `<paramName>` to the path or by using a
 ```typescript
 const application = new Application();
 
-application.get("/endpoint/<name>", (req) => {
+application.get("/endpoint/<name>", (req, res) => {
   const name = req.params.name;
-  req.json({ name }).send();
+  res.json({ name }).send();
 });
 
 await application.start();
@@ -136,9 +136,9 @@ The following is the same as the example above but using a RegExp instead of a s
 ```typescript
 const application = new Application();
 
-application.get(/\/endpoint\/(?<name>.+)/, (req) => {
+application.get(/\/endpoint\/(?<name>.+)/, (req, res) => {
   const name = req.params.name;
-  req.json({ name }).send();
+  res.json({ name }).send();
 });
 
 await application.start();
@@ -150,7 +150,7 @@ We only recommend using RegExp when absolutely necessary because there is a high
 
 This is just a list of what we have planned in order:
 
-- [ ] Standardize `Request` methods
+- [x] Standardize `Request` methods
 - [ ] Add `next` parameter to handlers
 - [ ] Add builtin `xml` support
 - [ ] Add `authenticator` function for routes

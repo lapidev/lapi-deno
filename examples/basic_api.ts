@@ -7,7 +7,7 @@ import {
   Response,
   ServerRequest,
 } from "../mod.ts";
-import { assertEquals } from "https://deno.land/std@0.74.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.83.0/testing/asserts.ts";
 import { LapiResponse } from "../lib/lapi_response.ts";
 
 const application = new Application({ timer: true });

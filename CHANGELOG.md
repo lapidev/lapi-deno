@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/LukeShay/lapi/compare/0.2.2...0.2.3) (2021-01-04)
+
+
+### Features
+
+* **core:** separated request and response ([#17](https://github.com/LukeShay/lapi/issues/17)) ([b51b127](https://github.com/LukeShay/lapi/commits/b51b12751ec2fcd47d3f1130ee4506a7f55005b4))
+
 ### [0.2.2](https://github.com/LukeShay/lapi/compare/0.2.1...0.2.2) (2020-10-18)
 
 

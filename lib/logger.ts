@@ -26,14 +26,14 @@ export class Logger {
   }
 
   time(label: string): void {
-    console.time(`${Logger.time()} [TIMER] ${this.id} | ${label}`);
+    console.time(`[TIMER] ${this.id} | ${label}`);
   }
 
   timeEnd(label: string): void {
-    console.timeEnd(`${Logger.time()} [TIMER] ${this.id} | ${label}`);
+    console.timeEnd(`[TIMER] ${this.id} | ${label}`);
   }
 
   timeLog(label: string): void {
-    console.timeLog(`${Logger.time()} [TIMER] ${this.id} | ${label}`);
+    console.timeLog(`[TIMER] ${this.id} | ${label}`);
   }
 }

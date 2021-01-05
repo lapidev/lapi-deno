@@ -32,26 +32,50 @@ export class Application extends LapiBase {
   serverPort = 3000;
   serverHost = "0.0.0.0";
   utf8TextDecoder = new TextDecoder("utf8");
-  errorHandler?: ErrorHandler;
 
-  private server?: Server;
+  private _errorHandler: ErrorHandler;
+  private _server?: Server;
 
   /** Constructs an Application. */
   constructor(options?: ApplicationOptions) {
     super(options);
 
+    this._errorHandler = options?.errorHandler || this._defaultErrorHandler;
+
     if (options) {
       const {
         controllers,
-        errorHandler,
         serverPort,
         serverHost,
       } = options;
 
       this.controllers = controllers || [];
-      this.errorHandler = errorHandler;
       this.serverPort = serverPort || 3000;
       this.serverHost = serverHost || "0.0.0.0";
+    }
+  }
+
+  private _defaultErrorHandler(
+    request: LapiRequest,
+    response: LapiResponse,
+    error: Error,
+  ): void {
+    if (error instanceof LapiError) {
+      const body = JSON.stringify(error.body || { message: error.message });
+
+      if (!error.body) {
+        response.setHeader(Header.ContentType, ContentType.ApplicationJson);
+      }
+
+      response.respond({ status: error.status, body });
+    } else {
+      response.setHeader(Header.ContentType, ContentType.ApplicationJson);
+      response.respond(
+        {
+          status: Status.InternalServerError,
+          body: JSON.stringify({ message: "An unexpected error occurred" }),
+        },
+      );
     }
   }
 
@@ -113,41 +137,28 @@ export class Application extends LapiBase {
       await this.runMiddleware(request, response);
 
       if (this.timer) request.logger.time("handler");
+
       await route.requestHandler(request, response);
-      if (this.timer) request.logger.timeEnd("handler");
     } catch (error) {
-      if (this.errorHandler) {
-        this.errorHandler(request, response, error);
-        return;
-      }
-
-      if (error instanceof LapiError) {
-        const body = JSON.stringify(error.body || { message: error.message });
-
-        if (!error.body) {
-          response.setHeader(Header.ContentType, ContentType.ApplicationJson);
-        }
-
-        response.send({ status: error.status, body });
-      } else {
-        response.setHeader(Header.ContentType, ContentType.ApplicationJson);
-        response.send(
-          {
-            status: Status.InternalServerError,
-            body: JSON.stringify({ message: "An unexpected error occurred" }),
-          },
-        );
-      }
+      this._errorHandler(request, response, error);
     }
+
+    try {
+      await serverRequest.respond(response.getResponse());
+    } catch (error) {
+      this._errorHandler(request, response, error);
+    }
+
+    if (this.timer) request.logger.timeEnd("handler");
   }
 
   /** Starts the HTTP server. */
   async start(onStart?: () => Promise<void> | void): Promise<void> {
-    this.server = serve({ hostname: this.serverHost, port: this.serverPort });
+    this._server = serve({ hostname: this.serverHost, port: this.serverPort });
 
     if (onStart) onStart();
 
-    for await (const serverRequest of this.server) {
+    for await (const serverRequest of this._server) {
       this.handleRequest(serverRequest);
     }
   }

@@ -7,26 +7,36 @@ import {
   Response,
   ServerRequest,
 } from "../mod.ts";
-import { assertEquals } from "https://deno.land/std@0.83.0/testing/asserts.ts";
+import { assertEquals } from "../deps_test.ts";
 import { LapiResponse } from "../lib/lapi_response.ts";
 
 const application = new Application({ timer: true });
 
 application.get(
-  "/hello/<name>",
+  "/hello/<name>", // Regex Equivalent: /\/hello\/(?<name>[^/?]+)/
   (request: LapiRequest, response: LapiResponse): void => {
-    response.send({ body: `Hello, ${request.params.name}!` });
+    response.respond({ body: `Hello, ${request.params.name}!` });
   },
 );
 
-application.get("/json", (request: LapiRequest, response: LapiResponse): void => {
-  response.json({ hello: "This is JSON" }).send();
-});
+application.get(
+  /\/helloreg\/(?<name>[^/?]+)/, // String Equivalent: "/helloreg/<name>"
+  (request: LapiRequest, response: LapiResponse): void => {
+    response.respond({ body: `Hello, ${request.params.name}!` });
+  },
+);
+
+application.get(
+  "/json",
+  (request: LapiRequest, response: LapiResponse): void => {
+    response.json({ hello: "This is JSON" });
+  },
+);
 
 application.get(
   "/xml",
   (request: LapiRequest, response: LapiResponse): void => {
-    response.xml("<tag>This is some XML</tag>").send();
+    response.xml("<tag>This is some XML</tag>");
   },
 );
 

@@ -40,7 +40,11 @@ export class LapiRoute implements Route {
     public requestHandler: RequestHandler,
   ) {
     this.requestPathRegex = new RegExp(
-      `^${(requestPath as string).replace(/\/(<[^/]+>)/g, "/(?$1[^/]+)")}$`,
+      `^${
+        (requestPath as string).replace("/", "\\/")
+          .replace(/\?.*/, "")
+          .replace(/\/(<[^/]+>)/g, "/(?$1[^/?]+)")
+      }`,
     );
   }
 

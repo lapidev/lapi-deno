@@ -32,6 +32,7 @@ export async function getVersion(): Promise<string> {
 export interface Config {
   coverage?: {
     lineCoverage?: number;
+    lineCoveragePerFile?: number;
     ignore: string[];
   };
 }

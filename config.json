@@ -1,6 +1,7 @@
 {
   "coverage": {
     "lineCoverage": 75,
+    "lineCoveragePerFile": 75,
     "ignore": ["lib/logger.ts"]
   }
 }

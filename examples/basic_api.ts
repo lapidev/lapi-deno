@@ -7,7 +7,7 @@ import {
   Response,
   ServerRequest,
 } from "../mod.ts";
-import { assertEquals } from "https://deno.land/std@0.83.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/x/lapi/mod.ts";
 import { LapiResponse } from "../lib/lapi_response.ts";
 
 const application = new Application({ timer: true });
@@ -19,9 +19,12 @@ application.get(
   },
 );
 
-application.get("/json", (request: LapiRequest, response: LapiResponse): void => {
-  response.json({ hello: "This is JSON" }).send();
-});
+application.get(
+  "/json",
+  (request: LapiRequest, response: LapiResponse): void => {
+    response.json({ hello: "This is JSON" }).send();
+  },
+);
 
 application.get(
   "/xml",

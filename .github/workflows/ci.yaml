@@ -34,13 +34,13 @@ jobs:
   analyze:
     name: analyze
     runs-on: ubuntu-latest
+    if: github.ref == 'master'
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
       - run: git checkout HEAD^2
-        if: github.event_name == 'pull_request'
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:

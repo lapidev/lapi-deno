@@ -7,13 +7,20 @@ import {
   Response,
   ServerRequest,
 } from "../mod.ts";
-import { assertEquals } from "https://deno.land/x/lapi/mod.ts";
+import { assertEquals } from "../deps_test.ts";
 import { LapiResponse } from "../lib/lapi_response.ts";
 
 const application = new Application({ timer: true });
 
 application.get(
-  "/hello/<name>",
+  "/hello/<name>", // Regex Equivalent: /\/hello\/(?<name>[^/?]+)/
+  (request: LapiRequest, response: LapiResponse): void => {
+    response.send({ body: `Hello, ${request.params.name}!` });
+  },
+);
+
+application.get(
+  /\/helloreg\/(?<name>[^/?]+)/, // String Equivalent: "/helloreg/<name>"
   (request: LapiRequest, response: LapiResponse): void => {
     response.send({ body: `Hello, ${request.params.name}!` });
   },

@@ -113,15 +113,15 @@ export class Application extends LapiBase {
       await this.runMiddleware(request, response);
 
       if (this.timer) request.logger.time("handler");
+
       await route.requestHandler(request, response);
+      await response.send();
+
       if (this.timer) request.logger.timeEnd("handler");
     } catch (error) {
       if (this.errorHandler) {
         this.errorHandler(request, response, error);
-        return;
-      }
-
-      if (error instanceof LapiError) {
+      } else if (error instanceof LapiError) {
         const body = JSON.stringify(error.body || { message: error.message });
 
         if (!error.body) {

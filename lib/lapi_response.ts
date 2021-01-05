@@ -84,8 +84,8 @@ export class LapiResponse {
   }
 
   /** Sends a response. */
-  send(response?: Response): void {
-    this.serverRequest.respond(this.getResponse(response));
+  send(response?: Response): Promise<void> {
+    return this.serverRequest.respond(this.getResponse(response));
   }
 
   /** Sets a header. */

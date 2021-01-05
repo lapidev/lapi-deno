@@ -26,6 +26,9 @@ export class LapiResponse {
   /** Cookies that will be sent in the response. */
   private _cookies: Cookie[] = [];
 
+  /** Response that will be sent. */
+  private _response?: Response;
+
   /** Creates a Request. */
   constructor(
     public id: string,
@@ -64,15 +67,17 @@ export class LapiResponse {
   }
 
   /** Generates and returns the response. */
-  getResponse(response?: Response): Response {
-    if (response?.headers && this._headers) {
-      response.headers.forEach((value, key) => this._headers.set(key, value));
+  public getResponse(): Response {
+    if (this._response?.headers && this._headers) {
+      this._response.headers.forEach((value, key) =>
+        this._headers.set(key, value)
+      );
     }
 
     const serverResponse = {
       body: this._body,
       status: this.status,
-      ...response,
+      ...this._response,
       headers: this._headers,
     };
 
@@ -83,9 +88,10 @@ export class LapiResponse {
     return serverResponse;
   }
 
-  /** Sends a response. */
-  send(response?: Response): Promise<void> {
-    return this.serverRequest.respond(this.getResponse(response));
+  /** Sets a response. */
+  respond(response: Response): LapiResponse {
+    this._response = response;
+    return this;
   }
 
   /** Sets a header. */

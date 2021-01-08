@@ -2,7 +2,7 @@
 /* @module lapi/application */
 
 import { serve, Server, ServerRequest, Status } from "../deps.ts";
-import { LapiBase, LapiBaseOptions } from "./lapi_base.ts";
+import { LapiBase, LapiBaseOptions, Middleware, Postware } from "./lapi_base.ts";
 import { LapiRoute } from "./lapi_route.ts";
 import type { Controller } from "./controller.ts";
 import { LapiError } from "./lapi_error.ts";
@@ -85,29 +85,42 @@ export class Application extends LapiBase {
   }
 
   /** Loops through they routers to find the handler for the given request and runs the middleware for it. */
-  findRouteFromRouters(
+  findRouteFromControllers(
     request: ServerRequest,
-  ): LapiRoute | null {
-    for (const router of this.controllers) {
-      const route = router.findRoute(request);
+  ): [LapiRoute | null, LapiBase | null] {
+    for (const controller of this.controllers) {
+      const route = controller.findRoute(request);
 
       if (route) {
-        return route;
+        return [route, controller];
       }
     }
 
-    return null;
+    return [null, null];
   }
 
   /**
-   * Handles the given request. 
+   * Handles the given request. The following is the basic flow:
+   * 
+   * 1. Look for handler in application routes
+   * 2. Look for handler in controller if wasn't found
+   * 3. If none found, return a 404
+   * 4. Run base middleware
+   * 5. Run controller middleware
+   * 6. Run handler
+   * 7. Run controller postware
+   * 8. Run base postware
+   * 9. If there is an error thrown in steps 4-8, the error handler will be
+   * invoked
+   * 10. Send response to requester
    * 
    * @throws {LapiError} if the route is not found.
    */
   async handleRequest(serverRequest: ServerRequest): Promise<void> {
-    let route = this.findRoute(serverRequest);
+    let controller = null;
+    let route = this.findRoute(serverRequest); // 1
 
-    if (!route) route = this.findRouteFromRouters(serverRequest);
+    if (!route) [route, controller] = this.findRouteFromControllers(serverRequest); // 2
 
     const rid = id();
 
@@ -122,7 +135,7 @@ export class Application extends LapiBase {
     const response = new LapiResponse(rid, serverRequest);
 
     try {
-      if (!route) {
+      if (!route) { // 3
         throw new LapiError(
           "Path not found",
           Status.NotFound,
@@ -134,29 +147,31 @@ export class Application extends LapiBase {
         `${serverRequest.proto} - ${request.method} - ${request.url}`,
       );
 
-      await this.runMiddleware(request, response);
+      await this._runMiddleware(request, response); // 4
 
-      if (this.timer) request.logger.time("handler");
+      if (controller) {
+        await controller._runMiddleware(request, response); // 5
+      }
 
-      await route.requestHandler(request, response);
+      await route.requestHandler(request, response); // 6
+
+      if (controller) {
+        await controller._runPostware(request, response); // 7
+      }
+
+      await this._runPostware(request, response); // 8
     } catch (error) {
-      this._errorHandler(request, response, error);
+      this._errorHandler(request, response, error); // 9
     }
 
-    try {
-      await serverRequest.respond(response.getResponse());
-    } catch (error) {
-      this._errorHandler(request, response, error);
-    }
-
-    if (this.timer) request.logger.timeEnd("handler");
+    await serverRequest.respond(response.getResponse()); // 10
   }
 
   /** Starts the HTTP server. */
   async start(onStart?: () => Promise<void> | void): Promise<void> {
     this._server = serve({ hostname: this.serverHost, port: this.serverPort });
 
-    if (onStart) onStart();
+    onStart && onStart();
 
     for await (const serverRequest of this._server) {
       this.handleRequest(serverRequest);

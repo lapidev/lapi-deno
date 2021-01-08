@@ -135,3 +135,25 @@ await application.start();
 ```
 
 We only recommend using RegExp when absolutely necessary because there is a higher chance of an error occurring.
+
+## Middleware and Postware
+
+Lapi allows the use of middleware and postware that are run before and after the request handler, respectfully.
+
+The following is an example of how to create middleware and postware:
+
+```typescript
+const application = new Application();
+
+application.addMiddleware(
+  (request: LapiRequest, response: LapiResponse): void => {
+    console.log("This is a middleware");
+  },
+);
+
+application.addPostware(
+  (request: LapiRequest, response: LapiResponse): void => {
+    console.log("This is a postware");
+  },
+);
+```

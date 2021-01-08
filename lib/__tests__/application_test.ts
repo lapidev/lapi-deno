@@ -69,7 +69,7 @@ Deno.test({
       method: RequestMethod.POST,
     } as unknown as ServerRequest;
 
-    const route = await application.findRouteFromRouters(serverRequest);
+    const route = await application.findRouteFromControllers(serverRequest);
 
     assert(route);
     assertEquals(route.requestMethod, RequestMethod.POST);

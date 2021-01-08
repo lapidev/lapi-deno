@@ -18,8 +18,8 @@ Deno.test({
   fn: () => {
     const lapiBase = new LapiBase();
 
-    assertEquals(lapiBase.middlewares.length, 0);
-    assertEquals(lapiBase.routes.length, 0);
+    assertEquals(lapiBase._middlewares.length, 0);
+    assertEquals(lapiBase._routes.length, 0);
   },
 });
 
@@ -34,7 +34,7 @@ Deno.test({
 
     lapiBase.addRoute(RequestMethod.POST, "/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
+    assertEquals(lapiBase._routes.length, 1);
   },
 });
 
@@ -49,7 +49,7 @@ Deno.test({
 
     lapiBase.addMiddleware((_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.middlewares.length, 1);
+    assertEquals(lapiBase._middlewares.length, 1);
   },
 });
 
@@ -64,8 +64,8 @@ Deno.test({
 
     lapiBase.post("/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
-    assertEquals(lapiBase.routes[0].requestMethod, RequestMethod.POST);
+    assertEquals(lapiBase._routes.length, 1);
+    assertEquals(lapiBase._routes[0].requestMethod, RequestMethod.POST);
   },
 });
 
@@ -80,8 +80,8 @@ Deno.test({
 
     lapiBase.get("/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
-    assertEquals(lapiBase.routes[0].requestMethod, RequestMethod.GET);
+    assertEquals(lapiBase._routes.length, 1);
+    assertEquals(lapiBase._routes[0].requestMethod, RequestMethod.GET);
   },
 });
 
@@ -96,8 +96,8 @@ Deno.test({
 
     lapiBase.put("/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
-    assertEquals(lapiBase.routes[0].requestMethod, RequestMethod.PUT);
+    assertEquals(lapiBase._routes.length, 1);
+    assertEquals(lapiBase._routes[0].requestMethod, RequestMethod.PUT);
   },
 });
 
@@ -112,8 +112,8 @@ Deno.test({
 
     lapiBase.delete("/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
-    assertEquals(lapiBase.routes[0].requestMethod, RequestMethod.DELETE);
+    assertEquals(lapiBase._routes.length, 1);
+    assertEquals(lapiBase._routes[0].requestMethod, RequestMethod.DELETE);
   },
 });
 
@@ -128,8 +128,8 @@ Deno.test({
 
     lapiBase.options("/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
-    assertEquals(lapiBase.routes[0].requestMethod, RequestMethod.OPTIONS);
+    assertEquals(lapiBase._routes.length, 1);
+    assertEquals(lapiBase._routes[0].requestMethod, RequestMethod.OPTIONS);
   },
 });
 
@@ -144,8 +144,8 @@ Deno.test({
 
     lapiBase.head("/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
-    assertEquals(lapiBase.routes[0].requestMethod, RequestMethod.HEAD);
+    assertEquals(lapiBase._routes.length, 1);
+    assertEquals(lapiBase._routes[0].requestMethod, RequestMethod.HEAD);
   },
 });
 
@@ -160,8 +160,8 @@ Deno.test({
 
     lapiBase.patch("/path", (_req: LapiRequest) => {});
 
-    assertEquals(lapiBase.routes.length, 1);
-    assertEquals(lapiBase.routes[0].requestMethod, RequestMethod.PATCH);
+    assertEquals(lapiBase._routes.length, 1);
+    assertEquals(lapiBase._routes[0].requestMethod, RequestMethod.PATCH);
   },
 });
 
@@ -234,7 +234,7 @@ Deno.test({
     const mockRequest = { request: "asdf" } as unknown as LapiRequest;
     const mockResponse = { response: "asdf" } as unknown as LapiResponse;
 
-    await lapiBase.runMiddleware(mockRequest, mockResponse);
+    await lapiBase._runMiddleware(mockRequest, mockResponse);
 
     assertEquals(middlewares[0].calls, [{ args: [mockRequest, mockResponse] }]);
     assertEquals(middlewares[1].calls, [{ args: [mockRequest, mockResponse] }]);

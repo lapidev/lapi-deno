@@ -56,6 +56,21 @@ Deno.test({
 Deno.test({
   name: testName(
     "LapiBase",
+    "addPostware",
+    "adds route to postware array",
+  ),
+  fn: () => {
+    const lapiBase = new LapiBase();
+
+    lapiBase.addPostware((_req: LapiRequest) => {});
+
+    assertEquals(lapiBase._postwares.length, 1);
+  },
+});
+
+Deno.test({
+  name: testName(
+    "LapiBase",
     "post",
     "adds POST route to routes array",
   ),

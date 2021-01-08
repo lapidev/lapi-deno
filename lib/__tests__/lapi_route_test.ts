@@ -60,6 +60,27 @@ Deno.test({
 });
 
 Deno.test({
+  name: testName("LapiRoute", "matches", "/ /path"),
+  fn: () => {
+    const lapiRoute = LapiRoute.FromRoute({
+      requestMethod: RequestMethod.POST,
+      requestPath: "/",
+      requestHandler: () => {},
+    });
+
+    console.log(lapiRoute.requestPathRegex);
+
+    assert(!lapiRoute.requestPathRegex.test("/path"));
+
+    assert(
+      !lapiRoute.matches(
+        { method: "POST", url: "/path" } as unknown as ServerRequest,
+      ),
+    );
+  },
+});
+
+Deno.test({
   name: testName("LapiRoute", "matches", "false"),
   fn: () => {
     const lapiRoute = LapiRoute.FromRoute({

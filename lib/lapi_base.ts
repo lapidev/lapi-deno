@@ -13,28 +13,31 @@ import type { StrOrRegExp } from "./types.ts";
 import type { LapiResponse } from "./lapi_response.ts";
 import type { ServerRequest } from "../deps.ts";
 
-export type Middleware = (
+export type Lapiware = (
   req: LapiRequest,
   res: LapiResponse,
 ) => Promise<void> | void;
 
+export type Middleware = Lapiware;
+export type Postware = Lapiware;
+
 export interface LapiBaseOptions {
   middlewares?: Middleware[];
+  postwares?: Postware[];
   routes?: Route[];
-  timer?: boolean;
 }
 
 /** Base class to be used if you need a class that supports middlewares and routes. */
 export class LapiBase {
-  middlewares: Middleware[];
-  routes: LapiRoute[];
-  timer = false;
+  _middlewares: Middleware[];
+  _postwares: Postware[];
+  _routes: LapiRoute[];
 
   /** Constructs a LapiBase class */
   constructor(options?: LapiBaseOptions) {
-    this.middlewares = options?.middlewares || [];
-    this.routes = options?.routes?.map(LapiRoute.FromRoute) || [];
-    this.timer = options?.timer || false;
+    this._middlewares = options?.middlewares || [];
+    this._postwares = options?.postwares || [];
+    this._routes = options?.routes?.map(LapiRoute.FromRoute) || [];
   }
 
   /** Adds a request handler for the given method and path. 
@@ -59,12 +62,17 @@ export class LapiBase {
       );
     }
 
-    this.routes.push(lapiRoute);
+    this._routes.push(lapiRoute);
   }
 
   /** Adds a middleware that is to be ran before the request handler. */
-  addMiddleware(middleware: Middleware): void {
-    this.middlewares.push(middleware);
+  addMiddleware(...middleware: Middleware[]): void {
+    this._middlewares.push(...middleware);
+  }
+
+  /** Adds a postware that is to be ran before the request handler. */
+  addPostware(...postware: Postware[]): void {
+    this._postwares.push(...postware);
   }
 
   /** Adds a `POST` route. */
@@ -103,20 +111,34 @@ export class LapiBase {
   }
 
   /** Runs all middleware on the passed in request. */
-  async runMiddleware(
+  async _runMiddleware(
     request: LapiRequest,
     response: LapiResponse,
   ): Promise<void> {
-    if (this.timer) request.logger.time("middleware");
-    for (const middleware of this.middlewares) {
-      await middleware(request, response);
+    await LapiBase.runLapiWare(request, response, this._middlewares);
+  }
+
+  /** Runs all postware on the passed in request. */
+  async _runPostware(
+    request: LapiRequest,
+    response: LapiResponse,
+  ): Promise<void> {
+    await LapiBase.runLapiWare(request, response, this._postwares);
+  }
+
+  private static async runLapiWare(
+    request: LapiRequest,
+    response: LapiResponse,
+    lapiwares: Lapiware[],
+  ): Promise<void> {
+    for (const lapiware of lapiwares) {
+      await lapiware(request, response);
     }
-    if (this.timer) request.logger.timeEnd("middleware");
   }
 
   /** Loops through the routes to find the handler for the given request.  */
   findRoute(request: ServerRequest): LapiRoute | null {
-    const matches = this.routes.filter((route) => route.matches(request));
+    const matches = this._routes.filter((route) => route.matches(request));
 
     if (matches.length === 0) {
       return null;

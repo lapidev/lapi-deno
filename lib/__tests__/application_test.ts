@@ -17,7 +17,6 @@ Deno.test({
 
     assertEquals(application.serverPort, 3000);
     assertEquals(application.serverHost, "0.0.0.0");
-    assert(!application.errorHandler);
   },
 });
 
@@ -38,13 +37,12 @@ Deno.test({
 
     assertEquals(application.serverPort, 4000);
     assertEquals(application.serverHost, "1.2.3.4");
-    assert(application.errorHandler);
   },
 });
 
 Deno.test({
-  name: testName("Application", "findRouteFromRouters", "finds controller"),
-  fn: async () => {
+  name: testName("Application", "findRouteFromControllers", "finds controller"),
+  fn: () => {
     const application = new Application(
       { serverPort: 4000, serverHost: "1.2.3.4" },
     );
@@ -69,9 +67,12 @@ Deno.test({
       method: RequestMethod.POST,
     } as unknown as ServerRequest;
 
-    const route = await application.findRouteFromRouters(serverRequest);
+    const [route, router] = application.findRouteFromControllers(
+      serverRequest,
+    );
 
     assert(route);
+    assert(router);
     assertEquals(route.requestMethod, RequestMethod.POST);
     assertEquals(route.requestPath, "/path1");
   },

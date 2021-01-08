@@ -40,6 +40,18 @@ application.get(
   },
 );
 
+application.addMiddleware(
+  (request: LapiRequest, response: LapiResponse): void => {
+    console.log("This is a middleware");
+  },
+);
+
+application.addPostware(
+  (request: LapiRequest, response: LapiResponse): void => {
+    console.log("This is a postware");
+  },
+);
+
 if (Deno.env.get("DENO_ENV") !== "TEST") {
   await application.start(() => {
     console.log(

@@ -42,9 +42,8 @@ export class LapiRoute implements Route {
     this.requestPathRegex = new RegExp(
       `^${
         (requestPath as string).replace("/", "\\/")
-          .replace(/\?.*/, "")
           .replace(/\/(<[^/]+>)/g, "/(?$1[^/?]+)")
-      }`,
+      }($|\\?.*$)`,
     );
   }
 
@@ -62,6 +61,7 @@ export class LapiRoute implements Route {
   public matches(request: ServerRequest) {
     const { method, url } = request;
 
-    return this.requestMethod === method && this.requestPathRegex.test(url);
+    return this.requestMethod === method &&
+      this.requestPathRegex.test(url.replace(/\?.*$/, ""));
   }
 }

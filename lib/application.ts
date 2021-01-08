@@ -2,7 +2,12 @@
 /* @module lapi/application */
 
 import { serve, Server, ServerRequest, Status } from "../deps.ts";
-import { LapiBase, LapiBaseOptions, Middleware, Postware } from "./lapi_base.ts";
+import {
+  LapiBase,
+  LapiBaseOptions,
+  Middleware,
+  Postware,
+} from "./lapi_base.ts";
 import { LapiRoute } from "./lapi_route.ts";
 import type { Controller } from "./controller.ts";
 import { LapiError } from "./lapi_error.ts";
@@ -88,8 +93,17 @@ export class Application extends LapiBase {
   findRouteFromControllers(
     request: ServerRequest,
   ): [LapiRoute | null, LapiBase | null] {
+    if (!request.url.startsWith(this._basePath)) {
+      return [null, null];
+    }
+
     for (const controller of this.controllers) {
-      const route = controller.findRoute(request);
+      const route = controller.findRoute(
+        {
+          ...request,
+          url: request.url.replace(this._basePath, ""),
+        } as ServerRequest,
+      );
 
       if (route) {
         return [route, controller];
@@ -118,9 +132,12 @@ export class Application extends LapiBase {
    */
   async handleRequest(serverRequest: ServerRequest): Promise<void> {
     let controller = null;
+
     let route = this.findRoute(serverRequest); // 1
 
-    if (!route) [route, controller] = this.findRouteFromControllers(serverRequest); // 2
+    if (!route) {
+      [route, controller] = this.findRouteFromControllers(serverRequest); // 2
+    }
 
     const rid = id();
 
@@ -135,7 +152,7 @@ export class Application extends LapiBase {
     const response = new LapiResponse(rid, serverRequest);
 
     try {
-      if (!route) { // 3
+      if (!route || !serverRequest.url.startsWith(this._basePath)) { // 3
         throw new LapiError(
           "Path not found",
           Status.NotFound,

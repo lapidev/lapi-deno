@@ -25,6 +25,7 @@ export interface LapiBaseOptions {
   middlewares?: Middleware[];
   postwares?: Postware[];
   routes?: Route[];
+  basePath?: string;
 }
 
 /** Base class to be used if you need a class that supports middlewares and routes. */
@@ -32,12 +33,14 @@ export class LapiBase {
   _middlewares: Middleware[];
   _postwares: Postware[];
   _routes: LapiRoute[];
+  _basePath: string;
 
   /** Constructs a LapiBase class */
   constructor(options?: LapiBaseOptions) {
     this._middlewares = options?.middlewares || [];
     this._postwares = options?.postwares || [];
     this._routes = options?.routes?.map(LapiRoute.FromRoute) || [];
+    this._basePath = options?.basePath || "";
   }
 
   /** Adds a request handler for the given method and path. 
@@ -53,7 +56,7 @@ export class LapiBase {
 
     if (isRegExp(requestPath)) {
       lapiRoute = new LapiRoute(requestMethod, "", requestHandler);
-      lapiRoute.requestPathRegex = requestPath as RegExp;
+      lapiRoute.requestPathRegex = (requestPath as RegExp);
     } else {
       lapiRoute = new LapiRoute(
         requestMethod,
@@ -138,7 +141,18 @@ export class LapiBase {
 
   /** Loops through the routes to find the handler for the given request.  */
   findRoute(request: ServerRequest): LapiRoute | null {
-    const matches = this._routes.filter((route) => route.matches(request));
+    if (!request.url.startsWith(`${this._basePath}`)) {
+      return null;
+    }
+
+    const matches = this._routes.filter((route) =>
+      route.matches(
+        {
+          ...request,
+          url: request.url.replace(this._basePath, ""),
+        } as ServerRequest,
+      )
+    );
 
     if (matches.length === 0) {
       return null;

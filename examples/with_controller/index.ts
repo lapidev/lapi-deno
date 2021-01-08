@@ -1,11 +1,11 @@
 import { Controller } from "../../lib/controller.ts";
 import { Application } from "../../mod.ts";
 
-const application = new Application();
+const application = new Application({ basePath: "/api" });
 
-const controller = new Controller();
+const controller = new Controller({ basePath: "/v1" });
 
-controller.get("/", (req, res) => {
+controller.get("", (req, res) => {
   res.text("Hello");
 });
 

@@ -62,6 +62,8 @@ export class LapiRoute implements Route {
     const { method, url } = request;
 
     return this.requestMethod === method &&
-      this.requestPathRegex.test(url.replace(/\?.*$/, ""));
+      this.requestPathRegex.test(
+        url.replace(/\?.*$/, ""),
+      );
   }
 }

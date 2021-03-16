@@ -1,6 +1,0 @@
-package lexar
-
-import (
-  "testing"
-  "github.com/lukeshay/lapi/token"
-)

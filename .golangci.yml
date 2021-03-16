@@ -1,0 +1,22 @@
+linters:
+  enable:
+    - asciicheck
+    - dupl
+    - funlen
+    - gochecknoglobals
+    - gocognit
+    - goconst
+    - godot
+    - godox
+    - gofmt
+    - gofumpt
+    - goimports
+    - golint
+    - gomnd
+    - gosec
+    - ifshort
+    - misspell
+    - nestif
+    - unconvert
+    - unparam
+    - wsl

@@ -30,7 +30,7 @@ If applicable, add screenshots to help explain your problem.
 ### Desktop (please complete the following information):
 
 - OS: [e.g. iOS]
-- Golang Version: [e.g. 1.16.0]
+- Deno Version: [e.g. 1.16.0]
 - Lapi Version: [e.g. 1.4.2]
 
 ### Additional context

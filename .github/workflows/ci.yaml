@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  validate:
+    name: validate ${{ matrix.deno }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno: ["v1.x", "nightly"]
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+      - name: Setup Deno
+        uses: denolib/setup-deno@v2
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Cache dependencies
+        run: make cache
+      - name: Run linter
+        if: github.event_name == 'pull_request'
+        run: make lint
+      - name: Run unit tests
+        run: make cov
+      # - name: Run int tests
+      #   run: make int
+  analyze:
+    name: analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - run: git checkout HEAD^2
+        if: github.event_name == 'pull_request'
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: typescript
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+  tag:
+    name: tag
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs: [validate, analyze]
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+      - name: Tag repo
+        uses: salsify/action-detect-and-tag-new-version@v2
+        with:
+          version-command: cat version.txt
+          tag-template: "{VERSION}"

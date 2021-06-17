@@ -1,0 +1,15 @@
+{
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true
+  },
+  "deno.enable": true,
+  "deno.unstable": true,
+  "deno.importMap": "./import_map.json",
+  "deno.path": "/home/codespace/.deno/bin/deno",
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": false
+  }
+}

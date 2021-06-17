@@ -1,0 +1,13 @@
+target/
+*.orig
+*.swp
+
+.cargo_home/
+.idea/
+
+# MacOS generated files
+.DS_Store
+.DS_Store?
+
+pkg/
+coverage/

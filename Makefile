@@ -35,8 +35,8 @@ docs:
 .PHONY: docs
 
 release:
-	npx standard-version --commit-all --tag-prefix ""
-release: docs
+	deno run --allow-read --allow-run https://dev.jspm.io/standard-version --tag-prefix "v"
+	npx standard-version --commit-all --tag-prefix "v"
 .PHONY: release
 
 ci: lint cache test

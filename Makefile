@@ -34,7 +34,7 @@ docs:
 	@$(DENO) run --allow-run --allow-write --allow-read scripts/docs.ts
 .PHONY: docs
 
-release: test int
+release:
 	npx standard-version --commit-all --tag-prefix ""
 release: docs
 .PHONY: release

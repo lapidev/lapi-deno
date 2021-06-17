@@ -1,4 +1,3 @@
-IMPORT_MAP = import_map.json
 DENO = deno
 MODULE = mod.ts
 FILES =  mod.ts deps.ts dep_test.ts lib
@@ -40,13 +39,5 @@ release: test int
 release: docs
 .PHONY: release
 
-cov:
-	@$(DENO) run --allow-run --allow-read scripts/coverage.ts
-.PHONY: cov
-
-ci: lint cache cov
+ci: lint cache test
 .PHONY: ci
-
-tag:
-	@$(DENO) run --allow-read --allow-run scripts/tag.ts
-.PHONY: tag

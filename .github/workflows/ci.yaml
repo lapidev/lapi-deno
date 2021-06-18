@@ -28,9 +28,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: make lint
       - name: Run unit tests
-        run: make cov
-      # - name: Run int tests
-      #   run: make int
+        run: make test
   analyze:
     name: analyze
     runs-on: ubuntu-latest
@@ -47,16 +45,3 @@ jobs:
           languages: typescript
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
-  tag:
-    name: tag
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    needs: [validate, analyze]
-    steps:
-      - name: Setup repo
-        uses: actions/checkout@v2
-      - name: Tag repo
-        uses: salsify/action-detect-and-tag-new-version@v2
-        with:
-          version-command: cat version.txt
-          tag-template: "{VERSION}"

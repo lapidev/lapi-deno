@@ -2,7 +2,7 @@
 /* @module lapi */
 
 export { Application } from "./application.ts";
-export type { ApplicationOptions } from "./application.ts";
+export type { ApplicationOptions, Rendered, Renderer } from "./application.ts";
 export type { Context } from "./context.ts";
 export type { Middleware } from "./middleware.ts";
 export type { Status } from "./deps.ts";

@@ -18,5 +18,10 @@ lint:
 .PHONY: lint
 
 release:
-	npx standard-version --commit-all
+	npx standard-version
 .PHONY: release
+
+
+prerelease:
+	npx standard-version --prerelease
+.PHONY: prerelease

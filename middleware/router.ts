@@ -4,7 +4,15 @@
 import { ComposedMiddleware, Middleware, compose } from "../middleware.ts";
 import { Context } from "../context.ts";
 
-export type Method = "POST" | "GET" | "DELETE" | "PUT" | "OPTIONS";
+export type Method =
+  | "POST"
+  | "GET"
+  | "DELETE"
+  | "PUT"
+  | "OPTIONS"
+  | "HEAD"
+  | "TRACE"
+  | "PATCH";
 
 function route(method: Method, path: string, middleware: ComposedMiddleware) {
   return async function (ctx: Context, next: () => Promise<void>) {

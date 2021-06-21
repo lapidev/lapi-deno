@@ -14,9 +14,12 @@ export type Method =
   | "TRACE"
   | "PATCH";
 
-function route(method: Method, path: string, middleware: ComposedMiddleware) {
+function route(method: Method, path: RegExp, middleware: ComposedMiddleware) {
   return async function (ctx: Context, next: () => Promise<void>) {
-    if (ctx.request.method === method && ctx.request.url.pathname === path) {
+    if (ctx.request.method === method && path.test(ctx.request.url.pathname)) {
+      ctx.request.pathParams = path.exec(ctx.request.url.pathname)?.groups ||
+        {};
+
       await middleware(ctx);
     }
 
@@ -56,7 +59,13 @@ export class Router {
       this.#middleware.push(
         route(
           methodOrMiddleware,
-          (this.#basePath + pathOrMiddleware).replaceAll(/\/+/g, "/"),
+          new RegExp(
+            `^${
+              (this.#basePath + pathOrMiddleware)
+                .replaceAll(/\/+/g, "/")
+                .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")
+            }$`,
+          ),
           compose(middlewares),
         ),
       );

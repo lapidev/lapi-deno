@@ -6,6 +6,8 @@ import type { ServerRequest } from "./deps.ts";
 export class Request {
   #serverRequest: ServerRequest;
   #domain: string;
+  #pathParams: Record<string, string> = {};
+  #pathParamsSet = false;
 
   constructor(serverRequest: ServerRequest, domain: string) {
     this.#serverRequest = serverRequest;
@@ -42,5 +44,15 @@ export class Request {
 
   get protoMajor() {
     return this.#serverRequest.protoMajor;
+  }
+
+  set pathParams(pathParams: Record<string, string>) {
+    if (!this.#pathParamsSet) {
+      this.#pathParams = pathParams;
+    }
+  }
+
+  get pathParams() {
+    return this.#pathParams;
   }
 }

@@ -6,15 +6,15 @@ CONFIG = --config tsconfig.json
 FLAGS = --allow-net --allow-env
 
 test:
-	@$(DENO) test --coverage=coverage $(FLAGS) --unstable lib
+	@$(DENO) test --coverage=coverage $(FLAGS)
 .PHONY: test
 
 format:
-	@$(DENO) fmt lib test
+	@$(DENO) fmt
 .PHONY: format
 
 lint:
-	@$(DENO) lint --unstable lib test
+	@$(DENO) lint
 .PHONY: lint
 
 release:

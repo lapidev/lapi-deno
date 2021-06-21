@@ -6,6 +6,7 @@ import { Middleware, ComposedMiddleware, compose } from "./middleware.ts";
 import { Response } from "./response.ts";
 import { Request } from "./request.ts";
 import { convertBodyToStdBody } from "./oak.ts";
+import { Context } from "./context.ts";
 
 export interface ApplicationOptions {
   port?: number;
@@ -91,10 +92,7 @@ export class Application {
    * @throws {LapiError} if the route is not found.
    */
   async #handleRequest(request: ServerRequest): Promise<void> {
-    const ctx = {
-      response: new Response(),
-      request: new Request(request, `http://${this.#host}:${this.#port}`),
-    };
+    const ctx = new Context(new Request(request, `http://${this.#host}:${this.#port}`), new Response(), this);
     await this.#getComposedMiddleware()(ctx);
 
     const { body, type } = await this.#renderer(

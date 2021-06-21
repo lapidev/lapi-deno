@@ -5,9 +5,11 @@ import type { ServerRequest } from "./deps.ts";
 
 export class Request {
   #serverRequest: ServerRequest;
+  #domain: String;
 
-  constructor(serverRequest: ServerRequest) {
+  constructor(serverRequest: ServerRequest, domain: String) {
     this.#serverRequest = serverRequest;
+    this.#domain = domain;
   }
 
   get method() {
@@ -15,7 +17,7 @@ export class Request {
   }
 
   get url() {
-    return this.#serverRequest.url;
+    return new URL(`${this.#domain}${this.#serverRequest.url}`);
   }
 
   get body() {

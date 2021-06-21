@@ -3,8 +3,32 @@
 
 import type { Response } from "./response.ts";
 import type { Request } from "./request.ts";
+import { Application } from "./application.ts";
 
-export interface Context {
-  request: Request;
-  response: Response;
+export class Context {
+  #request: Request;
+  #response: Response;
+  #application: Application;
+
+  constructor(request: Request, response: Response, application: Application) {
+    this.#request = request;
+    this.#response = response;
+    this.#application = application;
+  }
+
+  get request() {
+    return this.#request;
+  }
+
+  get response() {
+    return this.#response;
+  }
+
+  get host() {
+    return this.#application.host;
+  }
+
+  get port() {
+    return this.#application.port;
+  }
 }

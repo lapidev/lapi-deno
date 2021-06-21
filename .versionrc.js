@@ -20,4 +20,7 @@ module.exports = {
       type: "plain-text",
     },
   ],
+  skip: {
+    tag: true,
+  },
 };

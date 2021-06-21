@@ -2,7 +2,7 @@
 /* @module lapi/application */
 
 import { serve, Server, ServerRequest } from "./deps.ts";
-import { Middleware, ComposedMiddleware, compose } from "./middleware.ts";
+import { compose, ComposedMiddleware, Middleware } from "./middleware.ts";
 import { Response } from "./response.ts";
 import { Request } from "./request.ts";
 import { convertBodyToStdBody } from "./oak.ts";
@@ -86,17 +86,17 @@ export class Application {
     return this.#composedMiddleware;
   }
 
-  /**
-   * Handles the given request.
-   *
-   * @throws {LapiError} if the route is not found.
-   */
+  /** Handles the given request. */
   async #handleRequest(request: ServerRequest): Promise<void> {
-    const ctx = new Context(new Request(request, `http://${this.#host}:${this.#port}`), new Response(), this);
+    const ctx = new Context(
+      new Request(request, `http://${this.#host}:${this.#port}`),
+      new Response(),
+      this
+    );
     await this.#getComposedMiddleware()(ctx);
 
     const { body, type } = await this.#renderer(
-      ctx.response.body as any,
+      ctx.response.body as Body,
       ctx.response.headers.get("Content-type")
     );
 

@@ -1,7 +1,7 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/middleware/router */
 
-import { ComposedMiddleware, Middleware, compose } from "../middleware.ts";
+import { compose, ComposedMiddleware, Middleware } from "../middleware.ts";
 import { Context } from "../context.ts";
 
 export type Method =
@@ -57,8 +57,8 @@ export class Router {
         route(
           methodOrMiddleware,
           (this.#basePath + pathOrMiddleware).replaceAll(/\/+/g, "/"),
-          compose(middlewares)
-        )
+          compose(middlewares),
+        ),
       );
     }
 

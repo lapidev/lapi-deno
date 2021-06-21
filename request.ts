@@ -5,9 +5,9 @@ import type { ServerRequest } from "./deps.ts";
 
 export class Request {
   #serverRequest: ServerRequest;
-  #domain: String;
+  #domain: string;
 
-  constructor(serverRequest: ServerRequest, domain: String) {
+  constructor(serverRequest: ServerRequest, domain: string) {
     this.#serverRequest = serverRequest;
     this.#domain = domain;
   }

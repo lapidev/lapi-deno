@@ -6,17 +6,23 @@ A full featured middleware based web framework for Deno.
 
 ## Why
 
-I started this project because I wanted a very easy to use framework to build APIs with in Deno. There are definitely some great ones that have already been created but they always seem to be difficult to get started with. This framework will contain the very basic implementation required to create a web application and include middleware to make building web applications easier.
+I started this project because I wanted a very easy to use framework to build
+APIs with in Deno. There are definitely some great ones that have already been
+created but they always seem to be difficult to get started with. This framework
+will contain the very basic implementation required to create a web application
+and include middleware to make building web applications easier.
 
 ## Getting Started
 
-To create a basic application, you first need to import `Application` into your program. This can be done with the following import statment:
+To create a basic application, you first need to import `Application` into your
+program. This can be done with the following import statment:
 
 ```typescript
 import { Application } from "https://deno.land/x/application/mod.ts";
 ```
 
-Once you have `Application` imported, you can create an application by calling the constructor:
+Once you have `Application` imported, you can create an application by calling
+the constructor:
 
 ```typescript
 import { Application } from "https://deno.land/x/application/mod.ts";
@@ -58,7 +64,9 @@ The full example [can be found here](./examples/basic_api.ts)
 
 ## Search Parameters
 
-Lapi supports search parameters but they do not need to be defined in your code. They can be accessed through the property `ctx.request.searchParams` in your handler function. Please see the example below.
+Lapi supports search parameters but they do not need to be defined in your code.
+They can be accessed through the property `ctx.request.searchParams` in your
+handler function. Please see the example below.
 
 ```typescript
 import { Application } from "https://deno.land/x/application/mod.ts";
@@ -74,6 +82,26 @@ application.use((ctx) => {
 await application.start();
 ```
 
+## Routing
+
+There is a Middleware provided in `middleware/router.ts` that can handle routing
+and route specific middleware. The following is a basic example. More can be
+found in the `examples` directory.
+
+```typescript
+import { Application } from "https://deno.land/x/lapi/mod.ts";
+import { Router } from "https://deno.land/x/lapi/middleware/router.ts";
+
+const application = new Application();
+const router = new Router();
+
+router.use("GET", "/", (ctx) => {
+  ctx.response.body = { key: "value" };
+});
+
+application.use(router.routes()).start();
+```
+
 # Roadmap
 
 This is just a list of what we have planned in order:
@@ -87,3 +115,4 @@ This is just a list of what we have planned in order:
     - [ ] Support for regular expressions
 - core
   - [ ] JSX support
+  - [ ] HTTPS support

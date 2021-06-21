@@ -36,7 +36,7 @@ function toUint8Array(body: Body): Uint8Array {
 
 export async function convertBodyToStdBody(
   body: Body | BodyFunction,
-  type?: string | null
+  type?: string | null,
 ): Promise<[Uint8Array | Deno.Reader | undefined, string | undefined | null]> {
   let result: Uint8Array | Deno.Reader | undefined;
   if (BODY_TYPES.includes(typeof body)) {
@@ -47,7 +47,7 @@ export async function convertBodyToStdBody(
     result = body;
   } else if (body instanceof ReadableStream) {
     result = readerFromStreamReader(
-      body.pipeThrough(new Uint8ArrayTransformStream()).getReader()
+      body.pipeThrough(new Uint8ArrayTransformStream()).getReader(),
     );
   } else if (isAsyncIterable(body)) {
     result = new AsyncIterableReader(body, toUint8Array);

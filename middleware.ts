@@ -19,7 +19,7 @@ export interface ComposedMiddleware {
 export function compose(middleware: Middleware[]): ComposedMiddleware {
   return function composedMiddleware(
     context: Context,
-    next?: () => Promise<void>
+    next?: () => Promise<void>,
   ): Promise<void> {
     let index = -1;
 

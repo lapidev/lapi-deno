@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/LukeShay/lapi/compare/v1.1.0...v1.1.1) (2021-06-21)
+
+
+### Fixes
+
+* **core:** construct context ([babee73](https://github.com/LukeShay/lapi/commits/babee735d34f8be815466fbbdefb348e1980061b))
+
 ## [1.1.0](https://github.com/LukeShay/lapi/compare/v1.0.0...v1.1.0) (2021-06-21)
 
 

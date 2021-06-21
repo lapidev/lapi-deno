@@ -2,7 +2,7 @@
 /* @module lapi/application */
 
 import { serve, Server, ServerRequest } from "./deps.ts";
-import { Middleware, compose } from "./middleware.ts";
+import { Middleware, ComposedMiddleware, compose } from "./middleware.ts";
 import { Response } from "./response.ts";
 import { Request } from "./request.ts";
 import { convertBodyToStdBody } from "./oak.ts";
@@ -22,7 +22,7 @@ export interface Renderer {
   (body: Body, type?: string | null): Promise<Rendered> | Rendered;
 }
 
-async function defaultRenderer(
+export async function defaultRenderer(
   body: Body,
   type?: string | null
 ): Promise<Rendered> {
@@ -30,10 +30,13 @@ async function defaultRenderer(
   return { body: resultBody, type: resultType };
 }
 
-/** Class used to create an API. This handles starting the #server and sending requests to the correct location. */
+/**
+ * Used to create an API. This handles starting the #server and sending
+ * requests to the correct location.
+ */
 export class Application {
   #middleware: Middleware[] = [];
-  #composedMiddleware?: Middleware;
+  #composedMiddleware?: ComposedMiddleware;
   #port = 3000;
   #host = "0.0.0.0";
   #renderer: Renderer = defaultRenderer;
@@ -51,8 +54,25 @@ export class Application {
     }
   }
 
-  use(...middleware: Middleware[]): Application {
-    this.#middleware.push(compose(middleware));
+  get host() {
+    return this.#host;
+  }
+
+  get port() {
+    return this.#port;
+  }
+
+  /** Adds Middleware to the application. */
+  use(midlewares: Middleware[]): Application;
+  use(...middlewares: Middleware[]): Application;
+  use(middlewareOrMiddlewares: Middleware | Middleware[]): Application {
+    this.#middleware.push(
+      compose(
+        typeof middlewareOrMiddlewares === "function"
+          ? [middlewareOrMiddlewares]
+          : middlewareOrMiddlewares
+      )
+    );
 
     return this;
   }
@@ -73,7 +93,7 @@ export class Application {
   async #handleRequest(request: ServerRequest): Promise<void> {
     const ctx = {
       response: new Response(),
-      request: new Request(request),
+      request: new Request(request, `http://${this.#host}:${this.#port}`),
     };
     await this.#getComposedMiddleware()(ctx);
 
@@ -93,7 +113,7 @@ export class Application {
     });
   }
 
-  /** Starts the HTTP #server. */
+  /** Starts the HTTP server. */
   async start(): Promise<void> {
     this.#server = serve({ hostname: this.#host, port: this.#port });
 

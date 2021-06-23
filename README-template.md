@@ -104,7 +104,9 @@ application.use(router.routes()).start();
 
 ## Cors
 
-There is a Middleware provided in `middleware/cors.ts` that will set up the headers for your application. This Middleware is configurable. The following is a basic example. More can be found in the `examples` directory.
+There is a Middleware provided in `middleware/cors.ts` that will set up the
+headers for your application. This Middleware is configurable. The following is
+a basic example. More can be found in the `examples` directory.
 
 ```typescript
 import { Application } from "https://deno.land/x/lapi/mod.ts";

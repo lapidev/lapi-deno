@@ -1,7 +1,7 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 
 import { Context } from "../context.ts";
-import { assertEquals, assert } from "../deps_test.ts";
+import { assert, assertEquals } from "../deps_test.ts";
 import { cors } from "./cors.ts";
 
 function fakeContext() {
@@ -36,12 +36,12 @@ Deno.test({
 
     cors({ allowedOrigins: ["first", "second", "third"] })(
       ctx as Context,
-      () => {}
+      () => {},
     );
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Origin"),
-      "second"
+      "second",
     );
   },
 });
@@ -55,12 +55,12 @@ Deno.test({
 
     cors({ allowedOrigins: ["first", "second", "third"] })(
       ctx as Context,
-      () => {}
+      () => {},
     );
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Origin"),
-      "false"
+      "false",
     );
   },
 });
@@ -85,7 +85,7 @@ Deno.test({
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Credentials"),
-      "true"
+      "true",
     );
   },
 });

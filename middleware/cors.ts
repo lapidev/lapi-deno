@@ -125,13 +125,13 @@ function configureExposedHeaders(ctx: Context, exposedHeaders?: string[]) {
 export function cors(opts = defaultCorsOptions) {
   opts = { ...defaultCorsOptions, ...opts };
 
-  return function (ctx: Context, next: Function) {
+  return async function (ctx: Context, next: () => Promise<void>) {
     configureAllowedOrigin(ctx, opts.allowedOrigins);
     configureAllowCredentials(ctx, opts.credentials);
     configureAllowedHeaders(ctx, opts.allowedHeaders);
     configureMaxAge(ctx, opts.maxAge);
     configureExposedHeaders(ctx, opts.exposedHeaders);
 
-    next();
+    await next();
   };
 }

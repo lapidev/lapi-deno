@@ -14,17 +14,43 @@ export type Method =
   | "TRACE"
   | "PATCH";
 
-function route(method: Method, path: RegExp, middleware: ComposedMiddleware) {
+function route(
+  method: Method,
+  path: RegExp,
+  handleOptions: boolean,
+  middleware: ComposedMiddleware
+) {
   return async function (ctx: Context, next: () => Promise<void>) {
-    if (ctx.request.method === method && path.test(ctx.request.url.pathname)) {
-      ctx.request.pathParams = path.exec(ctx.request.url.pathname)?.groups ||
-        {};
+    if (path.test(ctx.request.url.pathname)) {
+      if (ctx.request.method === method) {
+        ctx.request.pathParams =
+          path.exec(ctx.request.url.pathname)?.groups || {};
 
-      await middleware(ctx);
+        await middleware(ctx);
+      } else if (ctx.request.method === "OPTIONS" && handleOptions) {
+        ctx.response.headers.append("Access-Control-Allow-Methods", method);
+      }
     }
 
     await next();
   };
+}
+
+/** Options for a Router. */
+export interface RouterOptions {
+  /**
+   * Holds the base path of the Router.
+   *
+   * @default "/"
+   */
+  basePath?: string;
+
+  /**
+   * Specifies whether the Router should handle OPTIONS requests.
+   *
+   * @default true
+   */
+  handleOptions?: boolean;
 }
 
 /**
@@ -32,11 +58,13 @@ function route(method: Method, path: RegExp, middleware: ComposedMiddleware) {
  */
 export class Router {
   #basePath: string;
+  #handleOptions: boolean;
   #middleware: Middleware[] = [];
   #composedMiddleware?: ComposedMiddleware;
 
-  constructor(basePath?: string) {
+  constructor({ basePath, handleOptions }: RouterOptions = {}) {
     this.#basePath = basePath ?? "/";
+    this.#handleOptions = handleOptions ?? true;
   }
 
   /* Adds Middleware or a route to the router. */
@@ -60,14 +88,13 @@ export class Router {
         route(
           methodOrMiddleware,
           new RegExp(
-            `^${
-              (this.#basePath + pathOrMiddleware)
-                .replaceAll(/\/+/g, "/")
-                .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")
-            }$`,
+            `^${(this.#basePath + pathOrMiddleware)
+              .replaceAll(/\/+/g, "/")
+              .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")}$`
           ),
-          compose(middlewares),
-        ),
+          this.#handleOptions,
+          compose(middlewares)
+        )
       );
     }
 

@@ -14,3 +14,5 @@ export {
   setCookie,
 } from "https://deno.land/std@0.99.0/http/cookie.ts";
 export type { Cookie } from "https://deno.land/std@0.99.0/http/cookie.ts";
+export { exists } from "https://deno.land/std@0.99.0/fs/mod.ts";
+export { extname } from "https://deno.land/std@0.99.0/path/mod.ts";

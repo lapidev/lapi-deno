@@ -20,7 +20,7 @@ Deno.test({
   fn: function () {
     const ctx = fakeContext();
 
-    cors()(ctx as Context, () => {});
+    cors()(ctx as Context, async () => {});
 
     assertEquals(ctx.response.headers.get("Access-Control-Allow-Origin"), "*");
     assert(!ctx.response.headers.get("Origin"));
@@ -36,12 +36,12 @@ Deno.test({
 
     cors({ allowedOrigins: ["first", "second", "third"] })(
       ctx as Context,
-      () => {},
+      async () => {}
     );
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Origin"),
-      "second",
+      "second"
     );
   },
 });
@@ -55,12 +55,12 @@ Deno.test({
 
     cors({ allowedOrigins: ["first", "second", "third"] })(
       ctx as Context,
-      () => {},
+      async () => {}
     );
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Origin"),
-      "false",
+      "false"
     );
   },
 });
@@ -70,7 +70,7 @@ Deno.test({
   fn: function () {
     const ctx = fakeContext();
 
-    cors({ credentials: false })(ctx as Context, () => {});
+    cors({ credentials: false })(ctx as Context, async () => {});
 
     assert(!ctx.response.headers.get("Access-Control-Allow-Credentials"));
   },
@@ -81,11 +81,11 @@ Deno.test({
   fn: function () {
     const ctx = fakeContext();
 
-    cors()(ctx as Context, () => {});
+    cors()(ctx as Context, async () => {});
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Credentials"),
-      "true",
+      "true"
     );
   },
 });
@@ -95,7 +95,7 @@ Deno.test({
   fn: function () {
     const ctx = fakeContext();
 
-    cors()(ctx as Context, () => {});
+    cors()(ctx as Context, async () => {});
 
     assertEquals(ctx.response.headers.get("Access-Control-Max-Age"), "3600");
   },
@@ -106,7 +106,7 @@ Deno.test({
   fn: function () {
     const ctx = fakeContext();
 
-    cors({ maxAge: 36000 })(ctx as Context, () => {});
+    cors({ maxAge: 36000 })(ctx as Context, async () => {});
 
     assertEquals(ctx.response.headers.get("Access-Control-Max-Age"), "36000");
   },

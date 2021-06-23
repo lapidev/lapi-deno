@@ -101,18 +101,3 @@ router.use("GET", "/", (ctx) => {
 
 application.use(router.routes()).start();
 ```
-
-# Roadmap
-
-This is just a list of what we have planned in order:
-
-- middleware
-  - [ ] CORS middleware
-  - [ ] Sessions middleware
-  - [ ] Static assets middleware
-  - [ ] router
-    - [ ] Support for path parameters
-    - [ ] Support for regular expressions
-- core
-  - [ ] JSX support
-  - [ ] HTTPS support

@@ -17,11 +17,17 @@ lint:
 	@$(DENO) lint
 .PHONY: lint
 
+readme:
+	@./scripts/readme.ts
+.PHONY: readme
+
 release:
 	npx standard-version
+release: readme
 .PHONY: release
 
 
 prerelease:
 	npx standard-version --prerelease
+release: readme
 .PHONY: prerelease

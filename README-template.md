@@ -101,3 +101,22 @@ router.use("GET", "/", (ctx) => {
 
 application.use(router.routes()).start();
 ```
+
+## Cors
+
+There is a Middleware provided in `middleware/cors.ts` that will set up the headers for your application. This Middleware is configurable. The following is a basic example. More can be found in the `examples` directory.
+
+```typescript
+import { Application } from "https://deno.land/x/lapi/mod.ts";
+import { cors } from "https://deno.land/x/lapi/middleware/cors.ts";
+
+const application = new Application();
+
+application.use(cors()).use((ctx) => {
+  if (ctx.request.method === "GET") {
+    ctx.response.body = { key: "value" };
+  }
+});
+
+application.start();
+```

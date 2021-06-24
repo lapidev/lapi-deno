@@ -61,6 +61,7 @@ export class Router {
   #handleOptions: boolean;
   #middleware: Middleware[] = [];
   #composedMiddleware?: ComposedMiddleware;
+  #routes: { method: Method; path: string }[] = [];
 
   constructor({ basePath, handleOptions }: RouterOptions = {}) {
     this.#basePath = basePath ?? "/";
@@ -84,14 +85,13 @@ export class Router {
       this.#middleware.push(pathOrMiddleware as Middleware);
       this.#middleware.push(...middlewares);
     } else {
+      const path = (this.#basePath + pathOrMiddleware).replaceAll(/\/+/g, "/");
+
+      this.#routes.push({ method: methodOrMiddleware, path });
       this.#middleware.push(
         route(
           methodOrMiddleware,
-          new RegExp(
-            `^${(this.#basePath + pathOrMiddleware)
-              .replaceAll(/\/+/g, "/")
-              .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")}$`
-          ),
+          new RegExp(`^${path.replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")}$`),
           this.#handleOptions,
           compose(middlewares)
         )
@@ -106,6 +106,10 @@ export class Router {
     if (!this.#composedMiddleware) {
       this.#composedMiddleware = compose(this.#middleware);
     }
+
+    this.#routes.forEach(({ method, path }) =>
+      console.log(`${method} ${path}`)
+    );
 
     return this.#composedMiddleware;
   }

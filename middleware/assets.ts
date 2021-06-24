@@ -31,17 +31,21 @@ function contentType(path: string): string | undefined {
 
 /** Serves an assets directory at the given path. */
 export function assets(basePath: string, assetsDirectory: string) {
-  return new Router(basePath).use("GET", "/", async (ctx) => {
-    const filePath = `${assetsDirectory}/${ctx.request.url.path}`.replaceAll("//", "/");
+  console.log(`serving file ${assetsDirectory}`);
+  return new Router({ basePath })
+    .use("GET", "/.*", async (ctx) => {
+      const filePath =
+        `${assetsDirectory}/${ctx.request.url.pathname.replace(basePath, "")}`.replaceAll("//", "/");
 
-    if (await exists(filePath)) {
-      ctx.response.body = await Deno.open(filePath);
+      if (await exists(filePath)) {
+        ctx.response.body = await Deno.open(filePath);
+ 
+        const contentTypeValue = contentType(filePath);
 
-      const contentTypeValue = contentType(filePath);
-
-      if (contentTypeValue) {
-        ctx.response.headers.set("Content-Type", contentTypeValue);
+        if (contentTypeValue) {
+          ctx.response.headers.set("Content-Type", contentTypeValue);
+        }
       }
-    }
-  }).routes();
+    })
+    .routes();
 }

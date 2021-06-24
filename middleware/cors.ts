@@ -116,7 +116,7 @@ function configureExposedHeaders(ctx: Context, exposedHeaders?: string[]) {
   if (exposedHeaders?.length) {
     ctx.response.headers.set(
       "Access-Control-Expose-Headers",
-      exposedHeaders.join(",")
+      exposedHeaders.join(","),
     );
   }
 }

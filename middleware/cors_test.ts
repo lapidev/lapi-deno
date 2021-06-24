@@ -36,12 +36,12 @@ Deno.test({
 
     cors({ allowedOrigins: ["first", "second", "third"] })(
       ctx as Context,
-      async () => {}
+      async () => {},
     );
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Origin"),
-      "second"
+      "second",
     );
   },
 });
@@ -55,12 +55,12 @@ Deno.test({
 
     cors({ allowedOrigins: ["first", "second", "third"] })(
       ctx as Context,
-      async () => {}
+      async () => {},
     );
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Origin"),
-      "false"
+      "false",
     );
   },
 });
@@ -85,7 +85,7 @@ Deno.test({
 
     assertEquals(
       ctx.response.headers.get("Access-Control-Allow-Credentials"),
-      "true"
+      "true",
     );
   },
 });

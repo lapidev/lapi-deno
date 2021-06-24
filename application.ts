@@ -25,7 +25,7 @@ export interface Renderer {
 
 export async function defaultRenderer(
   body: Body,
-  type?: string | null,
+  type?: string | null
 ): Promise<Rendered> {
   const [resultBody, resultType] = await convertBodyToStdBody(body, type);
   return { body: resultBody, type: resultType };
@@ -71,8 +71,8 @@ export class Application {
       compose(
         typeof middlewareOrMiddlewares === "function"
           ? [middlewareOrMiddlewares]
-          : middlewareOrMiddlewares,
-      ),
+          : middlewareOrMiddlewares
+      )
     );
 
     return this;
@@ -91,18 +91,28 @@ export class Application {
     const ctx = new Context(
       new Request(request, `http://${this.#host}:${this.#port}`),
       new Response(),
-      this,
+      this
     );
     await this.#getComposedMiddleware()(ctx);
 
-    const { body, type } = await this.#renderer(
-      ctx.response.body as Body,
-      ctx.response.headers.get("Content-type"),
-    );
+    const { body, type } = ctx.response.handled
+      ? await this.#renderer(
+          ctx.response.body as Body,
+          ctx.response.headers.get("Content-type")
+        )
+      : { body: undefined, type: undefined };
 
     if (type) {
       ctx.response.headers.set("Content-type", type);
     }
+
+    if (!ctx.response.handled) {
+      ctx.response.status = 404;
+    }
+
+    console.log(
+      `${ctx.request.method} ${ctx.request.url.pathname} ${ctx.response.status}`
+    );
 
     await request.respond({
       body,

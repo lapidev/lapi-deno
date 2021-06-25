@@ -5,7 +5,6 @@ import { asset, assets } from "../middleware/assets.ts";
 
 const application = new Application();
 
-application.use(assets("/", "./assets"));
-application.use(asset("/favicon.ico", "./assets/favicon.ico"));
+application.use(await assets("/", "./assets"));
 
 application.start();

@@ -1,5 +1,5 @@
 import { Router } from "./router.ts";
-import { exists, extname } from "../deps.ts";
+import { exists, extname, walk } from "../deps.ts";
 import { Context } from "../context.ts";
 
 const MEDIA_TYPES: Record<string, string> = {
@@ -23,7 +23,7 @@ const MEDIA_TYPES: Record<string, string> = {
   ".jpg": "image/jpg",
   ".webp": "image/webp",
   ".jpeg": "image/jpg",
-  ".ico": "image/vnd.microsoft.icon"
+  ".ico": "image/vnd.microsoft.icon",
 };
 
 /** Returns the content-type based on the extension of a path. */
@@ -33,36 +33,40 @@ function contentType(path: string): string | undefined {
 
 /** Sets the response to the file at the given path if it exists. */
 async function serveFile(ctx: Context, filePath: string) {
-  if (await exists(filePath)) {
-    ctx.response.body = await Deno.open(filePath);
+  ctx.response.body = await Deno.open(filePath);
 
-    const contentTypeValue = contentType(filePath);
+  const contentTypeValue = contentType(filePath);
 
-    if (contentTypeValue) {
-      ctx.response.headers.set("Content-Type", contentTypeValue);
-    }
+  if (contentTypeValue) {
+    ctx.response.headers.set("Content-Type", contentTypeValue);
   }
 }
 
 /** Serves an assets directory at the given path. */
-export function assets(basePath: string, assetsDirectory: string) {
-  console.log(`serving file ${assetsDirectory}`);
-  return new Router({ basePath })
-    .use("GET", "/.*", async (ctx) => {
-      const filePath = `${assetsDirectory}/${
-        ctx.request.url.pathname.replace(
-          basePath,
-          "",
-        )
-      }`.replaceAll("//", "/");
+export async function assets(basePath: string, assetsDirectory: string) {
+  const router = new Router({ basePath, name: "assets" });
 
-      await serveFile(ctx, filePath);
-    })
-    .routes();
+  const realPath = await Deno.realPath(assetsDirectory);
+
+  for await (const f of walk(realPath)) {
+    if (f.isFile) {
+      router.use("GET", f.path.replace(realPath, ""), async (ctx) => {
+        await serveFile(ctx, f.path);
+      });
+    }
+  }
+
+  return router.routes();
 }
 
 /** Serves an asset at the given path. */
-export function asset(path: string, assetPath: string) {
+export async function asset(path: string, assetPath: string) {
+  const realPath = await Deno.realPath(assetPath);
+
+  if (!(await exists(realPath))) {
+    throw new Error(`file with path ${assetPath} does not exist`);
+  }
+
   return new Router({ basePath: path })
     .use("GET", "", async (ctx) => {
       await serveFile(ctx, assetPath);

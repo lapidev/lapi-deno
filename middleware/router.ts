@@ -18,13 +18,13 @@ function route(
   method: Method,
   path: RegExp,
   handleOptions: boolean,
-  middleware: ComposedMiddleware,
+  middleware: ComposedMiddleware
 ) {
   return async function (ctx: Context, next: () => Promise<void>) {
     if (path.test(ctx.request.url.pathname)) {
       if (ctx.request.method === method) {
-        ctx.request.pathParams = path.exec(ctx.request.url.pathname)?.groups ||
-          {};
+        ctx.request.pathParams =
+          path.exec(ctx.request.url.pathname)?.groups || {};
 
         await middleware(ctx);
       } else if (ctx.request.method === "OPTIONS" && handleOptions) {
@@ -39,33 +39,45 @@ function route(
 /** Options for a Router. */
 export interface RouterOptions {
   /**
-   * Holds the base path of the Router.
-   *
-   * @default "/"
-   */
+   * Holds the base path of the Router. @see {defaultOptions} for default. */
   basePath?: string;
 
   /**
    * Specifies whether the Router should handle OPTIONS requests.
-   *
-   * @default true
+   * @see {defaultOptions} for default.
    */
   handleOptions?: boolean;
+
+  /**
+   * Stores a name for the router. This is used for logging.
+   * @see {defaultOptions} for default.
+   */
+  name?: string;
 }
+
+/** Default options used for creating a router. */
+export const defaultOptions = {
+  basePath: "/",
+  handleOptions: true,
+  name: undefined,
+};
 
 /**
  * Used to handle routing and route specific middleware for a Lapi Application.
  */
 export class Router {
   #basePath: string;
+  #name?: string;
   #handleOptions: boolean;
   #middleware: Middleware[] = [];
   #composedMiddleware?: ComposedMiddleware;
   #routes: { method: Method; path: string }[] = [];
 
-  constructor({ basePath, handleOptions }: RouterOptions = {}) {
-    this.#basePath = basePath ?? "/";
-    this.#handleOptions = handleOptions ?? true;
+  constructor(options: RouterOptions = defaultOptions) {
+    const opts = { ...defaultOptions, ...options };
+    this.#basePath = opts.basePath;
+    this.#name = opts.name;
+    this.#handleOptions = opts.handleOptions;
   }
 
   /* Adds Middleware or a route to the router. */
@@ -92,15 +104,13 @@ export class Router {
         route(
           methodOrMiddleware,
           new RegExp(
-            `^${
-              path
-                .replaceAll(".", "\\.")
-                .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")
-            }$`,
+            `^${path
+              .replaceAll(".", "\\.")
+              .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")}$`
           ),
           this.#handleOptions,
-          compose(middlewares),
-        ),
+          compose(middlewares)
+        )
       );
     }
 
@@ -113,8 +123,15 @@ export class Router {
       this.#composedMiddleware = compose(this.#middleware);
     }
 
+    let spaces = "";
+
+    if (this.#name) {
+      console.log(`${this.#name}:`);
+      spaces = "  ";
+    }
+
     this.#routes.forEach(({ method, path }) =>
-      console.log(`${method} ${path}`)
+      console.log(`${spaces}${method} ${path}`)
     );
 
     return this.#composedMiddleware;

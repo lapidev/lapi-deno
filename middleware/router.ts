@@ -18,13 +18,13 @@ function route(
   method: Method,
   path: RegExp,
   handleOptions: boolean,
-  middleware: ComposedMiddleware
+  middleware: ComposedMiddleware,
 ) {
   return async function (ctx: Context, next: () => Promise<void>) {
     if (path.test(ctx.request.url.pathname)) {
       if (ctx.request.method === method) {
-        ctx.request.pathParams =
-          path.exec(ctx.request.url.pathname)?.groups || {};
+        ctx.request.pathParams = path.exec(ctx.request.url.pathname)?.groups ||
+          {};
 
         await middleware(ctx);
       } else if (ctx.request.method === "OPTIONS" && handleOptions) {
@@ -104,13 +104,15 @@ export class Router {
         route(
           methodOrMiddleware,
           new RegExp(
-            `^${path
-              .replaceAll(".", "\\.")
-              .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")}$`
+            `^${
+              path
+                .replaceAll(".", "\\.")
+                .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")
+            }$`,
           ),
           this.#handleOptions,
-          compose(middlewares)
-        )
+          compose(middlewares),
+        ),
       );
     }
 

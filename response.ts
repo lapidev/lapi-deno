@@ -24,10 +24,6 @@ export class Response {
     return this.#body;
   }
 
-  get headers() {
-    return this.#headers;
-  }
-
   set body(body: Body) {
     this.#handled = true;
     this.#body = body;
@@ -40,6 +36,10 @@ export class Response {
   set status(status: Status) {
     this.#handled = true;
     this.#status = status;
+  }
+
+  get headers() {
+    return this.#headers;
   }
 
   get handled() {

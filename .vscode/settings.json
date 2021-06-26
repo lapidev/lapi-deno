@@ -7,7 +7,7 @@
   },
   "deno.enable": true,
   "deno.unstable": true,
-  "deno.path": "/usr/local/bin/deno",
+  "deno.path": "/home/codespace/.deno/bin/deno",
   "deno.suggest.imports.hosts": {
     "https://deno.land": false
   }

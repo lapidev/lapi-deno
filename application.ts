@@ -95,14 +95,24 @@ export class Application {
     );
     await this.#getComposedMiddleware()(ctx);
 
-    const { body, type } = await this.#renderer(
-      ctx.response.body as Body,
-      ctx.response.headers.get("Content-type"),
-    );
+    const { body, type } = ctx.response.handled
+      ? await this.#renderer(
+        ctx.response.body as Body,
+        ctx.response.headers.get("Content-type"),
+      )
+      : { body: undefined, type: undefined };
 
     if (type) {
       ctx.response.headers.set("Content-type", type);
     }
+
+    if (!ctx.response.handled) {
+      ctx.response.status = 404;
+    }
+
+    console.log(
+      `${ctx.request.method} ${ctx.request.url.pathname} ${ctx.response.status}`,
+    );
 
     await request.respond({
       body,

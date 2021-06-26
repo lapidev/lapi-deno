@@ -3,7 +3,7 @@ MODULE = mod.ts
 FILES =  mod.ts deps.ts dep_test.ts lib
 
 CONFIG = --config tsconfig.json
-FLAGS = --allow-net --allow-env
+FLAGS = --allow-net --allow-env --unstable
 
 test:
 	@$(DENO) test --coverage=coverage $(FLAGS)

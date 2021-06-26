@@ -1,14 +1,14 @@
 /* This all comes from Oak which can be [found here](https://deno.land/x/oak). */
 
-import { AsyncIterableReader } from "https://deno.land/x/oak@v7.5.0/async_iterable_reader.ts";
-import { readerFromStreamReader } from "https://deno.land/x/oak@v7.5.0/deps.ts";
+import { AsyncIterableReader } from "https://deno.land/x/oak@v7.6.3/async_iterable_reader.ts";
+import { readerFromStreamReader } from "https://deno.land/x/oak@v7.6.3/deps.ts";
 import {
   BODY_TYPES,
   isAsyncIterable,
   isHtml,
   isReader,
   Uint8ArrayTransformStream,
-} from "https://deno.land/x/oak@v7.5.0/util.ts";
+} from "https://deno.land/x/oak@v7.6.3/util.ts";
 
 type Body =
   | string

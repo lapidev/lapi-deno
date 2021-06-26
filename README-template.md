@@ -1,6 +1,15 @@
 # Lapi {{prerelease}}
 
+![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fdeno-visualizer.danopia.net%2Fshields%2Flatest-version%2Fhttps%2Fdeno.land%2Fx%2Flapi%2Fmod.ts)
+[![CI](https://github.com/LukeShay/lapi/actions/workflows/ci.yaml/badge.svg)](https://github.com/LukeShay/lapi/actions/workflows/ci.yaml)
+![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fdeno-visualizer.danopia.net%2Fshields%2Fcache-size%2Fhttps%2Fdeno.land%2Fx%2Flapi%2Fmod.ts)
+![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fdeno-visualizer.danopia.net%2Fshields%2Fdep-count%2Fhttps%2Fdeno.land%2Fx%2Flapi%2Fmod.ts)
+![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fdeno-visualizer.danopia.net%2Fshields%2Fupdates%2Fhttps%2Fdeno.land%2Fx%2Flapi%2Fmod.ts)
+
+
 A full featured middleware based web framework for Deno.
+
+Roadmap: https://github.com/LukeShay/lapi/discussions/28
 
 **NOTE:** This project is a heavy WIP, therefore this may not be up to date.
 
@@ -18,14 +27,14 @@ To create a basic application, you first need to import `Application` into your
 program. This can be done with the following import statment:
 
 ```typescript
-import { Application } from "https://deno.land/x/application/mod.ts";
+import { Application } from "https://deno.land/x/lapi/mod.ts";
 ```
 
 Once you have `Application` imported, you can create an application by calling
 the constructor:
 
 ```typescript
-import { Application } from "https://deno.land/x/application/mod.ts";
+import { Application } from "https://deno.land/x/lapi/mod.ts";
 
 const application = new Application();
 ```
@@ -33,7 +42,7 @@ const application = new Application();
 You can then add middleware by calling `application.use`:
 
 ```typescript
-import { Application } from "https://deno.land/x/application/mod.ts";
+import { Application } from "https://deno.land/x/lapi/mod.ts";
 
 const application = new Application();
 
@@ -47,7 +56,7 @@ application.use((ctx) => {
 Now that you have a middleware added created, you can create the API:
 
 ```typescript
-import { Application } from "https://deno.land/x/application/mod.ts";
+import { Application } from "https://deno.land/x/lapi/mod.ts";
 
 const application = new Application();
 
@@ -69,7 +78,7 @@ They can be accessed through the property `ctx.request.searchParams` in your
 handler function. Please see the example below.
 
 ```typescript
-import { Application } from "https://deno.land/x/application/mod.ts";
+import { Application } from "https://deno.land/x/lapi/mod.ts";
 
 const application = new Application();
 

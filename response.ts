@@ -13,9 +13,10 @@ export type Body =
   | object
   | undefined
   | null;
+export type BodyFunction = () => Body | Promise<Body>;
 
 export class Response {
-  #body: Body;
+  #body: Body | BodyFunction;
   #headers = new Headers();
   #status = Status.OK;
   #handled = false;

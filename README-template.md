@@ -6,7 +6,6 @@
 ![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fdeno-visualizer.danopia.net%2Fshields%2Fdep-count%2Fhttps%2Fdeno.land%2Fx%2Flapi%2Fmod.ts)
 ![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fdeno-visualizer.danopia.net%2Fshields%2Fupdates%2Fhttps%2Fdeno.land%2Fx%2Flapi%2Fmod.ts)
 
-
 A full featured middleware based web framework for Deno.
 
 Roadmap: https://github.com/LukeShay/lapi/discussions/28

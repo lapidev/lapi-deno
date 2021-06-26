@@ -1,26 +1,22 @@
 /* This all comes from Oak which can be [found here](https://deno.land/x/oak). */
 
 import { AsyncIterableReader } from "https://deno.land/x/oak@v7.6.3/async_iterable_reader.ts";
-import { readerFromStreamReader } from "https://deno.land/x/oak@v7.6.3/deps.ts";
+import { readerFromStreamReader } from "./deps.ts";
 import {
   BODY_TYPES,
-  isAsyncIterable,
-  isHtml,
-  isReader,
   Uint8ArrayTransformStream,
 } from "https://deno.land/x/oak@v7.6.3/util.ts";
-
-type Body =
-  | string
-  | number
-  | bigint
-  | boolean
-  | symbol
-  // deno-lint-ignore ban-types
-  | object
-  | undefined
-  | null;
-type BodyFunction = () => Body | Promise<Body>;
+import {
+  isAsyncIterable,
+  isFunction,
+  isHtml,
+  isObject,
+  isReadableStream,
+  isReader,
+  isUint8Array,
+  stringifyable,
+} from "./utils.ts";
+import { Body, BodyFunction } from "./response.ts";
 
 const encoder = new TextEncoder();
 
@@ -39,22 +35,23 @@ export async function convertBodyToStdBody(
   type?: string | null,
 ): Promise<[Uint8Array | Deno.Reader | undefined, string | undefined | null]> {
   let result: Uint8Array | Deno.Reader | undefined;
-  if (BODY_TYPES.includes(typeof body)) {
+
+  if (stringifyable(body)) {
     const bodyText = String(body);
     result = encoder.encode(bodyText);
     type = type ?? (isHtml(bodyText) ? "text/html" : "text/plain");
-  } else if (body instanceof Uint8Array || isReader(body)) {
+  } else if (isUint8Array(body) || isReader(body)) {
     result = body;
-  } else if (body instanceof ReadableStream) {
+  } else if (isReadableStream(body)) {
     result = readerFromStreamReader(
       body.pipeThrough(new Uint8ArrayTransformStream()).getReader(),
     );
   } else if (isAsyncIterable(body)) {
     result = new AsyncIterableReader(body, toUint8Array);
-  } else if (body && typeof body === "object") {
+  } else if (body && isObject(body)) {
     result = encoder.encode(JSON.stringify(body));
     type = type ?? "application/json";
-  } else if (typeof body === "function") {
+  } else if (isFunction(body)) {
     const result = body.call(null);
     return convertBodyToStdBody(await result, type);
   } else if (body) {

@@ -3,7 +3,7 @@
 
 import { serve, Server, ServerRequest } from "./deps.ts";
 import { compose, ComposedMiddleware, Middleware } from "./middleware.ts";
-import { Response } from "./response.ts";
+import { BodyFunction, Response } from "./response.ts";
 import { Request } from "./request.ts";
 import { convertBodyToStdBody } from "./oak.ts";
 import { Context } from "./context.ts";
@@ -24,7 +24,7 @@ export interface Renderer {
 }
 
 export async function defaultRenderer(
-  body: Body,
+  body: Body | BodyFunction,
   type?: string | null,
 ): Promise<Rendered> {
   const [resultBody, resultType] = await convertBodyToStdBody(body, type);

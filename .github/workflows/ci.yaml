@@ -51,6 +51,8 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
       - name: Tag repo
         uses: salsify/action-detect-and-tag-new-version@v2
         with:

@@ -133,8 +133,8 @@ application.start();
 
 # Roadmap
 
-The project roadmap can be found under the [discussions tab of this repository](https://github.com/lukeshay/lapi/discussions)
+The project roadmap can be found under the [discussions tab of this repository.](https://github.com/lukeshay/lapi/discussions)
 
 # Contributing
 
-If you would like to contribute, you can open a pull request and assign it to @lukeshay. Please follow the styling rules [found here](./.github/STYLE_GUIDE.md).
+If you would like to contribute, you can open a pull request and assign it to @lukeshay. Please follow the styling rules [found here.](./.github/STYLE_GUIDE.md).

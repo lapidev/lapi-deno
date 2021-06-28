@@ -1,8 +1,19 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See
-[standard-version](https://github.com/conventional-changelog/standard-version)
-for commit guidelines.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.3.0](https://github.com/LukeShay/lapi/compare/v1.2.0...v1.3.0) (2021-06-28)
+
+
+### Features
+
+* **middleware/assets:** created middleware for serving static assets and directories ([#29](https://github.com/LukeShay/lapi/issues/29)) ([5bcb4ef](https://github.com/LukeShay/lapi/commits/5bcb4ef6631b8978dbe0d306614fc43af0305ce6))
+* **middleware/router:** added OPTIONS request handling ([2f60e29](https://github.com/LukeShay/lapi/commits/2f60e29f972014a4b33ba2fbfa4440264b0b43b7))
+
+
+### Fixes
+
+* **core:** removed some dependencies on Oak ([b3820c4](https://github.com/LukeShay/lapi/commits/b3820c44c9e7e1f411da5af4263c2c1ac6c26222))
 
 ## [1.2.0](https://github.com/LukeShay/lapi/compare/v1.1.1...v1.2.0) (2021-06-23)
 

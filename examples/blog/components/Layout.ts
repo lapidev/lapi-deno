@@ -1,7 +1,7 @@
 import { html } from "../html.ts";
 
 export interface LayoutProps {
-  // deno-lint-ignore ban-types
+  // deno-lint-ignore no-explicit-any
   children: any;
   title?: string;
 }

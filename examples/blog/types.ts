@@ -4,6 +4,7 @@ export interface Post {
   title: string;
   author: string;
   description: string;
+  // deno-lint-ignore no-explicit-any
   body: any;
   id: string;
 }

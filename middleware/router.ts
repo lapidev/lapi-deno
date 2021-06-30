@@ -3,7 +3,7 @@
 
 import { compose, ComposedMiddleware, Middleware } from "../middleware.ts";
 import { Context } from "../context.ts";
-import { MatchFunction, match } from "../deps.ts";
+import { match, MatchFunction } from "../deps.ts";
 
 export type Method =
   | "POST"
@@ -19,7 +19,7 @@ function route(
   method: Method,
   matcher: MatchFunction,
   handleOptions: boolean,
-  middleware: ComposedMiddleware
+  middleware: ComposedMiddleware,
 ) {
   return async function (ctx: Context, next: () => Promise<void>) {
     const match = matcher(ctx.request.url.pathname);
@@ -107,8 +107,8 @@ export class Router {
           methodOrMiddleware,
           match(path),
           this.#handleOptions,
-          compose(middlewares)
-        )
+          compose(middlewares),
+        ),
       );
     }
 

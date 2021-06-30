@@ -1,62 +1,69 @@
 import { Context } from "./context.ts";
 import { serve } from "./deps.ts";
-import { HttpServer, HttpServerOpts, HttpServerParams } from "./http_server.ts";
+import {
+  HttpServer,
+  HttpServerIteratorResult,
+  HttpServerIteratorStarter,
+  HttpServerOpts,
+} from "./http_server.ts";
 import { StdRequest } from "./std_request.ts";
-import { Response } from "./response.ts";
+import { Response, updateTypeAndGetBody } from "./response.ts";
 import { defaultStdRenderer, Renderer } from "./renderer.ts";
 
 export type StdHttpResponse = Uint8Array | Deno.Reader | undefined;
 
 export class StdHttpServer implements HttpServer<StdHttpResponse> {
   #renderer: Renderer<StdHttpResponse>;
+  #host?: string;
+  #port: number;
 
-  constructor({ renderer }: HttpServerOpts<StdHttpResponse> = {}) {
+  constructor(
+    { renderer, host, port }: HttpServerOpts<StdHttpResponse> = { port: 3000 },
+  ) {
     this.#renderer = renderer || defaultStdRenderer;
+    this.#host = host;
+    this.#port = port;
   }
 
-  get renderer() {
-    return this.#renderer;
-  }
+  [Symbol.asyncIterator](): AsyncIterableIterator<
+    HttpServerIteratorResult<StdHttpResponse>
+  > {
+    const start: HttpServerIteratorStarter<StdHttpResponse> = (controller) => {
+      const server = this;
 
-  async start({ handler, application }: HttpServerParams<StdHttpResponse>) {
-    const server = serve({
-      hostname: application.host,
-      port: application.port,
-    });
+      async function accept() {
+        const listener = serve({
+          hostname: server.#host,
+          port: server.#port,
+        });
 
-    for await (const request of server) {
-      const ctx = new Context(
-        new StdRequest(
-          request,
-          `http://${application.host}:${application.port}`,
-        ),
-        new Response(),
-        application.host,
-        application.port,
-      );
+        for await (const request of listener) {
+          const ctx = new Context(
+            new StdRequest(request, `http://${server.#host}:${server.#port}`),
+            new Response(),
+            server.#host,
+            server.#port,
+          );
 
-      await handler(ctx);
+          async function responder(ctx: Context, body: StdHttpResponse) {
+            await request.respond({
+              body,
+              headers: ctx.response.headers,
+              status: ctx.response.status,
+            });
+          }
 
-      const { body, type } = ctx.response.handled
-        ? await this.#renderer(
-          ctx.response.body as Body,
-          ctx.response.headers.get("Content-type"),
-        )
-        : { body: undefined, type: undefined };
-
-      if (type) {
-        ctx.response.headers.set("Content-type", type);
+          controller.enqueue({ ctx, responder, renderer: server.#renderer });
+        }
       }
 
-      if (!ctx.response.handled) {
-        ctx.response.status = 404;
-      }
+      accept();
+    };
 
-      await request.respond({
-        body,
-        headers: ctx.response.headers,
-        status: ctx.response.status,
-      });
-    }
+    const stream = new ReadableStream<
+      HttpServerIteratorResult<StdHttpResponse>
+    >({ start });
+
+    return stream[Symbol.asyncIterator]();
   }
 }

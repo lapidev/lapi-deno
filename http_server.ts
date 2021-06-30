@@ -1,6 +1,16 @@
 import { ComposedMiddleware } from "./middleware.ts";
 import { Application } from "./application.ts";
 import { Renderer } from "./renderer.ts";
+import { Context } from "./context.ts";
+
+export type HttpServerIteratorStarter<T> =
+  ReadableStreamDefaultControllerCallback<
+    HttpServerIteratorResult<T>
+  >;
+
+export type HttpServerIteratorController<T> = ReadableStreamDefaultController<
+  HttpServerIteratorResult<T>
+>;
 
 export interface HttpServerParams<T> {
   handler: ComposedMiddleware;
@@ -9,10 +19,19 @@ export interface HttpServerParams<T> {
 
 export interface HttpServerOpts<T> {
   renderer?: Renderer<T>;
+  host?: string;
+  port: number;
 }
 
-export declare class HttpServer<T> {
+export interface HttpServerIteratorResult<T> {
+  ctx: Context;
+  renderer: Renderer<T>;
+  responder: (ctx: Context, body?: T) => Promise<void>;
+}
+
+export declare class HttpServer<T>
+  implements AsyncIterable<HttpServerIteratorResult<T>> {
   constructor(opts?: HttpServerOpts<T>);
-  start(params: HttpServerParams<T>): Promise<void>;
-  readonly renderer: Renderer<T>;
+
+  [Symbol.asyncIterator](): AsyncIterableIterator<HttpServerIteratorResult<T>>;
 }

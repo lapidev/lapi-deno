@@ -1,5 +1,11 @@
 import { Context } from "./context.ts";
-import { HttpServer, HttpServerOpts, HttpServerParams } from "./http_server.ts";
+import {
+  HttpServer,
+  HttpServerIteratorController,
+  HttpServerIteratorResult,
+  HttpServerIteratorStarter,
+  HttpServerOpts,
+} from "./http_server.ts";
 import { NativeRequest } from "./native_request.ts";
 import { Response as HttpResponse, updateTypeAndGetBody } from "./response.ts";
 import { defaultNativeRenderer, Renderer } from "./renderer.ts";
@@ -31,22 +37,23 @@ function serveHttp(conn: Deno.Conn) {
 
 export class NativeHttpServer implements HttpServer<BodyInit> {
   #renderer: Renderer<BodyInit>;
+  #host?: string;
+  #port: number;
 
-  constructor({ renderer }: HttpServerOpts<BodyInit> = {}) {
-    assertUnstable();
-
+  constructor(
+    { renderer, host, port }: HttpServerOpts<BodyInit> = { port: 3000 },
+  ) {
     this.#renderer = renderer || defaultNativeRenderer;
-  }
-
-  get renderer() {
-    return this.#renderer;
+    this.#host = host;
+    this.#port = port;
   }
 
   async #serve(
     conn: Deno.Conn,
-    { application, handler }: HttpServerParams<BodyInit>,
+    controller: HttpServerIteratorController<BodyInit>,
   ) {
     const httpConn = serveHttp(conn);
+    const server = this;
 
     while (true) {
       let requestEvent: RequestEvent | null = null;
@@ -54,40 +61,56 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
       try {
         requestEvent = await httpConn.nextRequest();
       } catch {
-        break;
+        return;
       }
 
-      if (!requestEvent) break;
+      if (!requestEvent) return;
 
       const ctx = new Context(
         new NativeRequest(requestEvent.request),
         new HttpResponse(),
-        application.host,
-        application.port,
+        this.#host,
+        this.#port,
       );
 
-      await handler(ctx);
+      async function responder(ctx: Context, body?: BodyInit) {
+        requestEvent?.respondWith(
+          new Response(body, {
+            status: ctx.response.status,
+            headers: ctx.response.headers,
+          }),
+        );
+      }
 
-      const body = await updateTypeAndGetBody(ctx, this.#renderer);
-
-      requestEvent.respondWith(
-        new Response(body, {
-          status: ctx.response.status,
-          headers: ctx.response.headers,
-        }),
-      );
+      controller.enqueue({ ctx, responder, renderer: server.#renderer });
     }
   }
 
-  async start(params: HttpServerParams<BodyInit>) {
-    const listener = Deno.listen({
-      hostname: params.application.host,
-      port: params.application.port,
+  [Symbol.asyncIterator](): AsyncIterableIterator<
+    HttpServerIteratorResult<BodyInit>
+  > {
+    const start: HttpServerIteratorStarter<BodyInit> = (controller) => {
+      const server = this;
+
+      async function accept() {
+        const listener = Deno.listen({
+          hostname: server.#host,
+          port: server.#port,
+        });
+
+        while (true) {
+          const conn = await listener.accept();
+          server.#serve(conn, controller);
+        }
+      }
+
+      accept();
+    };
+
+    const stream = new ReadableStream<HttpServerIteratorResult<BodyInit>>({
+      start,
     });
 
-    while (true) {
-      const conn = await listener.accept();
-      this.#serve(conn, params);
-    }
+    return stream[Symbol.asyncIterator]();
   }
 }

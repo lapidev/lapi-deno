@@ -14,7 +14,8 @@ export {
   setCookie,
 } from "https://deno.land/std@0.99.0/http/cookie.ts";
 export type { Cookie } from "https://deno.land/std@0.99.0/http/cookie.ts";
-export { exists, walk } from "https://deno.land/std@0.99.0/fs/mod.ts";
+export { exists } from "https://deno.land/std@0.99.0/fs/exists.ts";
+export { walk } from "https://deno.land/std@0.99.0/fs/walk.ts";
 export { extname } from "https://deno.land/std@0.99.0/path/mod.ts";
 export {
   readerFromStreamReader,

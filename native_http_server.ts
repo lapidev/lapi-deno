@@ -4,10 +4,36 @@ import { NativeRequest } from "./native_request.ts";
 import { Response as HttpResponse, updateTypeAndGetBody } from "./response.ts";
 import { Renderer, defaultNativeRenderer } from "./renderer.ts";
 
+export interface RequestEvent {
+  readonly request: Request;
+  respondWith(r: Response | Promise<Response>): Promise<void>;
+}
+
+export interface HttpConn extends AsyncIterable<RequestEvent> {
+  readonly rid: number;
+
+  nextRequest(): Promise<RequestEvent | null>;
+  close(): void;
+}
+
+function assertUnstable() {
+  if (!("serveHttp" in Deno)) {
+    throw new Error("'--unstable' flag is required for native http server");
+  }
+}
+
+function serveHttp(conn: Deno.Conn) {
+  assertUnstable();
+
+  return (Deno as any).serveHttp(conn) as HttpConn;
+}
+
 export class NativeHttpServer implements HttpServer<BodyInit> {
   #renderer: Renderer<BodyInit>;
 
   constructor({ renderer }: HttpServerOpts<BodyInit> = {}) {
+    assertUnstable();
+
     this.#renderer = renderer || defaultNativeRenderer;
   }
 
@@ -19,15 +45,14 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
     conn: Deno.Conn,
     { application, handler }: HttpServerParams<BodyInit>
   ) {
-    const httpConn = Deno.serveHttp(conn);
+    const httpConn = serveHttp(conn);
 
     while (true) {
-      let requestEvent: Deno.RequestEvent | null = null;
+      let requestEvent: RequestEvent | null = null;
 
       try {
         requestEvent = await httpConn.nextRequest();
       } catch (e) {
-        console.log(e.message);
         break;
       }
 

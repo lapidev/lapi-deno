@@ -121,17 +121,6 @@ export class Router {
       this.#composedMiddleware = compose(this.#middleware);
     }
 
-    let spaces = "";
-
-    if (this.#name) {
-      console.log(`${this.#name}:`);
-      spaces = "  ";
-    }
-
-    this.#routes.forEach(({ method, path }) =>
-      console.log(`${spaces}${method} ${path}`)
-    );
-
     return this.#composedMiddleware;
   }
 }

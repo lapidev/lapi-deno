@@ -1,7 +1,9 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/response */
 
+import { Context } from "./context.ts";
 import { Status } from "./deps.ts";
+import { Renderer } from "./renderer.ts";
 
 export type Body =
   | string
@@ -46,4 +48,27 @@ export class Response {
   get handled() {
     return this.#handled;
   }
+}
+
+/** Updates the Content-Type header and returns the rendered body. */
+export async function updateTypeAndGetBody<T>(
+  ctx: Context,
+  renderer: Renderer<T>
+) {
+  const { body, type } = ctx.response.handled
+    ? await renderer(
+        ctx.response.body as Body,
+        ctx.response.headers.get("Content-type")
+      )
+    : { body: undefined, type: undefined };
+
+  if (type) {
+    ctx.response.headers.set("Content-type", type);
+  }
+
+  if (!ctx.response.handled) {
+    ctx.response.status = 404;
+  }
+
+  return body;
 }

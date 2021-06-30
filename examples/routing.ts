@@ -11,7 +11,7 @@ router.use("GET", "/", (ctx) => {
   ctx.response.body = { key: "value" };
 });
 
-router.use("GET", "/hello/<name>", (ctx) => {
+router.use("GET", "/hello/:name", (ctx) => {
   ctx.response.body = `Hello, ${ctx.request.pathParams.name}!`;
 });
 

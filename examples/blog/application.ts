@@ -14,7 +14,7 @@ router.use("GET", "/", async (ctx) => {
   ctx.response.body = render(home({ posts }));
 });
 
-router.use("GET", "/post/<id>", async (ctx) => {
+router.use("GET", "/post/:id", async (ctx) => {
   const thePost = findPost(ctx.request.pathParams.id);
 
   if (thePost) {

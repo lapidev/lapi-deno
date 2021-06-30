@@ -1,5 +1,5 @@
 import { Context } from "./context.ts";
-import { serve } from "./deps.ts";
+import { Server } from "./deps.ts";
 import {
   HttpServer,
   HttpServerIteratorResult,
@@ -18,7 +18,7 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
   #port: number;
 
   constructor(
-    { renderer, host, port }: HttpServerOpts<StdHttpResponse> = { port: 3000 },
+    { renderer, host, port }: HttpServerOpts<StdHttpResponse> = { port: 3000 }
   ) {
     this.#renderer = renderer || defaultStdRenderer;
     this.#host = host;
@@ -32,17 +32,19 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
       const server = this;
 
       async function accept() {
-        const listener = serve({
-          hostname: server.#host,
-          port: server.#port,
-        });
+        const listener = new Server(
+          Deno.listen({
+            hostname: server.#host,
+            port: server.#port,
+          })
+        );
 
         for await (const request of listener) {
           const ctx = new Context(
             new StdRequest(request, `http://${server.#host}:${server.#port}`),
             new Response(),
             server.#host,
-            server.#port,
+            server.#port
           );
 
           async function responder(ctx: Context, body: StdHttpResponse) {

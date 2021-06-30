@@ -53,13 +53,13 @@ export class Response {
 /** Updates the Content-Type header and returns the rendered body. */
 export async function updateTypeAndGetBody<T>(
   ctx: Context,
-  renderer: Renderer<T>
+  renderer: Renderer<T>,
 ) {
   const { body, type } = ctx.response.handled
     ? await renderer(
-        ctx.response.body as Body,
-        ctx.response.headers.get("Content-type")
-      )
+      ctx.response.body as Body,
+      ctx.response.headers.get("Content-type"),
+    )
     : { body: undefined, type: undefined };
 
   if (type) {

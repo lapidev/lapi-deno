@@ -2,7 +2,6 @@
 /* @module lapi/application */
 
 import { compose, ComposedMiddleware, Middleware } from "./middleware.ts";
-import { defaultStdRenderer, Renderer } from "./renderer.ts";
 import { HttpServer } from "./http_server.ts";
 import { StdHttpServer } from "./std_http_server.ts";
 
@@ -27,8 +26,8 @@ export class Application<T> {
   constructor({ port, host, server }: ApplicationOptions<T> = {}) {
     this.#port = port || 3000;
     this.#host = host;
-    this.#httpServer =
-      server || (new StdHttpServer() as unknown as HttpServer<T>);
+    this.#httpServer = server ||
+      (new StdHttpServer() as unknown as HttpServer<T>);
   }
 
   get host() {
@@ -47,8 +46,8 @@ export class Application<T> {
       compose(
         typeof middlewareOrMiddlewares === "function"
           ? [middlewareOrMiddlewares]
-          : middlewareOrMiddlewares
-      )
+          : middlewareOrMiddlewares,
+      ),
     );
 
     return this;

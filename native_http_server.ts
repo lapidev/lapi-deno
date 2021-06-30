@@ -1,8 +1,8 @@
 import { Context } from "./context.ts";
-import { HttpServer, HttpServerParams, HttpServerOpts } from "./http_server.ts";
+import { HttpServer, HttpServerOpts, HttpServerParams } from "./http_server.ts";
 import { NativeRequest } from "./native_request.ts";
 import { Response as HttpResponse, updateTypeAndGetBody } from "./response.ts";
-import { Renderer, defaultNativeRenderer } from "./renderer.ts";
+import { defaultNativeRenderer, Renderer } from "./renderer.ts";
 
 export interface RequestEvent {
   readonly request: Request;
@@ -25,6 +25,7 @@ function assertUnstable() {
 function serveHttp(conn: Deno.Conn) {
   assertUnstable();
 
+  // deno-lint-ignore no-explicit-any
   return (Deno as any).serveHttp(conn) as HttpConn;
 }
 
@@ -43,7 +44,7 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
 
   async #serve(
     conn: Deno.Conn,
-    { application, handler }: HttpServerParams<BodyInit>
+    { application, handler }: HttpServerParams<BodyInit>,
   ) {
     const httpConn = serveHttp(conn);
 
@@ -52,7 +53,7 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
 
       try {
         requestEvent = await httpConn.nextRequest();
-      } catch (e) {
+      } catch {
         break;
       }
 
@@ -62,7 +63,7 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
         new NativeRequest(requestEvent.request),
         new HttpResponse(),
         application.host,
-        application.port
+        application.port,
       );
 
       await handler(ctx);
@@ -73,7 +74,7 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
         new Response(body, {
           status: ctx.response.status,
           headers: ctx.response.headers,
-        })
+        }),
       );
     }
   }

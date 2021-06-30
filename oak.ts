@@ -1,7 +1,7 @@
 /* This all comes from Oak which can be [found here](https://deno.land/x/oak). */
 
 import { AsyncIterableReader } from "https://deno.land/x/oak@v7.6.3/async_iterable_reader.ts";
-import { readerFromStreamReader, readableStreamFromReader } from "./deps.ts";
+import { readableStreamFromReader, readerFromStreamReader } from "./deps.ts";
 import {
   BODY_TYPES,
   Uint8ArrayTransformStream,
@@ -32,7 +32,7 @@ function toUint8Array(body: Body): Uint8Array {
 
 export async function convertBodyToBodyInit(
   body: Body | BodyFunction,
-  type?: string | null
+  type?: string | null,
 ): Promise<[globalThis.BodyInit | undefined, string | null | undefined]> {
   let result: globalThis.BodyInit | undefined;
   if (BODY_TYPES.includes(typeof body)) {
@@ -66,7 +66,7 @@ export async function convertBodyToBodyInit(
 
 export async function convertBodyToStdBody(
   body: Body | BodyFunction,
-  type?: string | null
+  type?: string | null,
 ): Promise<[Uint8Array | Deno.Reader | undefined, string | undefined | null]> {
   let result: Uint8Array | Deno.Reader | undefined;
 
@@ -78,7 +78,7 @@ export async function convertBodyToStdBody(
     result = body;
   } else if (isReadableStream(body)) {
     result = readerFromStreamReader(
-      body.pipeThrough(new Uint8ArrayTransformStream()).getReader()
+      body.pipeThrough(new Uint8ArrayTransformStream()).getReader(),
     );
   } else if (isAsyncIterable(body)) {
     result = new AsyncIterableReader(body, toUint8Array);

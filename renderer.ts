@@ -1,5 +1,5 @@
 import { Body, BodyFunction } from "./response.ts";
-import { convertBodyToStdBody, convertBodyToBodyInit } from "./oak.ts";
+import { convertBodyToBodyInit, convertBodyToStdBody } from "./oak.ts";
 
 export interface Rendered<T> {
   body?: T;
@@ -12,14 +12,14 @@ export interface Renderer<T> {
 
 export async function defaultStdRenderer(
   body: Body | BodyFunction,
-  type?: string | null
+  type?: string | null,
 ): Promise<Rendered<Uint8Array | Deno.Reader>> {
   const [resultBody, resultType] = await convertBodyToStdBody(body, type);
   return { body: resultBody, type: resultType };
 }
 export async function defaultNativeRenderer(
   body: Body | BodyFunction,
-  type?: string | null
+  type?: string | null,
 ): Promise<Rendered<BodyInit>> {
   const [resultBody, resultType] = await convertBodyToBodyInit(body, type);
   return { body: resultBody, type: resultType };

@@ -3,15 +3,19 @@
 
 import type { Response } from "./response.ts";
 import type { Request } from "./request.ts";
-import { Application } from "./application.ts";
 
 export class Context {
   #request: Request;
   #response: Response;
-  #host?: String;
+  #host?: string;
   #port: number;
 
-  constructor(request: Request, response: Response, host: string | undefined, port: number) {
+  constructor(
+    request: Request,
+    response: Response,
+    host: string | undefined,
+    port: number,
+  ) {
     this.#request = request;
     this.#response = response;
     this.#host = host;

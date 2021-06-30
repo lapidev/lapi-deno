@@ -10,11 +10,11 @@ import post from "./pages/post.ts";
 const application = new Application();
 const router = new Router();
 
-router.use("GET", "/", async (ctx) => {
+router.use("GET", "/", (ctx) => {
   ctx.response.body = render(home({ posts }));
 });
 
-router.use("GET", "/post/<id>", async (ctx) => {
+router.use("GET", "/post/:id", (ctx) => {
   const thePost = findPost(ctx.request.pathParams.id);
 
   if (thePost) {

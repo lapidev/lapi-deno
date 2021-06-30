@@ -3,6 +3,7 @@
 
 import { compose, ComposedMiddleware, Middleware } from "../middleware.ts";
 import { Context } from "../context.ts";
+import { match, MatchFunction } from "../deps.ts";
 
 export type Method =
   | "POST"
@@ -16,15 +17,16 @@ export type Method =
 
 function route(
   method: Method,
-  path: RegExp,
+  matcher: MatchFunction,
   handleOptions: boolean,
   middleware: ComposedMiddleware,
 ) {
   return async function (ctx: Context, next: () => Promise<void>) {
-    if (path.test(ctx.request.url.pathname)) {
+    const match = matcher(ctx.request.url.pathname);
+
+    if (match) {
       if (ctx.request.method === method) {
-        ctx.request.pathParams = path.exec(ctx.request.url.pathname)?.groups ||
-          {};
+        ctx.request.pathParams = (match.params as Record<string, string>) || {};
 
         await middleware(ctx);
       } else if (ctx.request.method === "OPTIONS" && handleOptions) {
@@ -103,13 +105,7 @@ export class Router {
       this.#middleware.push(
         route(
           methodOrMiddleware,
-          new RegExp(
-            `^${
-              path
-                .replaceAll(".", "\\.")
-                .replaceAll(/<([a-zA-Z]+)>/g, "(?<$1>[^/]+)")
-            }$`,
-          ),
+          match(path),
           this.#handleOptions,
           compose(middlewares),
         ),

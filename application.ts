@@ -110,10 +110,6 @@ export class Application {
       ctx.response.status = 404;
     }
 
-    console.log(
-      `${ctx.request.method} ${ctx.request.url.pathname} ${ctx.response.status}`,
-    );
-
     await request.respond({
       body,
       headers: ctx.response.headers,

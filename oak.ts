@@ -1,7 +1,8 @@
 /* This all comes from Oak which can be [found here](https://deno.land/x/oak). */
+/* @module lapi/oak */
 
 import { AsyncIterableReader } from "https://deno.land/x/oak@v7.6.3/async_iterable_reader.ts";
-import { readerFromStreamReader } from "./deps.ts";
+import { readableStreamFromReader, readerFromStreamReader } from "./deps.ts";
 import {
   BODY_TYPES,
   Uint8ArrayTransformStream,
@@ -28,6 +29,40 @@ function toUint8Array(body: Body): Uint8Array {
     bodyText = JSON.stringify(body);
   }
   return encoder.encode(bodyText);
+}
+
+export async function convertBodyToBodyInit(
+  body: Body | BodyFunction,
+  type?: string | null,
+): Promise<[globalThis.BodyInit | undefined, string | null | undefined]> {
+  let result: globalThis.BodyInit | undefined;
+  if (BODY_TYPES.includes(typeof body)) {
+    result = String(body);
+    type = type ?? (isHtml(result) ? "html" : "text/plain");
+  } else if (isReader(body)) {
+    result = readableStreamFromReader(body);
+  } else if (
+    ArrayBuffer.isView(body) ||
+    body instanceof ArrayBuffer ||
+    body instanceof Blob ||
+    body instanceof URLSearchParams
+  ) {
+    result = body;
+  } else if (isReadableStream(body)) {
+    result = body.pipeThrough(new Uint8ArrayTransformStream());
+  } else if (body instanceof FormData) {
+    result = body;
+    type = "multipart/form-data";
+  } else if (body && isObject(body)) {
+    result = JSON.stringify(body);
+    type = type ?? "json";
+  } else if (body && isFunction(body)) {
+    const result = body.call(null);
+    return convertBodyToBodyInit(await result, type);
+  } else if (body) {
+    throw new TypeError("Response body was set but could not be converted.");
+  }
+  return [result, type];
 }
 
 export async function convertBodyToStdBody(

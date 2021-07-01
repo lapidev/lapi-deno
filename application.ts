@@ -1,72 +1,60 @@
 // Copyright 2020 Luke Shay. All rights reserved. MIT license.
 /* @module lapi/application */
 
-import { serve, Server, ServerRequest } from "./deps.ts";
 import { compose, ComposedMiddleware, Middleware } from "./middleware.ts";
-import { BodyFunction, Response } from "./response.ts";
-import { Request } from "./request.ts";
-import { convertBodyToStdBody } from "./oak.ts";
-import { Context } from "./context.ts";
+import { HttpServer } from "./http_server.ts";
+import { HttpServerNative } from "./http_server_native.ts";
+import { HttpServerStd } from "./http_server_std.ts";
+import { isUnstable } from "./utils.ts";
+import { updateTypeAndGetBody } from "./response.ts";
 
-export interface ApplicationOptions {
+/** Options for configuring an Application. */
+export interface ApplicationOptions<T> {
+  /**
+   * Specifies the port to run on.
+   *
+   * @default 3000
+   */
   port?: number;
+
+  /** Specifies the host to listen to. */
   host?: string;
-  renderer?: Renderer;
-}
 
-export interface Rendered {
-  body?: Uint8Array | Deno.Reader;
-  type?: string | null;
-}
-
-export interface Renderer {
-  (body: Body, type?: string | null): Promise<Rendered> | Rendered;
-}
-
-export async function defaultRenderer(
-  body: Body | BodyFunction,
-  type?: string | null,
-): Promise<Rendered> {
-  const [resultBody, resultType] = await convertBodyToStdBody(body, type);
-  return { body: resultBody, type: resultType };
+  /**
+   * Selects the the type of HTTP server you want to use. If you want to run the
+   * native HTTP server, you must use the '--unstable' flag. Lapi determines
+   * this by see if it has been run with '--unstable'. If it has, the native
+   * HTTP server will be used. Otherwise, the standard HTTP server is used.
+   */
+  server?: HttpServer<T>;
 }
 
 /**
  * Used to create an API. This handles starting the #server and sending
  * requests to the correct location.
  */
-export class Application {
+export class Application<T> {
   #middleware: Middleware[] = [];
   #composedMiddleware?: ComposedMiddleware;
-  #port = 3000;
-  #host = "0.0.0.0";
-  #renderer: Renderer = defaultRenderer;
-
-  #server?: Server;
+  #httpServer: HttpServer<T>;
 
   /** Constructs an Application. */
-  constructor(options?: ApplicationOptions) {
-    if (options) {
-      const { port, host, renderer } = options;
-
-      this.#port = port || 3000;
-      this.#host = host || "0.0.0.0";
-      this.#renderer = renderer || defaultRenderer;
-    }
-  }
-
-  get host() {
-    return this.#host;
-  }
-
-  get port() {
-    return this.#port;
+  constructor({ port, host, server }: ApplicationOptions<T> = {}) {
+    this.#httpServer = server || isUnstable()
+      ? (new HttpServerNative({
+        port: port || 3000,
+        host,
+      }) as unknown as HttpServer<T>)
+      : (new HttpServerStd({
+        port: port || 3000,
+        host,
+      }) as unknown as HttpServer<T>);
   }
 
   /** Adds Middleware to the application. */
-  use(midlewares: Middleware[]): Application;
-  use(...middlewares: Middleware[]): Application;
-  use(middlewareOrMiddlewares: Middleware | Middleware[]): Application {
+  use(midlewares: Middleware[]): Application<T>;
+  use(...middlewares: Middleware[]): Application<T>;
+  use(middlewareOrMiddlewares: Middleware | Middleware[]): Application<T> {
     this.#middleware.push(
       compose(
         typeof middlewareOrMiddlewares === "function"
@@ -86,43 +74,14 @@ export class Application {
     return this.#composedMiddleware;
   }
 
-  /** Handles the given request. */
-  async #handleRequest(request: ServerRequest): Promise<void> {
-    const ctx = new Context(
-      new Request(request, `http://${this.#host}:${this.#port}`),
-      new Response(),
-      this,
-    );
-    await this.#getComposedMiddleware()(ctx);
-
-    const { body, type } = ctx.response.handled
-      ? await this.#renderer(
-        ctx.response.body as Body,
-        ctx.response.headers.get("Content-type"),
-      )
-      : { body: undefined, type: undefined };
-
-    if (type) {
-      ctx.response.headers.set("Content-type", type);
-    }
-
-    if (!ctx.response.handled) {
-      ctx.response.status = 404;
-    }
-
-    await request.respond({
-      body,
-      headers: ctx.response.headers,
-      status: ctx.response.status,
-    });
-  }
-
   /** Starts the HTTP server. */
   async start(): Promise<void> {
-    this.#server = serve({ hostname: this.#host, port: this.#port });
+    for await (const { ctx, responder, renderer } of this.#httpServer) {
+      this.#getComposedMiddleware()(ctx);
 
-    for await (const serverRequest of this.#server) {
-      this.#handleRequest(serverRequest);
+      const body = await updateTypeAndGetBody(ctx, renderer);
+
+      await responder(ctx, body);
     }
   }
 }

@@ -3,17 +3,23 @@
 
 import type { Response } from "./response.ts";
 import type { Request } from "./request.ts";
-import { Application } from "./application.ts";
 
 export class Context {
   #request: Request;
   #response: Response;
-  #application: Application;
+  #host?: string;
+  #port: number;
 
-  constructor(request: Request, response: Response, application: Application) {
+  constructor(
+    request: Request,
+    response: Response,
+    host: string | undefined,
+    port: number,
+  ) {
     this.#request = request;
     this.#response = response;
-    this.#application = application;
+    this.#host = host;
+    this.#port = port;
   }
 
   get request() {
@@ -25,10 +31,10 @@ export class Context {
   }
 
   get host() {
-    return this.#application.host;
+    return this.#host;
   }
 
   get port() {
-    return this.#application.port;
+    return this.#port;
   }
 }

@@ -1,8 +1,14 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See
-[standard-version](https://github.com/conventional-changelog/standard-version)
-for commit guidelines.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.4.0](https://github.com/LukeShay/lapi/compare/v1.3.0...v1.4.0) (2021-07-01)
+
+
+### Features
+
+* **core:** added support for the native http server ([#31](https://github.com/LukeShay/lapi/issues/31)) ([fa98f8a](https://github.com/LukeShay/lapi/commits/fa98f8a120574b12d684e0c504231474de9bd956))
+* **middleware/router:** updated routing to use path_to_regexp ([#30](https://github.com/LukeShay/lapi/issues/30)) ([fc4614e](https://github.com/LukeShay/lapi/commits/fc4614ed898777d64407d8723dbd1ca59437011c))
 
 ## [1.3.0](https://github.com/LukeShay/lapi/compare/v1.2.0...v1.3.0) (2021-06-28)
 

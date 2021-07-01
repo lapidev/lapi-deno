@@ -7,7 +7,7 @@ import {
   HttpServerOpts,
 } from "./http_server.ts";
 import { NativeRequest } from "./native_request.ts";
-import { Response as HttpResponse, updateTypeAndGetBody } from "./response.ts";
+import { Response as HttpResponse } from "./response.ts";
 import { defaultNativeRenderer, Renderer } from "./renderer.ts";
 
 export interface RequestEvent {
@@ -53,6 +53,7 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
     controller: HttpServerIteratorController<BodyInit>,
   ) {
     const httpConn = serveHttp(conn);
+    // deno-lint-ignore no-this-alias
     const server = this;
 
     while (true) {
@@ -73,8 +74,9 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
         this.#port,
       );
 
+      // deno-lint-ignore no-inner-declarations
       async function responder(ctx: Context, body?: BodyInit) {
-        requestEvent?.respondWith(
+        await requestEvent?.respondWith(
           new Response(body, {
             status: ctx.response.status,
             headers: ctx.response.headers,
@@ -90,6 +92,7 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
     HttpServerIteratorResult<BodyInit>
   > {
     const start: HttpServerIteratorStarter<BodyInit> = (controller) => {
+      // deno-lint-ignore no-this-alias
       const server = this;
 
       async function accept() {

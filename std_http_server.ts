@@ -7,7 +7,7 @@ import {
   HttpServerOpts,
 } from "./http_server.ts";
 import { StdRequest } from "./std_request.ts";
-import { Response, updateTypeAndGetBody } from "./response.ts";
+import { Response } from "./response.ts";
 import { defaultStdRenderer, Renderer } from "./renderer.ts";
 
 export type StdHttpResponse = Uint8Array | Deno.Reader | undefined;
@@ -18,7 +18,7 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
   #port: number;
 
   constructor(
-    { renderer, host, port }: HttpServerOpts<StdHttpResponse> = { port: 3000 }
+    { renderer, host, port }: HttpServerOpts<StdHttpResponse> = { port: 3000 },
   ) {
     this.#renderer = renderer || defaultStdRenderer;
     this.#host = host;
@@ -29,6 +29,7 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
     HttpServerIteratorResult<StdHttpResponse>
   > {
     const start: HttpServerIteratorStarter<StdHttpResponse> = (controller) => {
+      // deno-lint-ignore no-this-alias
       const server = this;
 
       async function accept() {
@@ -36,7 +37,7 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
           Deno.listen({
             hostname: server.#host,
             port: server.#port,
-          })
+          }),
         );
 
         for await (const request of listener) {
@@ -44,9 +45,10 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
             new StdRequest(request, `http://${server.#host}:${server.#port}`),
             new Response(),
             server.#host,
-            server.#port
+            server.#port,
           );
 
+          // deno-lint-ignore no-inner-declarations
           async function responder(ctx: Context, body: StdHttpResponse) {
             await request.respond({
               body,

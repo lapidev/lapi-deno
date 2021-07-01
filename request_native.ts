@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/request_native */
+
 import { Request as HttpRequest } from "./request.ts";
 import { readerFromStreamReader } from "./deps.ts";
 

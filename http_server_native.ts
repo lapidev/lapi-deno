@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/http_server_native */
+
 import { Context } from "./context.ts";
 import {
   HttpServer,
@@ -8,7 +11,9 @@ import {
 } from "./http_server.ts";
 import { RequestNative } from "./request_native.ts";
 import { Response as HttpResponse } from "./response.ts";
-import { defaultNativeRenderer, Renderer } from "./renderer.ts";
+import { Renderer } from "./renderer.ts";
+import { defaultNativeRenderer } from "./renderer_native.ts";
+import { isUnstable } from "./utils.ts";
 
 export interface RequestEvent {
   readonly request: Request;
@@ -23,7 +28,7 @@ export interface HttpConn extends AsyncIterable<RequestEvent> {
 }
 
 function assertUnstable() {
-  if (!("serveHttp" in Deno)) {
+  if (!isUnstable()) {
     throw new Error("'--unstable' flag is required for native http server");
   }
 }
@@ -43,6 +48,8 @@ export class HttpServerNative implements HttpServer<BodyInit> {
   constructor(
     { renderer, host, port }: HttpServerOpts<BodyInit> = { port: 3000 },
   ) {
+    assertUnstable();
+
     this.#renderer = renderer || defaultNativeRenderer;
     this.#host = host;
     this.#port = port;

@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/http_server_std */
+
 import { Context } from "./context.ts";
 import { Server } from "./deps.ts";
 import {
@@ -8,7 +11,8 @@ import {
 } from "./http_server.ts";
 import { RequestStd } from "./request_std.ts";
 import { Response } from "./response.ts";
-import { defaultStdRenderer, Renderer } from "./renderer.ts";
+import { Renderer } from "./renderer.ts";
+import { defaultStdRenderer } from "./renderer_std.ts";
 
 export type HttpServerStdResponse = Uint8Array | Deno.Reader | undefined;
 
@@ -18,7 +22,9 @@ export class HttpServerStd implements HttpServer<HttpServerStdResponse> {
   #port: number;
 
   constructor(
-    { renderer, host, port }: HttpServerOpts<HttpServerStdResponse> = { port: 3000 },
+    { renderer, host, port }: HttpServerOpts<HttpServerStdResponse> = {
+      port: 3000,
+    },
   ) {
     this.#renderer = renderer || defaultStdRenderer;
     this.#host = host;
@@ -28,7 +34,9 @@ export class HttpServerStd implements HttpServer<HttpServerStdResponse> {
   [Symbol.asyncIterator](): AsyncIterableIterator<
     HttpServerIteratorResult<HttpServerStdResponse>
   > {
-    const start: HttpServerIteratorStarter<HttpServerStdResponse> = (controller) => {
+    const start: HttpServerIteratorStarter<HttpServerStdResponse> = (
+      controller,
+    ) => {
       // deno-lint-ignore no-this-alias
       const server = this;
 

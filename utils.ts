@@ -1,3 +1,7 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/utils */
+/* @private */
+
 const BODY_TYPES = ["string", "number", "bigint", "boolean", "symbol"];
 
 /** Determines if a string is HTML. */
@@ -51,4 +55,9 @@ export function isObject(value: unknown): value is Object {
 // deno-lint-ignore ban-types
 export function isFunction(value: unknown): value is Function {
   return typeof value === "function";
+}
+
+/** Determines the current process is unstable by checking for 'serveHttp' on Deno. */
+export function isUnstable() {
+  return "serveHttp" in Deno;
 }

@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/http_server */
+
 import { ComposedMiddleware } from "./middleware.ts";
 import { Application } from "./application.ts";
 import { Renderer } from "./renderer.ts";

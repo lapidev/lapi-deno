@@ -1,3 +1,6 @@
+// Copyright 2020 Luke Shay. All rights reserved. MIT license.
+/* @module lapi/request_std */
+
 import { ServerRequest } from "./deps.ts";
 import { Request } from "./request.ts";
 

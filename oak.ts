@@ -1,4 +1,5 @@
 /* This all comes from Oak which can be [found here](https://deno.land/x/oak). */
+/* @module lapi/oak */
 
 import { AsyncIterableReader } from "https://deno.land/x/oak@v7.6.3/async_iterable_reader.ts";
 import { readableStreamFromReader, readerFromStreamReader } from "./deps.ts";

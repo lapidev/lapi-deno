@@ -3,9 +3,9 @@
 import { Application } from "../mod.ts";
 import { Router } from "../middleware/router.ts";
 import { cors } from "../middleware/cors.ts";
-import { NativeHttpServer } from "../mod.ts";
+import { HttpServerNative } from "../mod.ts";
 
-const application = new Application({ server: new NativeHttpServer() });
+const application = new Application({ server: new HttpServerNative() });
 const router = new Router();
 
 router.use("GET", "/", (ctx) => {

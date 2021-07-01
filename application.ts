@@ -3,7 +3,7 @@
 
 import { compose, ComposedMiddleware, Middleware } from "./middleware.ts";
 import { HttpServer } from "./http_server.ts";
-import { StdHttpServer } from "./std_http_server.ts";
+import { HttpServerStd } from "./http_server_std.ts";
 import { updateTypeAndGetBody } from "./response.ts";
 
 export interface ApplicationOptions<T> {
@@ -24,7 +24,7 @@ export class Application<T> {
   /** Constructs an Application. */
   constructor({ port, host, server }: ApplicationOptions<T> = {}) {
     this.#httpServer = server ||
-      (new StdHttpServer({
+      (new HttpServerStd({
         port: port || 3000,
         host,
       }) as unknown as HttpServer<T>);

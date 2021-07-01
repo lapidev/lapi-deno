@@ -6,7 +6,7 @@ import {
   HttpServerIteratorStarter,
   HttpServerOpts,
 } from "./http_server.ts";
-import { NativeRequest } from "./native_request.ts";
+import { RequestNative } from "./request_native.ts";
 import { Response as HttpResponse } from "./response.ts";
 import { defaultNativeRenderer, Renderer } from "./renderer.ts";
 
@@ -35,7 +35,7 @@ function serveHttp(conn: Deno.Conn) {
   return (Deno as any).serveHttp(conn) as HttpConn;
 }
 
-export class NativeHttpServer implements HttpServer<BodyInit> {
+export class HttpServerNative implements HttpServer<BodyInit> {
   #renderer: Renderer<BodyInit>;
   #host?: string;
   #port: number;
@@ -68,7 +68,7 @@ export class NativeHttpServer implements HttpServer<BodyInit> {
       if (!requestEvent) return;
 
       const ctx = new Context(
-        new NativeRequest(requestEvent.request),
+        new RequestNative(requestEvent.request),
         new HttpResponse(),
         this.#host,
         this.#port,

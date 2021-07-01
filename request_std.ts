@@ -1,7 +1,7 @@
 import { ServerRequest } from "./deps.ts";
 import { Request } from "./request.ts";
 
-export class StdRequest implements Request {
+export class RequestStd implements Request {
   #serverRequest: ServerRequest;
   #domain: string;
   #pathParams: Record<string, string> = {};

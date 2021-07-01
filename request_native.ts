@@ -1,7 +1,7 @@
 import { Request as HttpRequest } from "./request.ts";
 import { readerFromStreamReader } from "./deps.ts";
 
-export class NativeRequest implements HttpRequest {
+export class RequestNative implements HttpRequest {
   #request: Request;
   #pathParams: Record<string, string> = {};
   #pathParamsSet = false;

@@ -6,19 +6,19 @@ import {
   HttpServerIteratorStarter,
   HttpServerOpts,
 } from "./http_server.ts";
-import { StdRequest } from "./std_request.ts";
+import { RequestStd } from "./request_std.ts";
 import { Response } from "./response.ts";
 import { defaultStdRenderer, Renderer } from "./renderer.ts";
 
-export type StdHttpResponse = Uint8Array | Deno.Reader | undefined;
+export type HttpServerStdResponse = Uint8Array | Deno.Reader | undefined;
 
-export class StdHttpServer implements HttpServer<StdHttpResponse> {
-  #renderer: Renderer<StdHttpResponse>;
+export class HttpServerStd implements HttpServer<HttpServerStdResponse> {
+  #renderer: Renderer<HttpServerStdResponse>;
   #host?: string;
   #port: number;
 
   constructor(
-    { renderer, host, port }: HttpServerOpts<StdHttpResponse> = { port: 3000 },
+    { renderer, host, port }: HttpServerOpts<HttpServerStdResponse> = { port: 3000 },
   ) {
     this.#renderer = renderer || defaultStdRenderer;
     this.#host = host;
@@ -26,9 +26,9 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
   }
 
   [Symbol.asyncIterator](): AsyncIterableIterator<
-    HttpServerIteratorResult<StdHttpResponse>
+    HttpServerIteratorResult<HttpServerStdResponse>
   > {
-    const start: HttpServerIteratorStarter<StdHttpResponse> = (controller) => {
+    const start: HttpServerIteratorStarter<HttpServerStdResponse> = (controller) => {
       // deno-lint-ignore no-this-alias
       const server = this;
 
@@ -42,14 +42,14 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
 
         for await (const request of listener) {
           const ctx = new Context(
-            new StdRequest(request, `http://${server.#host}:${server.#port}`),
+            new RequestStd(request, `http://${server.#host}:${server.#port}`),
             new Response(),
             server.#host,
             server.#port,
           );
 
           // deno-lint-ignore no-inner-declarations
-          async function responder(ctx: Context, body: StdHttpResponse) {
+          async function responder(ctx: Context, body: HttpServerStdResponse) {
             await request.respond({
               body,
               headers: ctx.response.headers,
@@ -65,7 +65,7 @@ export class StdHttpServer implements HttpServer<StdHttpResponse> {
     };
 
     const stream = new ReadableStream<
-      HttpServerIteratorResult<StdHttpResponse>
+      HttpServerIteratorResult<HttpServerStdResponse>
     >({ start });
 
     return stream[Symbol.asyncIterator]();

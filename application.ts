@@ -77,7 +77,7 @@ export class Application<T> {
   /** Starts the HTTP server. */
   async start(): Promise<void> {
     for await (const { ctx, responder, renderer } of this.#httpServer) {
-      this.#getComposedMiddleware()(ctx);
+      await this.#getComposedMiddleware()(ctx);
 
       const body = await updateTypeAndGetBody(ctx, renderer);
 

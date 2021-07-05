@@ -33,7 +33,7 @@ function contentType(path: string): string | undefined {
 
 /** Sets the response to the file at the given path if it exists. */
 async function serveFile(ctx: Context, filePath: string) {
-  ctx.response.body = await Deno.open(filePath);
+  ctx.response.body = await Deno.open(filePath, { read: true, write: false });
 
   const contentTypeValue = contentType(filePath);
 
@@ -44,13 +44,15 @@ async function serveFile(ctx: Context, filePath: string) {
 
 /** Serves an assets directory at the given path. */
 export async function assets(basePath: string, assetsDirectory: string) {
-  const router = new Router({ basePath, name: "assets" });
+  const router = new Router({ basePath });
 
   const realPath = await Deno.realPath(assetsDirectory);
 
   for await (const f of walk(realPath)) {
     if (f.isFile) {
-      router.use("GET", f.path.replace(realPath, ""), async (ctx) => {
+      const pathname = f.path.replace(realPath, "");
+
+      router.get(pathname, async (ctx) => {
         await serveFile(ctx, f.path);
       });
     }

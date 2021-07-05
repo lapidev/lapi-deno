@@ -49,19 +49,12 @@ export interface RouterOptions {
    * @see {defaultOptions} for default.
    */
   handleOptions?: boolean;
-
-  /**
-   * Stores a name for the router. This is used for logging.
-   * @see {defaultOptions} for default.
-   */
-  name?: string;
 }
 
 /** Default options used for creating a router. */
 export const defaultOptions = {
   basePath: "/",
   handleOptions: true,
-  name: undefined,
 };
 
 /**
@@ -69,7 +62,6 @@ export const defaultOptions = {
  */
 export class Router {
   #basePath: string;
-  #name?: string;
   #handleOptions: boolean;
   #middleware: Middleware[] = [];
   #composedMiddleware?: ComposedMiddleware;
@@ -78,7 +70,6 @@ export class Router {
   constructor(options: RouterOptions = defaultOptions) {
     const opts = { ...defaultOptions, ...options };
     this.#basePath = opts.basePath;
-    this.#name = opts.name;
     this.#handleOptions = opts.handleOptions;
   }
 
@@ -115,11 +106,55 @@ export class Router {
     return this;
   }
 
+  /** Adds a get route to the router. */
+  get(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("GET", path, ...middlewares);
+  }
+
+  /** Adds a post route to the router. */
+  post(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("POST", path, ...middlewares);
+  }
+
+  /** Adds a put route to the router. */
+  put(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("PUT", path, ...middlewares);
+  }
+
+  /** Adds a patch route to the router. */
+  patch(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("PATCH", path, ...middlewares);
+  }
+
+  /** Adds a options route to the router. */
+  options(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("OPTIONS", path, ...middlewares);
+  }
+
+  /** Adds a delete route to the router. */
+  delete(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("DELETE", path, ...middlewares);
+  }
+
+  /** Adds a head route to the router. */
+  head(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("HEAD", path, ...middlewares);
+  }
+
+  /** Adds a trace route to the router. */
+  trace(path: string, ...middlewares: Middleware[]): Router {
+    return this.use("TRACE", path, ...middlewares);
+  }
+
   /** Returns the routes and Middleware for the Lapi Application to use. */
   routes() {
     if (!this.#composedMiddleware) {
       this.#composedMiddleware = compose(this.#middleware);
     }
+
+    this.#routes.forEach(({ method, path }) =>
+      console.log(`${method} ${path}`)
+    );
 
     return this.#composedMiddleware;
   }

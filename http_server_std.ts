@@ -2,7 +2,7 @@
 /* @module lapi/http_server_std */
 
 import { Context } from "./context.ts";
-import { Server } from "./deps.ts";
+import { Server, ServerRequest } from "./deps.ts";
 import {
   HttpServer,
   HttpServerIteratorResult,
@@ -31,43 +31,45 @@ export class HttpServerStd implements HttpServer<HttpServerStdResponse> {
     this.#port = port;
   }
 
+  static #responder(request: ServerRequest) {
+    return async function responder(ctx: Context, body: HttpServerStdResponse) {
+      await request.respond({
+        body,
+        headers: ctx.response.headers,
+        status: ctx.response.status,
+      });
+    };
+  }
+
   [Symbol.asyncIterator](): AsyncIterableIterator<
     HttpServerIteratorResult<HttpServerStdResponse>
   > {
     const start: HttpServerIteratorStarter<HttpServerStdResponse> = (
       controller,
     ) => {
-      // deno-lint-ignore no-this-alias
-      const server = this;
-
-      async function accept() {
+      const accept = async () => {
         const listener = new Server(
           Deno.listen({
-            hostname: server.#host,
-            port: server.#port,
+            hostname: this.#host,
+            port: this.#port,
           }),
         );
 
         for await (const request of listener) {
           const ctx = new Context(
-            new RequestStd(request, `http://${server.#host}:${server.#port}`),
+            new RequestStd(request, `http://${this.#host}:${this.#port}`),
             new Response(),
-            server.#host,
-            server.#port,
+            this.#host,
+            this.#port,
           );
 
-          // deno-lint-ignore no-inner-declarations
-          async function responder(ctx: Context, body: HttpServerStdResponse) {
-            await request.respond({
-              body,
-              headers: ctx.response.headers,
-              status: ctx.response.status,
-            });
-          }
-
-          controller.enqueue({ ctx, responder, renderer: server.#renderer });
+          controller.enqueue({
+            ctx,
+            responder: HttpServerStd.#responder(request),
+            renderer: this.#renderer,
+          });
         }
-      }
+      };
 
       accept();
     };

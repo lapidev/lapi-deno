@@ -55,13 +55,22 @@ export class HttpServerNative implements HttpServer<BodyInit> {
     this.#port = port;
   }
 
+  static #responder(requestEvent: RequestEvent) {
+    return async function responder(ctx: Context, body?: BodyInit) {
+      await requestEvent.respondWith(
+        new Response(body, {
+          status: ctx.response.status,
+          headers: ctx.response.headers,
+        }),
+      );
+    };
+  }
+
   async #serve(
     conn: Deno.Conn,
     controller: HttpServerIteratorController<BodyInit>,
   ) {
     const httpConn = serveHttp(conn);
-    // deno-lint-ignore no-this-alias
-    const server = this;
 
     while (true) {
       let requestEvent: RequestEvent | null = null;
@@ -81,17 +90,11 @@ export class HttpServerNative implements HttpServer<BodyInit> {
         this.#port,
       );
 
-      // deno-lint-ignore no-inner-declarations
-      async function responder(ctx: Context, body?: BodyInit) {
-        await requestEvent?.respondWith(
-          new Response(body, {
-            status: ctx.response.status,
-            headers: ctx.response.headers,
-          }),
-        );
-      }
-
-      controller.enqueue({ ctx, responder, renderer: server.#renderer });
+      controller.enqueue({
+        ctx,
+        responder: HttpServerNative.#responder(requestEvent),
+        renderer: this.#renderer,
+      });
     }
   }
 
@@ -99,18 +102,16 @@ export class HttpServerNative implements HttpServer<BodyInit> {
     HttpServerIteratorResult<BodyInit>
   > {
     const start: HttpServerIteratorStarter<BodyInit> = (controller) => {
-      // deno-lint-ignore no-this-alias
-      const server = this;
 
-      async function accept() {
+      const accept = async () => {
         const listener = Deno.listen({
-          hostname: server.#host,
-          port: server.#port,
+          hostname: this.#host,
+          port: this.#port,
         });
 
         while (true) {
           const conn = await listener.accept();
-          server.#serve(conn, controller);
+          this.#serve(conn, controller);
         }
       }
 

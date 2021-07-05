@@ -1,4 +1,4 @@
-import { html } from "../html.ts";
+import { html } from "../lib/html.ts";
 import { Post } from "../types.ts";
 import Layout from "../components/Layout.ts";
 

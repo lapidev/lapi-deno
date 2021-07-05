@@ -38,7 +38,7 @@ export async function convertBodyToBodyInit(
   let result: globalThis.BodyInit | undefined;
   if (BODY_TYPES.includes(typeof body)) {
     result = String(body);
-    type = type ?? (isHtml(result) ? "html" : "text/plain");
+    type = type ?? (isHtml(result) ? "text/html" : "text/plain");
   } else if (isReader(body)) {
     result = readableStreamFromReader(body);
   } else if (
@@ -55,7 +55,7 @@ export async function convertBodyToBodyInit(
     type = "multipart/form-data";
   } else if (body && isObject(body)) {
     result = JSON.stringify(body);
-    type = type ?? "json";
+    type = type ?? "application/json";
   } else if (body && isFunction(body)) {
     const result = body.call(null);
     return convertBodyToBodyInit(await result, type);

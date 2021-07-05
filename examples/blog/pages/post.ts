@@ -1,7 +1,7 @@
-import { html } from "../html.ts";
+import { html } from "../lib/html.ts";
 import { Post } from "../types.ts";
 import Layout from "../components/Layout.ts";
-import { format } from "../format_date.ts";
+import { format } from "../lib/format_date.ts";
 import ArrowLeftIcon from "../components/ArrowLeftIcon.ts";
 
 export interface PostProps {

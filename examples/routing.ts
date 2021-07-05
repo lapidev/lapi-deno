@@ -7,11 +7,11 @@ import { cors } from "../middleware/cors.ts";
 const application = new Application();
 const router = new Router();
 
-router.use("GET", "/", (ctx) => {
+router.get("/", (ctx) => {
   ctx.response.body = { key: "value" };
 });
 
-router.use("GET", "/hello/:name", (ctx) => {
+router.get("/hello/:name", (ctx) => {
   ctx.response.body = `Hello, ${ctx.request.pathParams.name}!`;
 });
 

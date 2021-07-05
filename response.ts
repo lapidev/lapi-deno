@@ -58,12 +58,12 @@ export async function updateTypeAndGetBody<T>(
   const { body, type } = ctx.response.handled
     ? await renderer(
       ctx.response.body as Body,
-      ctx.response.headers.get("Content-type"),
+      ctx.response.headers.get("Content-Type"),
     )
     : { body: undefined, type: undefined };
 
   if (type) {
-    ctx.response.headers.set("Content-type", type);
+    ctx.response.headers.set("Content-Type", type);
   }
 
   if (!ctx.response.handled) {

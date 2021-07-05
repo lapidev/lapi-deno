@@ -1,4 +1,4 @@
-import { html } from "../html.ts";
+import { html } from "../lib/html.ts";
 
 export interface LayoutProps {
   // deno-lint-ignore no-explicit-any

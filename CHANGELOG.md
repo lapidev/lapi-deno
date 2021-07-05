@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/LukeShay/lapi/compare/v1.4.0...v1.4.1) (2021-07-05)
+
+
+### Fixes
+
+* **core:** wait for middleware functions to finish ([11a30a2](https://github.com/LukeShay/lapi/commits/11a30a2d4ba4ed3bdd38076fface91a6ddff73f6))
+
 ## [1.4.0](https://github.com/LukeShay/lapi/compare/v1.3.0...v1.4.0) (2021-07-01)
 
 

@@ -32,18 +32,43 @@ function contentType(path: string): string | undefined {
 }
 
 /** Sets the response to the file at the given path if it exists. */
-async function serveFile(ctx: Context, filePath: string) {
-  ctx.response.body = await Deno.open(filePath, { read: true, write: false });
+async function serveFile(ctx: Context, filePath: string) {}
 
-  const contentTypeValue = contentType(filePath);
+/**
+ * Options for configuring assets. {@see defaultAssetsOptions} for defaults.
+ */
+export interface AssetsOptions {
+  /** Specifies to route `/` to `index.html` if it exists. */
+  routeToIndex?: boolean;
 
-  if (contentTypeValue) {
-    ctx.response.headers.set("Content-Type", contentTypeValue);
-  }
+  /** Computes the content type based on the path.  */
+  contentType?: (path: string) => string | undefined;
+}
+
+/** Default options for assets. */
+const defaultAssetsOptions = {
+  routeToIndex: true,
+  contentType,
+};
+
+function handler(path: string, contentType: string) {
+  return async function (ctx: Context) {
+    ctx.response.body = await Deno.open(path, {
+      read: true,
+      write: false,
+    });
+    ctx.response.headers.set("Content-Type", contentType);
+  };
 }
 
 /** Serves an assets directory at the given path. */
-export async function assets(basePath: string, assetsDirectory: string) {
+export async function assets(
+  basePath: string,
+  assetsDirectory: string,
+  opts: AssetsOptions = {},
+) {
+  const { routeToIndex, contentType } = { ...defaultAssetsOptions, ...opts };
+
   const router = new Router({ basePath });
 
   const realPath = await Deno.realPath(assetsDirectory);
@@ -51,10 +76,16 @@ export async function assets(basePath: string, assetsDirectory: string) {
   for await (const f of walk(realPath)) {
     if (f.isFile) {
       const pathname = f.path.replace(realPath, "");
+      const contentTypeValue = contentType(f.path) || "";
 
-      router.get(pathname, async (ctx) => {
-        await serveFile(ctx, f.path);
-      });
+      router.get(pathname, handler(f.path, contentTypeValue));
+
+      if (routeToIndex && pathname.includes("index.html")) {
+        router.get(
+          pathname.replace("index.html", ""),
+          handler(f.path, contentTypeValue),
+        );
+      }
     }
   }
 
@@ -62,16 +93,30 @@ export async function assets(basePath: string, assetsDirectory: string) {
 }
 
 /** Serves an asset at the given path. */
-export async function asset(path: string, assetPath: string) {
+export async function asset(
+  path: string,
+  assetPath: string,
+  opts: AssetsOptions = {},
+) {
+  const { routeToIndex, contentType } = { ...defaultAssetsOptions, ...opts };
   const realPath = await Deno.realPath(assetPath);
 
   if (!(await exists(realPath))) {
     throw new Error(`file with path ${assetPath} does not exist`);
   }
 
-  return new Router({ basePath: path })
-    .use("GET", "", async (ctx) => {
-      await serveFile(ctx, assetPath);
-    })
-    .routes();
+  const contentTypeValue = contentType(realPath) || "";
+
+  const router = new Router();
+
+  router.get(path, handler(assetPath, contentTypeValue));
+
+  if (routeToIndex && path.includes("index.html")) {
+    router.get(
+      path.replace("index.html", ""),
+      handler(assetPath, contentTypeValue),
+    );
+  }
+
+  return router.routes();
 }

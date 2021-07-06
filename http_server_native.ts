@@ -102,7 +102,6 @@ export class HttpServerNative implements HttpServer<BodyInit> {
     HttpServerIteratorResult<BodyInit>
   > {
     const start: HttpServerIteratorStarter<BodyInit> = (controller) => {
-
       const accept = async () => {
         const listener = Deno.listen({
           hostname: this.#host,
@@ -113,7 +112,7 @@ export class HttpServerNative implements HttpServer<BodyInit> {
           const conn = await listener.accept();
           this.#serve(conn, controller);
         }
-      }
+      };
 
       accept();
     };
